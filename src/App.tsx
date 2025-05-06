@@ -2,6 +2,7 @@ import React from 'react';
 import { TabBar, TabBarItem } from 'tdesign-mobile-react';
 import { Icon } from '@iconify/react';
 import { useLocation, useNavigate, Outlet } from 'react-router-dom';
+import PageTransition from '@/components/PageTransition';
 import './index.css';
 
 const tabList = [
@@ -25,7 +26,9 @@ function App() {
   return (
     <div className="app-container">
       <div className="app-content">
-        <Outlet />
+        <PageTransition>
+          <Outlet />
+        </PageTransition>
       </div>
       {showTabBar && (
         <TabBar

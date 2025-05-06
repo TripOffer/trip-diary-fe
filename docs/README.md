@@ -1,0 +1,46 @@
+# 旅行日记
+
+## API Docs
+- Auth [Register - 注册](01-Register.md): 
+- Auth [Login - 登录](02-Login.md): 
+- Auth [Delete - 注销](03-Delete.md): 
+- Auth [ChangePassword - 修改密码](04-ChangePassword.md): 
+- Auth [SendCode - 发送验证码](05-SendCode.md): 
+- Auth [ResetPassword - 重置密码](06-ResetPassword.md): 
+- User > Profile [List - 获取用户列表](07-List.md): 该接口会区分管理员和其他用户
+- User > Profile [Info - 获取用户信息（通过ID）](08-Info.md): 
+- User > Profile [Info - 获取我的用户信息](09-Info_2.md): 
+- User > Profile [Info - 更新用户信息](10-Info_3.md): 
+- User > Profile [Avatar - 修改头像](11-Avatar.md): 
+- User > Profile [ChangeRole - 修改角色](12-ChangeRole.md): 
+- User > Follow [Follow - 关注用户](13-Follow.md): 
+- User > Follow [Unfollow - 取关用户](14-Unfollow.md): 
+- User > Follow [Following - 获取关注列表](15-Following.md): 
+- User > Follow [Followers - 获取粉丝列表](16-Followers.md): 
+- User > Follow [Stats - 获取关注、粉丝数量](17-Stats.md): 
+- OSS [获取预签名 URL](18-291677823e0.md): 调用接口后返回 url，直接 Binary PUT 请求，将图片或者视频上传到 url 即可
+- OSS [Confirm - 确认上传](19-Confirm.md): 先获取预签名URL，对象上传成功后再请求 Confirm，此时会将对象信息存储到数据库
+- OSS [Image - 图片处理](20-Image.md): 由 Cloudflare Worker 实现，仓库链接：https://github.com/TripOffer/cloudflare-worker-image
+- Diary > User [List - 获取我的日记列表](21-List_2.md): 
+- Diary > User [List - 获取用户日记列表](22-List_3.md): 
+- Diary > User [FavoriteList - 获取我的收藏列表](23-FavoriteList.md): 
+- Diary > Ctrl [Create - 创建日记](24-Create.md): 
+- Diary > Ctrl [Update - 修改日记](25-Update.md): 
+- Diary > Ctrl [Delete - 删除日记](26-Delete_2.md): 
+- Diary > Ctrl [Publish - 修改发布状态](27-Publish.md): 
+- Diary > Ctrl [Review - 审核日记](28-Review.md): 
+- Diary > Action [Like - 点赞](29-Like.md): 
+- Diary > Action [UnLike - 取消点赞](30-UnLike.md): 
+- Diary > Action [Favorite - 收藏](31-Favorite.md): 
+- Diary > Action [UnFavorite - 取消收藏](32-UnFavorite.md): 
+- Diary > Comment [Create - 创建评论](33-Create_2.md): 
+- Diary > Comment [Delete - 删除评论](34-Delete_3.md): 
+- Diary > Comment [List - 获取评论列表](35-List_4.md): 
+- Diary > Comment [ReplyList - 获取子评论列表](36-ReplyList.md): 
+- Diary > Comment [Like - 点赞](37-Like_2.md): 
+- Diary > Comment [UnLike - 取消点赞](38-UnLike_2.md): 
+- Diary [Detail - 获取日记详细内容](39-Detail.md): Auth 为可选，带有 Auth 的请求会返回与用户相关的特殊字段
+- Diary [ReviewList - 获取待审核日记列表](40-ReviewList.md): 
+- Diary [Search - 搜索日记](41-Search.md): 
+- Diary [Recommend - 获取推荐日记列表](42-Recommend.md): 
+- [HelloWorld](43-HelloWorld.md): 

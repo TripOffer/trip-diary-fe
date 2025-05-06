@@ -1,10 +1,9 @@
-import { useAuthStore } from '@/store/auth';
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
+import { useAuthStore } from '@/store/auth';
 
 const http = axios.create({
-  baseURL: import.meta.env.VITE_SERVICE_BASE_URL, // 开发环境使用 /api，生产环境使用环境变量配置的 API 基础 URL
-  timeout: parseInt(import.meta.env.VITE_SERVICE_TIMEOUT || '5000'), // 使用 Vite 提供的环境变量设置请求超时时间
+  baseURL: import.meta.env.VITE_API_BASE_URL,
+  timeout: parseInt(import.meta.env.VITE_API_TIMEOUT || '30000'),
   headers: {
     'Content-Type': 'application/json',
   },
@@ -13,9 +12,7 @@ const http = axios.create({
 // 请求拦截器
 http.interceptors.request.use(
   (config) => {
-    // 在发送请求之前添加 token 或其他自定义逻辑
-    const { token } = useAuthStore();
-    console.log(`get success Token ${token}`);
+    const token = useAuthStore.getState().token;
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
@@ -41,7 +38,7 @@ http.interceptors.response.use(
     // 处理服务器返回200但实际上是错误的情况（例如：返回code: 403）
     if (response.data && response.data.code === 403) {
       console.log('服务器返回403权限错误，正在跳转到登录页面');
-      useNavigate()('/auth/login', { replace: true });
+      window.location.href = '/auth/login';
       return Promise.reject(new Error('Unauthorized'));
     }
     return response.data;
@@ -54,7 +51,7 @@ http.interceptors.response.use(
       console.log('权限错误或Token无效，正在跳转到登录页面');
       // 清除 token
       useAuthStore.getState().clearToken();
-      useNavigate()('/auth/login', { replace: true });
+      window.location.href = '/auth/login';
     }
     return Promise.reject(error);
   },

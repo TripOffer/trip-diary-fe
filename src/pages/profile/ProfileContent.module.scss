@@ -4,95 +4,67 @@
   border-radius: 16px 16px 0 0;
   overflow: hidden;
   min-height: 300px;
-}
 
-.tabsHeader {
-  display: flex;
-  border-bottom: 1px solid #f0f0f0;
-}
+  .tabsHeader {
+    display: flex;
+    border-bottom: 1px solid #f0f0f0;
 
-.tabItem {
-  flex: 1;
-  padding: 14px 0;
-  text-align: center;
-  font-size: 14px;
-  position: relative;
-  color: #666;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 4px;
+    .tabItem {
+      flex: 1;
+      padding: 14px 0;
+      text-align: center;
+      font-size: 14px;
+      position: relative;
+      color: #666;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
 
-  &.active {
-    color: #333;
-    font-weight: 500;
+      &.active {
+        color: #333;
+        font-weight: 500;
 
-    &::after {
-      content: '';
-      position: absolute;
-      bottom: 0;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 20px;
-      height: 3px;
-      background-color: #ff2442;
-      border-radius: 3px;
+        &::after {
+          content: '';
+          position: absolute;
+          bottom: 0;
+          left: 50%;
+          transform: translateX(-50%);
+          width: 20px;
+          height: 3px;
+          background-color: #ff2442;
+          border-radius: 3px;
+        }
+      }
     }
   }
-}
 
-/* 笔记区域样式 */
-.notesHeader {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 12px 16px;
-  border-bottom: 1px solid #f5f5f5;
-}
+  .emptyNotes {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 40px 0;
 
-.notesType {
-  display: flex;
-  gap: 16px;
-}
+    .emptyIcon {
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
 
-.typeItem {
-  font-size: 13px;
-  color: #999;
-  display: flex;
-  align-items: center;
-  gap: 4px;
+    .emptyText {
+      font-size: 14px;
+      color: #999;
+      margin-bottom: 16px;
+    }
 
-  &.active {
-    color: #333;
-    font-weight: 500;
+    .publishBtn {
+      background-color: #ff2442 !important;
+      color: white !important;
+      font-size: 14px !important;
+      padding: 6px 20px !important;
+    }
   }
-}
-
-/* 空状态样式 */
-.emptyNotes {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding: 40px 0;
-}
-
-.emptyIcon {
-  margin-bottom: 12px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.emptyText {
-  font-size: 14px;
-  color: #999;
-  margin-bottom: 16px;
-}
-
-.publishBtn {
-  background-color: #ff2442 !important;
-  color: white !important;
-  font-size: 14px !important;
-  padding: 6px 20px !important;
 }

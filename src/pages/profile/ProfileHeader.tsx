@@ -34,14 +34,19 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = ({
 
       {/* 用户信息部分 */}
       <div className={styles.userInfo}>
+        {/* 头像区域 */}
         <div className={styles.avatarContainer}>
           <Avatar size="large" image={userData.avatar} className={styles.avatar} />
           <div className={styles.avatarAddBtn}>
             <Icon icon="material-symbols:add" color="#fff" width="16" />
           </div>
         </div>
-        <div className={styles.userName}>{userData.name}</div>
-        <div className={styles.userId}>平台账号：{userData.userId}</div>
+
+        {/* 用户资料区域 */}
+        <div className={styles.userDetails}>
+          <div className={styles.userName}>{userData.name}</div>
+          <div className={styles.userId}>平台账号：{userData.userId}</div>
+        </div>
       </div>
 
       {/* 数据统计区域和操作按钮在同一行 */}

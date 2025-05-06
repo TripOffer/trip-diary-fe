@@ -1,27 +1,51 @@
-import { Calendar } from 'tdesign-mobile-react';
-import './locales/index';
-import { useTranslation } from 'react-i18next';
-import { useState } from 'react';
+import React from 'react';
+import { TabBar, TabBarItem } from 'tdesign-mobile-react';
+import { Icon } from '@iconify/react';
+import { useLocation, useNavigate, Outlet } from 'react-router-dom';
+import './index.css';
+
+const tabList = [
+  { value: '/', icon: 'material-symbols:home-rounded', label: '首页' },
+  { value: '/create', icon: 'material-symbols:add-circle-outline-rounded', label: '发布' },
+  { value: '/profile', icon: 'material-symbols:person-rounded', label: '我的' },
+];
 
 function App() {
-  const { t, i18n } = useTranslation();
-  const [calendarVisible, setCalendarVisible] = useState(false);
-  const toggleLang = () => {
-    i18n.changeLanguage(i18n.language === 'zh-CN' ? 'en-US' : 'zh-CN');
+  const location = useLocation();
+  const navigate = useNavigate();
+  // 只在首页、发布页、我的页面显示TabBar
+  const showTabBar = ['/', '/profile', '/create'].includes(location.pathname);
+
+  const handleTabChange = (value: string | number) => {
+    if (typeof value === 'string') {
+      navigate(value);
+    }
   };
+
   return (
-    <main>
-      <h1>{t('welcome')}</h1>
-      <button onClick={toggleLang}>{t('language')}</button>
-      <button onClick={() => setCalendarVisible(true)} style={{ marginLeft: 8 }}>
-        显示日历
-      </button>
-      <Calendar
-        visible={calendarVisible}
-        onClose={() => setCalendarVisible(false)}
-        firstDayOfWeek={1}
-      />
-    </main>
+    <div className="app-container">
+      <div className="app-content">
+        <Outlet />
+      </div>
+      {showTabBar && (
+        <TabBar
+          value={location.pathname}
+          onChange={handleTabChange}
+          shape="round"
+          theme="tag"
+          split={false}
+        >
+          {tabList.map((item) => (
+            <TabBarItem
+              key={item.value}
+              icon={<Icon icon={item.icon} width={24} />}
+              value={item.value}
+              aria-label={item.label}
+            />
+          ))}
+        </TabBar>
+      )}
+    </div>
   );
 }
 

@@ -2,12 +2,15 @@ import React, { useState } from 'react';
 import { Button, Input, Toast } from 'tdesign-mobile-react';
 import { Icon } from '@iconify/react';
 import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import styles from './index.module.scss';
 
 // 定义表单类型
 type FormType = 'login' | 'register';
 
 const Login: React.FC = () => {
+  const { t } = useTranslation();
+
   // 当前表单类型
   const [formType, setFormType] = useState<FormType>('login');
 
@@ -55,7 +58,7 @@ const Login: React.FC = () => {
   const handleSendCode = () => {
     if (!registerForm.email) {
       Toast.warning({
-        message: '请输入邮箱',
+        message: t('login.emailRequired'),
         duration: 2000,
       });
       return;
@@ -65,7 +68,7 @@ const Login: React.FC = () => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(registerForm.email)) {
       Toast.warning({
-        message: '请输入有效的邮箱地址',
+        message: t('login.emailInvalid'),
         duration: 2000,
       });
       return;
@@ -87,7 +90,7 @@ const Login: React.FC = () => {
     }, 1000);
 
     Toast.success({
-      message: '验证码已发送',
+      message: t('login.codeSent'),
       duration: 2000,
     });
   };
@@ -96,7 +99,7 @@ const Login: React.FC = () => {
   const handleLogin = () => {
     if (!loginForm.email) {
       Toast.warning({
-        message: '请输入邮箱',
+        message: t('login.emailRequired'),
         duration: 2000,
       });
       return;
@@ -106,7 +109,7 @@ const Login: React.FC = () => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(loginForm.email)) {
       Toast.warning({
-        message: '请输入有效的邮箱地址',
+        message: t('login.emailInvalid'),
         duration: 2000,
       });
       return;
@@ -114,7 +117,7 @@ const Login: React.FC = () => {
 
     if (!loginForm.password) {
       Toast.warning({
-        message: '请输入密码',
+        message: t('login.passwordRequired'),
         duration: 2000,
       });
       return;
@@ -126,7 +129,7 @@ const Login: React.FC = () => {
     setTimeout(() => {
       setLoading(false);
       Toast.success({
-        message: '登录成功',
+        message: t('login.loginSuccess'),
         duration: 1500,
       });
       setTimeout(() => navigate('/'), 1600);
@@ -137,7 +140,7 @@ const Login: React.FC = () => {
   const handleRegister = () => {
     if (!registerForm.email) {
       Toast.warning({
-        message: '请输入邮箱',
+        message: t('login.emailRequired'),
         duration: 2000,
       });
       return;
@@ -147,7 +150,7 @@ const Login: React.FC = () => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(registerForm.email)) {
       Toast.warning({
-        message: '请输入有效的邮箱地址',
+        message: t('login.emailInvalid'),
         duration: 2000,
       });
       return;
@@ -155,7 +158,7 @@ const Login: React.FC = () => {
 
     if (!registerForm.password) {
       Toast.warning({
-        message: '请输入密码',
+        message: t('login.passwordRequired'),
         duration: 2000,
       });
       return;
@@ -163,7 +166,7 @@ const Login: React.FC = () => {
 
     if (!registerForm.verifyCode) {
       Toast.warning({
-        message: '请输入验证码',
+        message: t('login.verifyCodeRequired'),
         duration: 2000,
       });
       return;
@@ -175,7 +178,7 @@ const Login: React.FC = () => {
     setTimeout(() => {
       setLoading(false);
       Toast.success({
-        message: '注册成功',
+        message: t('login.registerSuccess'),
         duration: 1500,
       });
       // 注册成功后切换到登录
@@ -186,26 +189,26 @@ const Login: React.FC = () => {
   // 渲染登录表单
   const renderLoginForm = () => (
     <>
-      <div className={styles.formTitle}>{formType === 'login' ? '登录' : '注册'}</div>
+      <div className={styles.formTitle}>
+        {formType === 'login' ? t('login.loginTitle') : t('login.registerTitle')}
+      </div>
 
       <div className={styles.formItem}>
         <Input
-          placeholder="请输入邮箱"
+          placeholder={t('login.email')}
           value={loginForm.email}
           onChange={(val) => handleLoginInputChange(val, 'email')}
           prefixIcon={<Icon icon="material-symbols:mail" />}
-          clearable
           type="text"
         />
       </div>
 
       <div className={styles.formItem}>
         <Input
-          placeholder="请输入密码"
+          placeholder={t('login.password')}
           value={loginForm.password}
           onChange={(val) => handleLoginInputChange(val, 'password')}
           prefixIcon={<Icon icon="material-symbols:lock" />}
-          clearable
           type="password"
         />
       </div>
@@ -215,26 +218,26 @@ const Login: React.FC = () => {
   // 渲染注册表单
   const renderRegisterForm = () => (
     <>
-      <div className={styles.formTitle}>{formType === 'login' ? '登录' : '注册'}</div>
+      <div className={styles.formTitle}>
+        {formType === 'login' ? t('login.loginTitle') : t('login.registerTitle')}
+      </div>
 
       <div className={styles.formItem}>
         <Input
-          placeholder="请输入邮箱"
+          placeholder={t('login.email')}
           value={registerForm.email}
           onChange={(val) => handleRegisterInputChange(val, 'email')}
           prefixIcon={<Icon icon="material-symbols:mail" />}
-          clearable
           type="text"
         />
       </div>
 
       <div className={styles.formItem}>
         <Input
-          placeholder="请输入密码"
+          placeholder={t('login.password')}
           value={registerForm.password}
           onChange={(val) => handleRegisterInputChange(val, 'password')}
           prefixIcon={<Icon icon="material-symbols:lock" />}
-          clearable
           type="password"
         />
       </div>
@@ -242,11 +245,10 @@ const Login: React.FC = () => {
       <div className={styles.formItem}>
         <div className={styles.codeInput}>
           <Input
-            placeholder="请输入验证码"
+            placeholder={t('login.verifyCode')}
             value={registerForm.verifyCode}
             onChange={(val) => handleRegisterInputChange(val, 'verifyCode')}
             prefixIcon={<Icon icon="material-symbols:shield-lock" />}
-            clearable
             type="text"
           />
           <Button
@@ -255,7 +257,7 @@ const Login: React.FC = () => {
             onClick={handleSendCode}
             disabled={counting}
           >
-            {counting ? `${countdown}秒后重发` : '获取验证码'}
+            {counting ? `${countdown}${t('login.resendAfter')}` : t('login.getVerifyCode')}
           </Button>
         </div>
       </div>
@@ -270,7 +272,7 @@ const Login: React.FC = () => {
       loading={loading}
       onClick={formType === 'login' ? handleLogin : handleRegister}
     >
-      {formType === 'login' ? '登 录' : '注 册'}
+      {formType === 'login' ? t('login.loginButton') : t('login.registerButton')}
     </Button>
   );
 
@@ -278,8 +280,8 @@ const Login: React.FC = () => {
     <div className={styles.loginContainer}>
       <div className={styles.loginHeader}>
         <div className={styles.headerImage}></div>
-        <h1 className={styles.title}>旅途日记</h1>
-        <p className={styles.subtitle}>记录旅行，分享生活</p>
+        <h1 className={styles.title}>{t('login.title')}</h1>
+        <p className={styles.subtitle}>{t('login.subtitle')}</p>
       </div>
 
       {/* 表单区域 */}
@@ -292,16 +294,16 @@ const Login: React.FC = () => {
           <div className={styles.switchButtons}>
             {formType === 'login' ? (
               <div className={styles.switchText}>
-                <span>没有账号？</span>
+                <span>{t('login.noAccount')}</span>
                 <span className={styles.switchLink} onClick={() => toggleFormType('register')}>
-                  立即注册
+                  {t('login.register')}
                 </span>
               </div>
             ) : (
               <div className={styles.switchText}>
-                <span>已有账号？</span>
+                <span>{t('login.hasAccount')}</span>
                 <span className={styles.switchLink} onClick={() => toggleFormType('login')}>
-                  去登录
+                  {t('login.goLogin')}
                 </span>
               </div>
             )}
@@ -310,7 +312,10 @@ const Login: React.FC = () => {
       </div>
 
       <div className={styles.loginFooter}>
-        <p>登录或注册即代表同意《用户协议》和《隐私政策》</p>
+        <p>
+          {t('login.agreement')} {t('login.userAgreement')} {t('login.and')}{' '}
+          {t('login.privacyPolicy')}
+        </p>
       </div>
     </div>
   );

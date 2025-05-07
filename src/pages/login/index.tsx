@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
-import { Button, Input, Toast } from 'tdesign-mobile-react';
+import { Button, Input, Message } from 'tdesign-mobile-react';
 import { Icon } from '@iconify/react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
+import { authApi } from '@/service/api/auth';
 import styles from './index.module.scss';
 
 // 定义表单类型
@@ -55,10 +56,10 @@ const Login: React.FC = () => {
   };
 
   // 发送验证码
-  const handleSendCode = () => {
+  const handleSendCode = async () => {
     if (!registerForm.email) {
-      Toast.warning({
-        message: t('login.emailRequired'),
+      Message.warning({
+        content: t('login.emailRequired'),
         duration: 2000,
       });
       return;
@@ -67,39 +68,53 @@ const Login: React.FC = () => {
     // 邮箱格式验证
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(registerForm.email)) {
-      Toast.warning({
-        message: t('login.emailInvalid'),
+      Message.warning({
+        content: t('login.emailInvalid'),
         duration: 2000,
       });
       return;
     }
 
-    // 启动倒计时
-    setCounting(true);
-    setCountdown(60);
+    try {
+      setCounting(true);
+      setCountdown(60);
 
-    const timer = setInterval(() => {
-      setCountdown((prev) => {
-        if (prev <= 1) {
-          clearInterval(timer);
-          setCounting(false);
-          return 60;
-        }
-        return prev - 1;
+      const res = await authApi.sendCode({ email: registerForm.email });
+
+      // 倒计时
+      const timer = setInterval(() => {
+        setCountdown((prev) => {
+          if (prev <= 1) {
+            clearInterval(timer);
+            setCounting(false);
+            return 60;
+          }
+          return prev - 1;
+        });
+      }, 1000);
+
+      Message.success({
+        content: t('login.codeSent'),
+        duration: 2000,
       });
-    }, 1000);
+    } catch (error) {
+      // 发送失败时，停止倒计时
+      setCounting(false);
+      setCountdown(60);
 
-    Toast.success({
-      message: t('login.codeSent'),
-      duration: 2000,
-    });
+      // 错误提示
+      Message.error({
+        content: error instanceof Error ? error.message : t('login.sendCodeFailed'),
+        duration: 3000,
+      });
+    }
   };
 
   // 处理登录
-  const handleLogin = () => {
+  const handleLogin = async () => {
     if (!loginForm.email) {
-      Toast.warning({
-        message: t('login.emailRequired'),
+      Message.warning({
+        content: t('login.emailRequired'),
         duration: 2000,
       });
       return;
@@ -108,16 +123,16 @@ const Login: React.FC = () => {
     // 邮箱格式验证
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(loginForm.email)) {
-      Toast.warning({
-        message: t('login.emailInvalid'),
+      Message.warning({
+        content: t('login.emailInvalid'),
         duration: 2000,
       });
       return;
     }
 
     if (!loginForm.password) {
-      Toast.warning({
-        message: t('login.passwordRequired'),
+      Message.warning({
+        content: t('login.passwordRequired'),
         duration: 2000,
       });
       return;
@@ -125,22 +140,33 @@ const Login: React.FC = () => {
 
     setLoading(true);
 
-    // 模拟登录请求
-    setTimeout(() => {
-      setLoading(false);
-      Toast.success({
-        message: t('login.loginSuccess'),
+    try {
+      const res = await authApi.login({
+        email: loginForm.email,
+        password: loginForm.password,
+      });
+
+      Message.success({
+        content: t('login.loginSuccess'),
         duration: 1500,
       });
+
       setTimeout(() => navigate('/'), 1600);
-    }, 1500);
+    } catch (error) {
+      Message.error({
+        content: error instanceof Error ? error.message : t('login.loginFailed'),
+        duration: 3000,
+      });
+    } finally {
+      setLoading(false);
+    }
   };
 
   // 处理注册
-  const handleRegister = () => {
+  const handleRegister = async () => {
     if (!registerForm.email) {
-      Toast.warning({
-        message: t('login.emailRequired'),
+      Message.warning({
+        content: t('login.emailRequired'),
         duration: 2000,
       });
       return;
@@ -149,24 +175,24 @@ const Login: React.FC = () => {
     // 邮箱格式验证
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(registerForm.email)) {
-      Toast.warning({
-        message: t('login.emailInvalid'),
+      Message.warning({
+        content: t('login.emailInvalid'),
         duration: 2000,
       });
       return;
     }
 
     if (!registerForm.password) {
-      Toast.warning({
-        message: t('login.passwordRequired'),
+      Message.warning({
+        content: t('login.passwordRequired'),
         duration: 2000,
       });
       return;
     }
 
     if (!registerForm.verifyCode) {
-      Toast.warning({
-        message: t('login.verifyCodeRequired'),
+      Message.warning({
+        content: t('login.verifyCodeRequired'),
         duration: 2000,
       });
       return;
@@ -174,19 +200,35 @@ const Login: React.FC = () => {
 
     setLoading(true);
 
-    // 模拟注册请求
-    setTimeout(() => {
-      setLoading(false);
-      Toast.success({
-        message: t('login.registerSuccess'),
+    try {
+      const res = await authApi.register({
+        email: registerForm.email,
+        password: registerForm.password,
+        code: registerForm.verifyCode,
+      });
+
+      Message.success({
+        content: t('login.registerSuccess'),
         duration: 1500,
       });
-      // 注册成功后切换到登录
+
+      const newLoginForm = {
+        ...loginForm,
+        email: registerForm.email,
+        password: '',
+      };
+      setLoginForm(newLoginForm);
       setFormType('login');
-    }, 1500);
+    } catch (error) {
+      Message.error({
+        content: error instanceof Error ? error.message : t('login.registerFailed'),
+        duration: 3000,
+      });
+    } finally {
+      setLoading(false);
+    }
   };
 
-  // 渲染登录表单
   const renderLoginForm = () => (
     <>
       <div className={styles.formTitle}>
@@ -215,7 +257,6 @@ const Login: React.FC = () => {
     </>
   );
 
-  // 渲染注册表单
   const renderRegisterForm = () => (
     <>
       <div className={styles.formTitle}>
@@ -264,7 +305,6 @@ const Login: React.FC = () => {
     </>
   );
 
-  // 渲染提交按钮
   const renderActionButton = () => (
     <Button
       block

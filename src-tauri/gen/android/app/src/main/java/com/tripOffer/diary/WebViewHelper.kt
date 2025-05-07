@@ -13,8 +13,9 @@ object WebViewHelper {
     private fun setCustomUserAgent(context: Context, settings: WebSettings) {
         val envUserAgent = try { BuildConfig.VITE_APP_NAME } catch (e: Exception) { null }
         val envAppVersion = try { BuildConfig.VERSION_NAME } catch (e: Exception) { null }
+        val originalUA = settings.userAgentString
         if (!envUserAgent.isNullOrBlank()) {
-            val ua = if (!envAppVersion.isNullOrBlank()) "$envUserAgent/$envAppVersion" else envUserAgent
+            val ua = if (!envAppVersion.isNullOrBlank()) "$originalUA $envUserAgent/$envAppVersion" else "$originalUA $envUserAgent"
             settings.userAgentString = ua
             Log.d("WebViewHelper", "User Agent set from env: $ua")
             return
@@ -26,11 +27,11 @@ object WebViewHelper {
               context.packageManager.getPackageInfo(context.packageName, 0)
             }
             val appVersion = packageInfo.versionName
-            val customUserAgent = "${settings.userAgentString} TripDiary/$appVersion"
+            val customUserAgent = "$originalUA TripDiary/$appVersion"
             settings.userAgentString = customUserAgent
             Log.d("WebViewHelper", "User Agent set to: $customUserAgent")
         } catch (e: PackageManager.NameNotFoundException) {
-            val defaultUserAgent = settings.userAgentString
+            val defaultUserAgent = originalUA
             val customUserAgent = "$defaultUserAgent TripDiary/unknown"
             settings.userAgentString = customUserAgent
             Log.e("WebViewHelper", "Failed to get package info for User Agent", e)
@@ -50,5 +51,15 @@ object WebViewHelper {
         settings.javaScriptEnabled = true
         setCustomUserAgent(context, settings)
         webView.addJavascriptInterface(WebAppInterface(context), "Android")
+    }
+
+    fun updateWebViewBackgroundColor(context: Context, webView: WebView) {
+        val nightModeFlags = context.resources.configuration.uiMode and android.content.res.Configuration.UI_MODE_NIGHT_MASK
+        val color = when (nightModeFlags) {
+            android.content.res.Configuration.UI_MODE_NIGHT_YES -> 0xFF1a1c1e.toInt()
+            android.content.res.Configuration.UI_MODE_NIGHT_NO -> 0xFFFCFCFF.toInt()
+            else -> 0xFFFCFCFF.toInt()
+        }
+        webView.setBackgroundColor(color)
     }
 }

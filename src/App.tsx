@@ -1,8 +1,7 @@
-import React from 'react';
-import { TabBar, TabBarItem } from 'tdesign-mobile-react';
-import { Icon } from '@iconify/react';
-import { useLocation, useNavigate, Outlet } from 'react-router-dom';
 import PageTransition from '@/components/PageTransition';
+import { Icon } from '@iconify/react';
+import { Outlet, useLocation, useNavigate } from 'react-router-dom';
+import { TabBar, TabBarItem } from 'tdesign-mobile-react';
 import './index.css';
 
 const tabList = [

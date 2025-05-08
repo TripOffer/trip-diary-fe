@@ -31,22 +31,11 @@ const TabContent: React.FC = () => {
 
       {activeTab === 'notes' && (
         <div className={styles.notesContainer}>
-          <div className={styles.notesHeader}>
-            <div className={styles.notesType}>
-              <div className={`${styles.typeItem} ${styles.active}`}>公开 0</div>
-              <div className={styles.typeItem}>
-                <Icon icon="material-symbols:lock" width="14" /> 私密 2
-              </div>
-              <div className={styles.typeItem}>合集 0</div>
-            </div>
-            <Icon icon="material-symbols:search" width="20" />
-          </div>
-
           <div className={styles.emptyNotes}>
             <div className={styles.emptyIcon}>
               <Icon icon="material-symbols:image" width="64" color="#ddd" />
             </div>
-            <div className={styles.emptyText}>晒出你的offer</div>
+            <div className={styles.emptyText}>晒出你的旅行日记</div>
             <Button shape="round" size="small" className={styles.publishBtn}>
               去发布
             </Button>

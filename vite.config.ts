@@ -7,6 +7,7 @@ import path from 'path';
 const port = Number(process.env.VITE_TAURI_DEV_PORT) || 1420;
 const hmrPort = Number(process.env.VITE_TAURI_DEV_HMR_PORT) || 1421;
 const host = process.env.VITE_TAURI_DEV_HOST || false;
+const proxyUrl = process.env.VITE_SERVICE_PROXY_URL || 'https://trip.mengchen.xyz';
 
 // https://vitejs.dev/config/
 export default defineConfig(async () => ({
@@ -35,6 +36,13 @@ export default defineConfig(async () => ({
     watch: {
       // 3. tell vite to ignore watching `src-tauri`
       ignored: ['**/src-tauri/**'],
+    },
+    proxy: {
+      '/api': {
+        target: proxyUrl,
+        changeOrigin: true,
+        secure: true,
+      },
     },
   },
 }));

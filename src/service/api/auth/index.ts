@@ -16,13 +16,13 @@ import {
 
 class AuthApi extends BaseApi {
   urls = {
-    login: '/user/login',
-    register: '/user/register',
-    sendCode: '/user/send-code',
-    changePassword: '/user/change-password',
-    deleteAccount: '/user',
-    getUserInfo: '/user/info',
-    resetPassword: '/user/reset-password',
+    login: '/auth/login',
+    register: '/auth/register',
+    sendCode: '/auth/send-code',
+    changePassword: '/auth/change-password',
+    deleteAccount: '/auth',
+    getUserInfo: '/auth/info',
+    resetPassword: '/auth/reset-password',
   };
 
   tag = 'Auth';

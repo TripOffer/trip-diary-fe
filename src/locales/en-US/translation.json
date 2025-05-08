@@ -1,4 +1,35 @@
 {
   "welcome": "Welcome to Trip Diary!",
-  "language": "Language"
+  "language": "Language",
+  "login": {
+    "title": "Trip Diary",
+    "subtitle": "Record travel, share life",
+    "loginTitle": "Login",
+    "registerTitle": "Register",
+    "email": "Please enter your email",
+    "password": "Please enter your password",
+    "verifyCode": "Please enter verification code",
+    "getVerifyCode": "Get Code",
+    "resendAfter": "s to resend",
+    "loginButton": "Login",
+    "registerButton": "Register",
+    "noAccount": "No account?",
+    "register": "Register now",
+    "hasAccount": "Have an account?",
+    "goLogin": "Login now",
+    "agreement": "By login or register, you agree to our",
+    "userAgreement": "User Agreement",
+    "and": "and",
+    "privacyPolicy": "Privacy Policy",
+    "emailRequired": "Email is required",
+    "emailInvalid": "Please enter a valid email address",
+    "passwordRequired": "Password is required",
+    "verifyCodeRequired": "Verification code is required",
+    "codeSent": "Verification code sent",
+    "sendCodeFailed": "Failed to send verification code, please try again later",
+    "registerFailed": "Registration failed, please try again later",
+    "loginFailed": "Login failed, please check your email and password",
+    "loginSuccess": "Login successful",
+    "registerSuccess": "Registration successful"
+  }
 }

@@ -49,7 +49,6 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = ({
         </div>
       </div>
 
-      {/* 数据统计区域和操作按钮在同一行 */}
       <div className={styles.statsAndActions}>
         {/* 数据统计区域 */}
         <div className={styles.stats}>

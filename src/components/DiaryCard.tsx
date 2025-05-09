@@ -3,6 +3,9 @@ import { Image } from 'tdesign-mobile-react';
 import SimpleSkeleton from './SimpleSkeleton';
 import Avatar from 'tdesign-mobile-react/es/avatar/Avatar';
 import { Icon } from '@iconify/react';
+import { useNavigate } from 'react-router-dom';
+import { motion, useAnimation, AnimatePresence } from 'framer-motion';
+import LikeButton from './LikeButton';
 
 export interface Tag {
   id: string;
@@ -44,10 +47,27 @@ const MAX_RATIO = 4 / 3;
 const MIN_RATIO = 3 / 4;
 const OSS_PREFIX = import.meta.env.VITE_OSS_URL || '';
 
+function getImageRatio(width?: number, height?: number) {
+  if (!width || !height) return 1;
+  let ratio = width / height;
+  if (ratio > MAX_RATIO) return MAX_RATIO;
+  if (ratio < MIN_RATIO) return MIN_RATIO;
+  return ratio;
+}
+
+function getAuthorInfo(author?: Author) {
+  return {
+    avatarUrl: author?.avatar ? OSS_PREFIX + author.avatar : undefined,
+    name: author?.name || '未知用户',
+  };
+}
+
 const DiaryCard: React.FC<DiaryCardProps> = ({ diary }) => {
-  const { thumbnail, title, author, likeCount, isLiked, liked, width, height } = diary;
+  const navigate = useNavigate();
+  const { thumbnail, title, author, likeCount, isLiked, liked, width, height, id } = diary;
   const [autoWidth, setAutoWidth] = React.useState<number | undefined>(width);
   const [autoHeight, setAutoHeight] = React.useState<number | undefined>(height);
+
   const handleImageLoad = (context: { e: React.SyntheticEvent<HTMLImageElement> }) => {
     if (!width || !height) {
       const target = context.e.target as HTMLImageElement;
@@ -55,23 +75,20 @@ const DiaryCard: React.FC<DiaryCardProps> = ({ diary }) => {
       setAutoHeight(target.naturalHeight);
     }
   };
-  let ratio = autoWidth && autoHeight ? autoWidth / autoHeight : 1;
-  if (ratio > MAX_RATIO) ratio = MAX_RATIO;
-  if (ratio < MIN_RATIO) ratio = MIN_RATIO;
-  const wrapperStyle: React.CSSProperties = { width: '100%', aspectRatio: String(ratio) };
 
-  const avatarUrl = author && author.avatar ? OSS_PREFIX + author.avatar : undefined;
-  const authorName = author && author.name ? author.name : '未知用户';
-  const likedState = typeof isLiked === 'boolean' ? isLiked : liked;
+  const ratio = getImageRatio(autoWidth, autoHeight);
+  const wrapperStyle: React.CSSProperties = { width: '100%', aspectRatio: String(ratio) };
+  const { avatarUrl, name: authorName } = getAuthorInfo(author);
 
   return (
     <div
       className="w-full box-border bg-white overflow-hidden rounded-md shadow-sm flex flex-col p-0"
       style={{ boxShadow: '0 2px 8px 0 rgba(0,0,0,0.06)' }}
+      onClick={() => navigate(`/diary/${id}`)}
     >
       <div
         className="w-full relative flex items-center justify-center bg-gray-100 overflow-hidden"
-        style={{ ...wrapperStyle }}
+        style={wrapperStyle}
       >
         <Image
           src={OSS_PREFIX + thumbnail}
@@ -90,15 +107,13 @@ const DiaryCard: React.FC<DiaryCardProps> = ({ diary }) => {
             <Avatar shape="circle" image={avatarUrl} size="24px" />
             <span className="text-xs text-gray-500 font-medium truncate">{authorName}</span>
           </div>
-          <div className="flex items-center gap-1 ml-2">
-            <Icon
-              icon={likedState ? 'mdi:heart' : 'mdi:heart-outline'}
-              color={likedState ? '#f43f5e' : '#aaa'}
-              width={18}
-              height={18}
-            />
-            <span className="text-xs text-gray-500 font-medium">{likeCount}</span>
-          </div>
+          <LikeButton
+            liked={typeof isLiked === 'boolean' ? isLiked : !!liked}
+            likeCount={likeCount}
+            onLikeChange={(liked, likeNum) => {
+              // 这里可以做后续的同步操作
+            }}
+          />
         </div>
       </div>
     </div>

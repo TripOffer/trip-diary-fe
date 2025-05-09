@@ -1,102 +1,209 @@
-import { getStatusBarHeight } from '@/utils/getStatusBarHeight';
-import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { Button, Switch } from 'tdesign-mobile-react';
+import React from 'react';
+import DiaryMasonry from '@/components/DiaryMasonry';
+
+// 示例：新版 DiaryCard 需要 diary 字段结构如下
+// const diary = {
+//   id: '3dcb9de1-0325-4b02-919e-c627591d1034',
+//   authorId: 1,
+//   title: '日记 2025-05-04',
+//   slug: 'ri-ji-2025-05-04-1746369800566',
+//   thumbnail: '2025/05/03/2bbf5996-db03-4ad6-adc2-45f2a49406da.jpg',
+//   viewCount: 0,
+//   likeCount: 0,
+//   favoriteCount: 1,
+//   commentCount: 2,
+//   publishedAt: '2025-05-04T10:35:58.719Z',
+//   updatedAt: '2025-05-05T11:27:48.984Z',
+//   tags: [
+//     { id: '56e0125c-a188-4b74-88bc-a49844056614', name: '日记' }
+//   ],
+//   author: {
+//     id: 1,
+//     name: '梦梦',
+//     avatar: '2025/05/03/14849228-a974-40ce-8878-17073f0111bf.jpg'
+//   },
+//   width: 720,
+//   height: 720
+// }
+// 你可以用类似结构 mock 数据传给 DiaryMasonry
+
+const items = [
+  {
+    id: '1',
+    authorId: 1,
+    title: '正方形 720x720',
+    slug: 'zheng-fang-xing-720x720',
+    thumbnail: '2025/05/03/2bbf5996-db03-4ad6-adc2-45f2a49406da.jpg',
+    viewCount: 10,
+    likeCount: 2,
+    favoriteCount: 1,
+    commentCount: 3,
+    publishedAt: '2025-05-04T10:35:58.719Z',
+    updatedAt: '2025-05-05T11:27:48.984Z',
+    tags: [{ id: 'tag1', name: '日记' }],
+    author: {
+      id: 1,
+      name: '梦梦',
+      avatar: '2025/05/03/14849228-a974-40ce-8878-17073f0111bf.jpg',
+    },
+    width: 720,
+    height: 720,
+  },
+  {
+    id: '2',
+    authorId: 1,
+    title: '横图 1280x720',
+    slug: 'heng-tu-1280x720',
+    thumbnail: '2025/05/03/2bbf5996-db03-4ad6-adc2-45f2a49406da.jpg',
+    viewCount: 5,
+    likeCount: 1,
+    favoriteCount: 0,
+    commentCount: 1,
+    publishedAt: '2025-05-04T10:35:58.719Z',
+    updatedAt: '2025-05-05T11:27:48.984Z',
+    tags: [{ id: 'tag2', name: '横图' }],
+    author: {
+      id: 1,
+      name: '梦梦',
+      avatar: '2025/05/03/14849228-a974-40ce-8878-17073f0111bf.jpg',
+    },
+    width: 1280,
+    height: 720,
+  },
+  {
+    id: '3',
+    authorId: 1,
+    title: '竖图 540x960',
+    slug: 'shu-tu-540x960',
+    thumbnail: '2025/05/03/2bbf5996-db03-4ad6-adc2-45f2a49406da.jpg',
+    viewCount: 8,
+    likeCount: 0,
+    favoriteCount: 0,
+    commentCount: 0,
+    publishedAt: '2025-05-04T10:35:58.719Z',
+    updatedAt: '2025-05-05T11:27:48.984Z',
+    tags: [{ id: 'tag3', name: '竖图' }],
+    author: {
+      id: 1,
+      name: '梦梦',
+      avatar: '2025/05/03/14849228-a974-40ce-8878-17073f0111bf.jpg',
+    },
+    width: 540,
+    height: 960,
+  },
+  {
+    id: '4',
+    authorId: 1,
+    title: '横图 1000x500',
+    slug: 'heng-tu-1000x500',
+    thumbnail: '2025/05/03/2bbf5996-db03-4ad6-adc2-45f2a49406da.jpg',
+    viewCount: 12,
+    likeCount: 3,
+    favoriteCount: 2,
+    commentCount: 2,
+    publishedAt: '2025-05-04T10:35:58.719Z',
+    updatedAt: '2025-05-05T11:27:48.984Z',
+    tags: [{ id: 'tag4', name: '横图' }],
+    author: {
+      id: 1,
+      name: '梦梦',
+      avatar: '2025/05/03/14849228-a974-40ce-8878-17073f0111bf.jpg',
+    },
+    width: 1000,
+    height: 500,
+  },
+  {
+    id: '5',
+    authorId: 1,
+    title: '竖图 500x1000',
+    slug: 'shu-tu-500x1000',
+    thumbnail: '2025/05/03/2bbf5996-db03-4ad6-adc2-45f2a49406da.jpg',
+    viewCount: 7,
+    likeCount: 0,
+    favoriteCount: 0,
+    commentCount: 0,
+    publishedAt: '2025-05-04T10:35:58.719Z',
+    updatedAt: '2025-05-05T11:27:48.984Z',
+    tags: [{ id: 'tag5', name: '竖图' }],
+    author: {
+      id: 1,
+      name: '梦梦',
+      avatar: '2025/05/03/14849228-a974-40ce-8878-17073f0111bf.jpg',
+    },
+    width: 500,
+    height: 1000,
+  },
+  {
+    id: '6',
+    authorId: 1,
+    title: '超高 500x2000',
+    slug: 'chao-gao-500x2000',
+    thumbnail: '2025/05/03/2bbf5996-db03-4ad6-adc2-45f2a49406da.jpg',
+    viewCount: 4,
+    likeCount: 0,
+    favoriteCount: 0,
+    commentCount: 0,
+    publishedAt: '2025-05-04T10:35:58.719Z',
+    updatedAt: '2025-05-05T11:27:48.984Z',
+    tags: [{ id: 'tag6', name: '超高' }],
+    author: {
+      id: 1,
+      name: '梦梦',
+      avatar: '2025/05/03/14849228-a974-40ce-8878-17073f0111bf.jpg',
+    },
+    width: 500,
+    height: 2000,
+  },
+  {
+    id: '7',
+    authorId: 1,
+    title: '超宽 2000x500',
+    slug: 'chao-kuan-2000x500',
+    thumbnail: '2025/05/03/2bbf5996-db03-4ad6-adc2-45f2a49406da.jpg',
+    viewCount: 6,
+    likeCount: 1,
+    favoriteCount: 0,
+    commentCount: 0,
+    publishedAt: '2025-05-04T10:35:58.719Z',
+    updatedAt: '2025-05-05T11:27:48.984Z',
+    tags: [{ id: 'tag7', name: '超宽' }],
+    author: {
+      id: 1,
+      name: '梦梦',
+      avatar: '2025/05/03/14849228-a974-40ce-8878-17073f0111bf.jpg',
+    },
+    width: 2000,
+    height: 500,
+  },
+  {
+    id: '8',
+    authorId: 1,
+    title:
+      '自适应宽高自适应宽高自适应宽高自适应宽高自适应宽高自适应宽高自适应宽高自适应宽高自适应宽高',
+    slug: 'zi-shi-ying-kuan-gao',
+    thumbnail: '2025/05/03/2bbf5996-db03-4ad6-adc2-45f2a49406da.jpg',
+    viewCount: 9,
+    likeCount: 2,
+    favoriteCount: 1,
+    commentCount: 1,
+    publishedAt: '2025-05-04T10:35:58.719Z',
+    updatedAt: '2025-05-05T11:27:48.984Z',
+    tags: [{ id: 'tag8', name: '自适应' }],
+    author: {
+      id: 1,
+      name: '梦梦',
+      avatar: '2025/05/03/14849228-a974-40ce-8878-17073f0111bf.jpg',
+    },
+    isLiked: true,
+  },
+];
 
 const Home: React.FC = () => {
-  const navigate = useNavigate();
-
-  const [statusBarHeight, setStatusBarHeight] = useState(0);
-  const [immersive, setImmersive] = useState(true);
-  const [darkMode, setDarkMode] = useState(true);
-  const [fullScreen, setFullScreen] = useState(false);
-  const [usePaddingTop, setUsePaddingTop] = useState(true);
-
-  useEffect(() => {
-    if (window.Android) {
-      console.log('Android bridge detected');
-    }
-  }, []);
-
-  useEffect(() => {
-    setStatusBarHeight(getStatusBarHeight());
-  }, []);
-
   return (
-    <div
-      className={`p-4 box-border bg-[#DDEEFF] ${usePaddingTop ? '' : ''}`}
-      style={{
-        marginTop: usePaddingTop ? statusBarHeight : 0,
-      }}
-    >
-      <div className="mb-2">首页（Home）</div>
-      <Button onClick={() => navigate('/search')} className="my-2 mx-2" theme="primary" block>
-        进入搜索页
-      </Button>
-      <Button onClick={() => navigate('/diary/123')} className="my-2 mx-2" theme="primary" block>
-        进入详细页（示例ID:123）
-      </Button>
-      <hr className="my-2" />
-      <Button
-        onClick={() => window.Android?.showToast?.('Hello from JS!')}
-        className="my-2 mx-2"
-        block
-      >
-        测试 showToast
-      </Button>
-      <div className="my-2 mx-2 flex items-center">
-        <span className="mr-2">沉浸式状态栏</span>
-        <Switch
-          value={immersive}
-          onChange={(val) => {
-            const boolVal = val === true || val === 'true';
-            setImmersive(boolVal);
-            window.Android?.setImmersiveStatusBar?.(boolVal);
-          }}
-        />
+    <div className="h-full overflow-hidden bg-gray-50">
+      <div className="h-full overflow-auto px-4 py-20">
+        <DiaryMasonry items={items} />
       </div>
-      <div className="my-2 mx-2 flex items-center">
-        <span className="mr-2">状态栏深色模式</span>
-        <Switch
-          value={darkMode}
-          onChange={(val) => {
-            const boolVal = val === true || val === 'true';
-            setDarkMode(boolVal);
-            window.Android?.setStatusBarLightMode?.(boolVal);
-          }}
-        />
-      </div>
-      <div className="my-2 mx-2 flex items-center">
-        <span className="mr-2">隐藏状态栏（全屏）</span>
-        <Switch
-          value={fullScreen}
-          onChange={(val) => {
-            const boolVal = val === true || val === 'true';
-            setFullScreen(boolVal);
-            window.Android?.setFullScreen?.(boolVal);
-          }}
-        />
-      </div>
-      <div className="my-2 mx-2 flex items-center">
-        <span className="mr-2">顶部 paddingTop</span>
-        <Switch
-          value={usePaddingTop}
-          onChange={(val) => {
-            const boolVal = val === true || val === 'true';
-            setUsePaddingTop(boolVal);
-          }}
-        />
-      </div>
-      <Button
-        onClick={() => window.Android?.setStatusBarColor?.('#FF0000')}
-        className="my-2 mx-2"
-        block
-      >
-        设置状态栏为红色
-      </Button>
-      <Button className="my-2 mx-2" block>
-        获取状态栏高度（px）：{statusBarHeight}
-      </Button>
     </div>
   );
 };

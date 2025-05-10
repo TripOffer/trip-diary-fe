@@ -30,22 +30,25 @@ function App() {
         </PageTransition>
       </div>
       {showTabBar && (
-        <TabBar
-          value={location.pathname}
-          onChange={handleTabChange}
-          shape="round"
-          theme="tag"
-          split={false}
-        >
-          {tabList.map((item) => (
-            <TabBarItem
-              key={item.value}
-              icon={<Icon icon={item.icon} width={24} />}
-              value={item.value}
-              aria-label={item.label}
-            />
-          ))}
-        </TabBar>
+        <div className="transform -translate-y-4 z-100">
+          <TabBar
+            className=""
+            value={location.pathname}
+            onChange={handleTabChange}
+            shape="round"
+            theme="tag"
+            split={false}
+          >
+            {tabList.map((item) => (
+              <TabBarItem
+                key={item.value}
+                icon={<Icon icon={item.icon} width={24} />}
+                value={item.value}
+                aria-label={item.label}
+              />
+            ))}
+          </TabBar>
+        </div>
       )}
     </div>
   );

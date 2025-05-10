@@ -1,5 +1,18 @@
 import { ApiRes } from '../shared';
 
+// 缩略图元数据
+export interface ThumbnailMeta {
+  id: string;
+  key: string;
+  userId: number;
+  ext: string;
+  width: number;
+  height: number;
+  duration: number | null;
+  type: string;
+  createdAt: string;
+}
+
 // 日记基础信息
 export interface DiaryBase {
   id: number;
@@ -8,11 +21,13 @@ export interface DiaryBase {
   userAvatar: string | null;
   title: string;
   cover: string | null;
+  thumbnailMeta?: ThumbnailMeta;
   summary: string;
   createdAt: string;
   updatedAt: string;
   published: boolean;
   liked?: boolean;
+  isLiked?: boolean;
   favorited?: boolean;
   likeCount: number;
   favoriteCount: number;
@@ -26,6 +41,9 @@ export interface DiaryDetail extends DiaryBase {
   images: string[];
   status?: 'pending' | 'approved' | 'rejected';
   reason?: string;
+  thumbnailMeta?: ThumbnailMeta;
+  liked?: boolean;
+  isLiked?: boolean;
 }
 
 // 日记列表
@@ -103,6 +121,7 @@ export interface CommentBase {
   createdAt: string;
   likeCount: number;
   liked?: boolean;
+  isLiked?: boolean;
   parentId?: number;
   replyCount?: number;
 }

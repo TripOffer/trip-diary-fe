@@ -1,12 +1,14 @@
 import React, { useRef, useEffect, useState, RefObject } from 'react';
 import styles from './TopBar.module.scss';
 import { Icon } from '@iconify/react';
+import { useNavigate } from 'react-router-dom';
 
 interface TopBarProps {
   scrollContainerRef: RefObject<HTMLDivElement>;
 }
 
 const TopBar: React.FC<TopBarProps> = ({ scrollContainerRef }) => {
+  const navigator = useNavigate();
   const [hidden, setHidden] = useState(false);
   const lastScroll = useRef(0);
 
@@ -37,7 +39,7 @@ const TopBar: React.FC<TopBarProps> = ({ scrollContainerRef }) => {
 
   return (
     <div className={styles.topBar + (hidden ? ' ' + styles.hide : '')}>
-      <div className={styles.fakeSearchBox}>
+      <div className={styles.fakeSearchBox} onClick={() => navigator('/search')}>
         <span className={styles.searchIcon}>
           <Icon icon="mdi:magnify" width="20" height="20" />
         </span>

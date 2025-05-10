@@ -30,7 +30,7 @@ function App() {
         </PageTransition>
       </div>
       {showTabBar && (
-        <div className="transform -translate-y-4">
+        <div className="transform -translate-y-4 z-100">
           <TabBar
             className=""
             value={location.pathname}

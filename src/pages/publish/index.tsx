@@ -1,21 +1,62 @@
+import React, { useRef } from 'react';
 import { Icon } from '@iconify/react';
 import { useNavigate } from 'react-router-dom';
 import { Cell } from 'tdesign-mobile-react';
 
 const PublishPage = () => {
   const navigate = useNavigate();
+  const videoInputRef = useRef<HTMLInputElement>(null);
+  const imageInputRef = useRef<HTMLInputElement>(null);
+
   const handleClick = (type: 'image' | 'video') => {
+    if (type === 'video') {
+      videoInputRef.current?.click();
+      return;
+    }
+    if (type === 'image') {
+      imageInputRef.current?.click();
+      return;
+    }
     // 兼容 Toast 组件不可用时，使用浏览器原生 alert
     if (window?.Android && typeof window.Android.showToast === 'function') {
-      window.Android.showToast(type === 'image' ? '进入图文发布' : '进入视频发布');
+      window.Android.showToast('进入图文发布');
     } else {
-      alert(type === 'image' ? '进入图文发布' : '进入视频发布');
+      alert('进入图文发布');
     }
-    // navigate(`/publish/${type}`)
+    // navigate(`/publish/image`)
+  };
+
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      navigate('/publish/edit', { state: { file, type: 'image' } });
+    }
+  };
+
+  const handleVideoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      navigate('/publish/edit', { state: { file, type: 'video' } });
+    }
   };
 
   return (
     <div className="min-h-screen bg-white pt-8 px-4">
+      {/* 隐藏的文件选择器 */}
+      <input
+        type="file"
+        accept="image/*"
+        ref={imageInputRef}
+        style={{ display: 'none' }}
+        onChange={handleImageChange}
+      />
+      <input
+        type="file"
+        accept="video/*"
+        ref={videoInputRef}
+        style={{ display: 'none' }}
+        onChange={handleVideoChange}
+      />
       <h2 className="text-2xl font-bold mb-8 text-center">发布</h2>
       <div className="flex gap-4">
         <div className="flex-1">

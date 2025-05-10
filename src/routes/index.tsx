@@ -8,12 +8,14 @@ import Login from '../pages/login';
 import Profile from '../pages/profile';
 import Search from '../pages/search';
 import UserProfile from '../pages/user';
+import PublishEditPage from '../pages/publish/edit';
 
 const AppRoutes: React.FC = () => (
   <Routes>
     <Route path="/" element={<App />}>
       <Route index element={<Home />} />
       <Route path="publish" element={<PublishPage />} />
+      <Route path="publish/edit" element={<PublishEditPage />} />
       <Route path="profile" element={<Profile />} />
       <Route path="login" element={<Login />} />
     </Route>

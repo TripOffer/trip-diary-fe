@@ -6,7 +6,7 @@ import './index.css';
 
 const tabList = [
   { value: '/', icon: 'material-symbols:home-rounded', label: '首页' },
-  { value: '/create', icon: 'material-symbols:add-circle-outline-rounded', label: '发布' },
+  { value: '/publish', icon: 'material-symbols:add-circle-outline-rounded', label: '发布' },
   { value: '/profile', icon: 'material-symbols:person-rounded', label: '我的' },
 ];
 
@@ -14,7 +14,7 @@ function App() {
   const location = useLocation();
   const navigate = useNavigate();
   // 只在首页、发布页、我的页面显示TabBar
-  const showTabBar = ['/', '/profile', '/create'].includes(location.pathname);
+  const showTabBar = ['/', '/profile', '/publish'].includes(location.pathname);
 
   const handleTabChange = (value: string | number) => {
     if (typeof value === 'string') {

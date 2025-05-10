@@ -1,0 +1,44 @@
+import { Icon } from '@iconify/react';
+import { useNavigate } from 'react-router-dom';
+import { Cell } from 'tdesign-mobile-react';
+
+const PublishPage = () => {
+  const navigate = useNavigate();
+  const handleClick = (type: 'image' | 'video') => {
+    // 兼容 Toast 组件不可用时，使用浏览器原生 alert
+    if (window?.Android && typeof window.Android.showToast === 'function') {
+      window.Android.showToast(type === 'image' ? '进入图文发布' : '进入视频发布');
+    } else {
+      alert(type === 'image' ? '进入图文发布' : '进入视频发布');
+    }
+    // navigate(`/publish/${type}`)
+  };
+
+  return (
+    <div className="min-h-screen bg-white pt-8 px-4">
+      <h2 className="text-2xl font-bold mb-8 text-center">发布</h2>
+      <div className="flex gap-4">
+        <div className="flex-1">
+          <Cell
+            title="图文"
+            description="发布图文日记"
+            leftIcon={<Icon icon="mdi:image" width="32" height="32" />}
+            onClick={() => handleClick('image')}
+            className="rounded-2xl shadow-md mb-4 bg-gray-50 active:shadow-lg transition-shadow"
+          />
+        </div>
+        <div className="flex-1">
+          <Cell
+            title="视频"
+            description="发布视频日记"
+            leftIcon={<Icon icon="mdi:video" width="32" height="32" />}
+            onClick={() => handleClick('video')}
+            className="rounded-2xl shadow-md mb-4 bg-gray-50 active:shadow-lg transition-shadow"
+          />
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default PublishPage;

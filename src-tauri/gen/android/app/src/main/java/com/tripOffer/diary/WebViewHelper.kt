@@ -62,6 +62,10 @@ object WebViewHelper {
     val settings: WebSettings = webView.settings
     settings.javaScriptEnabled = true
     settings.mixedContentMode = WebSettings.MIXED_CONTENT_ALWAYS_ALLOW
+    // 支持 WebSocket 调试和远程调试
+    WebView.setWebContentsDebuggingEnabled(true)
+    // 允许第三方 Cookie（部分 HMR 场景需要）
+    android.webkit.CookieManager.getInstance().setAcceptThirdPartyCookies(webView, true)
     setCustomUserAgent(context, settings)
     webView.addJavascriptInterface(WebAppInterface(context), "Android")
   }

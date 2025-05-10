@@ -29,6 +29,7 @@
   },
   "devDependencies": {
     "@tauri-apps/cli": "^2",
+    "@types/dotenv": "^8.2.3",
     "@types/node": "^22.15.9",
     "@types/react": "^18.3.1",
     "@types/react-dom": "^18.3.1",
@@ -36,6 +37,7 @@
     "@typescript-eslint/parser": "^8.32.0",
     "@vitejs/plugin-react": "^4.3.4",
     "@vitejs/plugin-react-swc": "^3.9.0",
+    "dotenv": "^16.5.0",
     "eslint": "^9.26.0",
     "eslint-config-prettier": "^10.1.2",
     "eslint-plugin-prettier": "^5.4.0",

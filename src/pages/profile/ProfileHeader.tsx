@@ -8,6 +8,7 @@ interface ProfileHeaderProps {
     name: string;
     userId: string;
     avatar: string;
+    bio?: string;
   };
   statsData?: {
     followCount: number;
@@ -21,6 +22,7 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = ({
     name: '用户test',
     userId: '349595329',
     avatar: 'https://fastly.jsdelivr.net/npm/@vant/assets/cat.jpeg',
+    bio: '这个人很懒，什么都没留下',
   },
   statsData = {
     followCount: 243,
@@ -28,6 +30,11 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = ({
     likeCount: 7,
   },
 }) => {
+  // 处理头像URL，确保它是完整的URL
+  const avatarUrl = userData.avatar?.startsWith('http')
+    ? userData.avatar
+    : `https://trip.mengchen.xyz/static/${userData.avatar}`;
+
   return (
     <div className={styles.header}>
       <div className={styles.headerBg}></div>
@@ -36,7 +43,7 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = ({
       <div className={styles.userInfo}>
         {/* 头像区域 */}
         <div className={styles.avatarContainer}>
-          <Avatar size="large" image={userData.avatar} className={styles.avatar} />
+          <Avatar size="large" image={avatarUrl} className={styles.avatar} />
           <div className={styles.avatarAddBtn}>
             <Icon icon="material-symbols:add" color="#fff" width="16" />
           </div>
@@ -46,6 +53,7 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = ({
         <div className={styles.userDetails}>
           <div className={styles.userName}>{userData.name}</div>
           <div className={styles.userId}>平台账号：{userData.userId}</div>
+          {userData.bio && <div className={styles.userBio}>{userData.bio}</div>}
         </div>
       </div>
 

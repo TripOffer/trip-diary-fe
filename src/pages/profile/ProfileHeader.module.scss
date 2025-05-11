@@ -1,35 +1,39 @@
 .header {
   position: relative;
-  padding: 16px;
-  background-color: #aeb5d5;
+  overflow: hidden;
+  padding-bottom: 16px;
+  background-color: #fff;
+  border-radius: 0 0 16px 16px;
 
   .headerBg {
     position: absolute;
     top: 0;
     left: 0;
-    right: 0;
-    height: 90px;
-    opacity: 0.1;
+    width: 100%;
+    height: 120px;
+    background: linear-gradient(to right, #4facfe, #00f2fe);
     z-index: 0;
   }
 
   .userInfo {
     position: relative;
-    z-index: 1;
     display: flex;
     flex-direction: row;
-    align-items: center;
-    margin-bottom: 16px;
-    padding: 0 10px;
+    align-items: flex-start;
+    padding: 80px 16px 16px;
+    color: #333;
+    z-index: 1;
 
     .avatarContainer {
       position: relative;
       margin-right: 16px;
-      flex-shrink: 0;
 
       .avatar {
-        width: 70px !important;
-        height: 70px !important;
+        width: 70px;
+        height: 70px;
+        border: 3px solid #fff;
+        border-radius: 50%;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
       }
 
       .avatarAddBtn {
@@ -38,7 +42,7 @@
         bottom: 0;
         width: 20px;
         height: 20px;
-        background-color: #ff2442;
+        background-color: #0984e3;
         border-radius: 50%;
         display: flex;
         align-items: center;
@@ -48,70 +52,78 @@
     }
 
     .userDetails {
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
       flex: 1;
+      min-width: 0;
 
       .userName {
         font-size: 18px;
         font-weight: bold;
-        margin-bottom: 6px;
+        color: #333;
+        margin-bottom: 4px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
       }
 
       .userId {
-        font-size: 12px;
-        color: #999;
-        display: flex;
-        align-items: center;
-        gap: 4px;
+        font-size: 14px;
+        color: #666;
+        margin-bottom: 8px;
+      }
+
+      .userBio {
+        font-size: 14px;
+        color: #666;
+        line-height: 1.5;
+        margin-top: 8px;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        text-overflow: ellipsis;
       }
     }
   }
 
   .statsAndActions {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 0 10px;
+    padding: 0 16px;
 
     .stats {
       display: flex;
-      gap: 8px;
+      margin-bottom: 16px;
 
       .statItem {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        margin-right: 10px;
+        flex: 1;
+        text-align: center;
 
         .statNumber {
           font-size: 18px;
           font-weight: bold;
+          color: #333;
         }
 
         .statLabel {
           font-size: 12px;
-          color: #999;
+          color: #666;
+          margin-top: 4px;
         }
       }
     }
 
     .actions {
       display: flex;
-      align-items: center;
-      gap: 12px;
+      gap: 8px;
 
       .editBtn {
-        width: 100px !important;
-        font-size: 14px !important;
-        border-color: #ddd !important;
+        flex: 1;
+        height: 36px;
+        font-size: 14px;
       }
 
       .settingBtn {
-        width: 40px !important;
-        height: 40px !important;
-        border-color: #ddd !important;
+        width: 36px;
+        height: 36px;
+        padding: 0;
       }
     }
   }

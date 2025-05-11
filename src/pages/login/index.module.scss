@@ -1,149 +1,234 @@
 @use 'sass:color';
-$primary-color: #1976d2;
-$primary-light: #bbdefb;
-$text-color: #333;
-$text-light: #666;
-$background: #fff;
-$divider-color: #eee;
+$primary-color: #3b82f6;
+$primary-dark: #2563eb;
+$primary-light: #93c5fd;
+$background-color: #f9fafb;
+$text-color: #1f2937;
+$text-light: #6b7280;
+$border-color: #e5e7eb;
+$success-color: #10b981;
+$error-color: #ef4444;
+$white: #ffffff;
+$background: #ffffff;
 
-.loginContainer {
+.container {
   display: flex;
   flex-direction: column;
-  min-height: 100vh;
-  background-color: $background;
-  position: relative;
-}
-
-.loginHeader {
-  height: 30vh;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
   align-items: center;
+  min-height: 100vh;
   background: linear-gradient(
     135deg,
     $primary-color,
     color.adjust($primary-color, $lightness: 20%)
   );
-  color: white;
   padding: 20px;
   position: relative;
   overflow: hidden;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  box-sizing: border-box;
 
-  .headerImage {
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    background-image: url('/assets/travel-bg.jpg');
-    background-size: cover;
-    background-position: center;
-    opacity: 0.2;
-    z-index: 0;
-  }
+  // Logo区域
+  .logo {
+    display: flex;
+    align-items: center;
+    margin-top: 2rem;
 
-  .title {
-    font-size: 2.5rem;
-    margin-bottom: 0.5rem;
-    font-weight: bold;
-    position: relative;
-    z-index: 1;
-    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-  }
+    svg {
+      color: $white;
+    }
 
-  .subtitle {
-    font-size: 1.1rem;
-    position: relative;
-    z-index: 1;
-  }
-}
-
-.formContainer {
-  flex: 1;
-  padding: 24px 20px;
-  margin-top: -20px;
-  background-color: $background;
-  border-top-left-radius: 20px;
-  border-top-right-radius: 20px;
-  z-index: 2;
-
-  .loginForm {
-    margin-bottom: 20px;
-
-    .formTitle {
+    h1 {
       font-size: 1.5rem;
-      font-weight: 500;
-      color: $text-color;
-      margin-bottom: 24px;
+      font-weight: 600;
+      margin-left: 0.5rem;
+      color: $white;
+    }
+  }
+
+  // 表单容器
+  .formContainer {
+    width: 100%;
+    max-width: 400px;
+    background-color: $white;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    overflow: hidden;
+    margin: 2rem 0;
+    padding-bottom: 1.5rem;
+  }
+
+  // 表单头部
+  .formHeader {
+    display: flex;
+    margin-bottom: 1rem;
+
+    .formTab {
+      flex: 1;
+      padding: 1rem 0;
       text-align: center;
+      font-weight: 500;
+      color: $text-light;
+      cursor: pointer;
+      position: relative;
+
+      &.active {
+        color: $primary-color;
+
+        &::after {
+          content: '';
+          position: absolute;
+          bottom: 0;
+          left: 40%;
+          right: 40%;
+          height: 3px;
+          background-color: $primary-color;
+          border-radius: 3px;
+        }
+      }
+    }
+  }
+
+  // 表单样式
+  .form {
+    padding: 0 1.5rem;
+  }
+
+  .formItem {
+    margin-bottom: 1.25rem;
+
+    :global {
+      .t-input {
+        background-color: #f3f4f6;
+        border-radius: 8px;
+        border: none;
+        height: 48px;
+        padding: 0 1rem;
+
+        &:focus,
+        &:hover {
+          background-color: #eef2ff;
+        }
+      }
+
+      svg {
+        color: $text-light;
+      }
+    }
+  }
+
+  // 验证码输入包装
+  .codeInputWrapper {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+
+    :global {
+      .t-input {
+        flex: 1;
+      }
+    }
+  }
+
+  // 发送验证码按钮
+  .sendCodeBtn {
+    min-width: 80px;
+    height: 40px;
+    border-color: $primary-color;
+    color: $primary-color;
+
+    &:disabled {
+      opacity: 0.6;
+      border-color: $text-light;
+      color: $text-light;
+    }
+  }
+
+  // 忘记密码
+  .forgotPassword {
+    text-align: right;
+    margin-bottom: 1.5rem;
+
+    span {
+      color: $primary-color;
+      font-size: 0.875rem;
+      cursor: pointer;
+    }
+  }
+
+  // 提交按钮
+  .submitBtn {
+    height: 48px;
+    font-size: 1rem;
+    font-weight: 500;
+    margin-top: 1rem;
+
+    :global {
+      .t-button--theme-primary {
+        background-color: $primary-color;
+
+        &:hover,
+        &:active {
+          background-color: $primary-dark;
+        }
+      }
+    }
+  }
+
+  // 分割线
+  .divider {
+    display: flex;
+    align-items: center;
+    margin: 1.5rem 1.5rem;
+
+    &::before,
+    &::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background-color: $border-color;
     }
 
-    .formItem {
-      margin-bottom: 16px;
+    span {
+      padding: 0 1rem;
+      color: $text-light;
+      font-size: 0.875rem;
     }
+  }
 
-    .codeInput {
+  // 第三方登录
+  .socialLogin {
+    display: flex;
+    justify-content: center;
+    gap: 2rem;
+
+    .socialIcon {
       display: flex;
       align-items: center;
-      gap: 8px;
-
-      .codeButton {
-        flex-shrink: 0;
-        white-space: nowrap;
-        color: $primary-color;
-        border-color: $primary-color;
-        min-width: 120px;
-
-        &:disabled {
-          color: $text-light;
-          border-color: $divider-color;
-        }
-      }
-    }
-
-    .formActions {
-      margin-top: 32px;
-      margin-bottom: 20px;
-
-      .actionButton {
-        background-color: $primary-color;
-        height: 48px;
-        font-size: 1.1rem;
-        font-weight: 500;
-        box-shadow: 0 2px 10px rgba(25, 118, 210, 0.3);
-        color: #fff;
-      }
-    }
-
-    .switchButtons {
-      display: flex;
       justify-content: center;
-      margin-top: 16px;
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      background-color: #f3f4f6;
+      cursor: pointer;
 
-      .switchText {
-        font-size: 0.95rem;
-        color: $text-light;
+      svg {
+        color: $text-color;
+      }
 
-        .switchLink {
-          color: $primary-color;
-          margin-left: 6px;
-          font-weight: 500;
-          cursor: pointer;
-
-          &:hover {
-            text-decoration: underline;
-          }
-        }
+      &:hover {
+        background-color: #e5e7eb;
       }
     }
   }
-}
 
-.loginFooter {
-  padding: 16px;
-  text-align: center;
-  font-size: 0.8rem;
-  color: $text-light;
-  background-color: $background;
-  margin-top: auto;
+  // 页脚
+  .footer {
+    margin-top: auto;
+    text-align: center;
+
+    p {
+      color: $white;
+      font-size: 0.75rem;
+      line-height: 1.5;
+    }
+  }
 }

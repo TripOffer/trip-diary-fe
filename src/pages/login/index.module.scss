@@ -1,3 +1,4 @@
+@use 'sass:color';
 $primary-color: #1976d2;
 $primary-light: #bbdefb;
 $text-color: #333;
@@ -19,7 +20,11 @@ $divider-color: #eee;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  background: linear-gradient(135deg, $primary-color, lighten($primary-color, 20%));
+  background: linear-gradient(
+    135deg,
+    $primary-color,
+    color.adjust($primary-color, $lightness: 20%)
+  );
   color: white;
   padding: 20px;
   position: relative;

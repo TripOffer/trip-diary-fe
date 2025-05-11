@@ -30,6 +30,21 @@
     "registerFailed": "注册失败，请稍后重试",
     "loginFailed": "登录失败，请检查邮箱和密码",
     "loginSuccess": "登录成功",
-    "registerSuccess": "注册成功"
+    "registerSuccess": "注册成功",
+
+    "appName": "旅途日记",
+    "loginTab": "登录",
+    "registerTab": "注册",
+    "emailPlaceholder": "请输入邮箱",
+    "passwordPlaceholder": "请输入密码",
+    "codePlaceholder": "请输入验证码",
+    "forgotPassword": "忘记密码？",
+    "login": "登录",
+    "sendCode": "发送验证码",
+    "orUse": "或使用以下方式",
+    "footerTerms": "用户协议",
+    "footerPrivacy": "隐私政策",
+    "footerHelp": "帮助中心",
+    "footerVersion": "版本 1.0.0"
   }
 }

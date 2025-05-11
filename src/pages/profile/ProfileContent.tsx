@@ -1,71 +1,52 @@
 import React, { useState } from 'react';
-import { Button } from 'tdesign-mobile-react';
 import { Icon } from '@iconify/react';
-import styles from './ProfileContent.module.scss';
+import { Button } from 'tdesign-mobile-react';
+import { useNavigate } from 'react-router-dom';
+import styles from './index.module.scss';
 
-const TabContent: React.FC = () => {
-  const [activeTab, setActiveTab] = useState<string | number>('notes');
+type TabType = '笔记' | '收藏' | '赞过';
+
+const ProfileContent: React.FC = () => {
+  const [activeTab, setActiveTab] = useState<TabType>('笔记');
+  const navigate = useNavigate();
+
+  const tabs: TabType[] = ['笔记', '收藏', '赞过'];
+
+  const handlePublish = () => {
+    navigate('/create');
+  };
 
   return (
-    <div className={styles.content}>
-      <div className={styles.tabsHeader}>
-        <div
-          className={`${styles.tabItem} ${activeTab === 'notes' ? styles.active : ''}`}
-          onClick={() => setActiveTab('notes')}
-        >
-          笔记
-        </div>
-        <div
-          className={`${styles.tabItem} ${activeTab === 'collections' ? styles.active : ''}`}
-          onClick={() => setActiveTab('collections')}
-        >
-          <Icon icon="material-symbols:bookmark-outline" width="16" /> 收藏
-        </div>
-        <div
-          className={`${styles.tabItem} ${activeTab === 'liked' ? styles.active : ''}`}
-          onClick={() => setActiveTab('liked')}
-        >
-          赞过
+    <>
+      {/* 标签栏 */}
+      <div className={styles.tabBar}>
+        <div className={styles.tabContent}>
+          {tabs.map((tab) => (
+            <div
+              key={tab}
+              className={`${styles.tabItem} ${activeTab === tab ? styles.active : ''}`}
+              onClick={() => setActiveTab(tab)}
+            >
+              {tab}
+            </div>
+          ))}
         </div>
       </div>
 
-      {activeTab === 'notes' && (
-        <div className={styles.notesContainer}>
-          <div className={styles.emptyNotes}>
-            <div className={styles.emptyIcon}>
-              <Icon icon="material-symbols:image" width="64" color="#ddd" />
-            </div>
-            <div className={styles.emptyText}>晒出你的旅行日记</div>
-            <Button shape="round" size="small" className={styles.publishBtn}>
-              去发布
-            </Button>
-          </div>
-        </div>
-      )}
-
-      {activeTab === 'collections' && (
-        <div className={styles.collectionsContainer}>
-          <div className={styles.emptyNotes}>
-            <div className={styles.emptyIcon}>
-              <Icon icon="material-symbols:bookmark-outline" width="64" color="#ddd" />
-            </div>
-            <div className={styles.emptyText}>还没有收藏内容</div>
-          </div>
-        </div>
-      )}
-
-      {activeTab === 'liked' && (
-        <div className={styles.likedContainer}>
-          <div className={styles.emptyNotes}>
-            <div className={styles.emptyIcon}>
-              <Icon icon="material-symbols:favorite-outline" width="64" color="#ddd" />
-            </div>
-            <div className={styles.emptyText}>还没有赞过内容</div>
-          </div>
-        </div>
-      )}
-    </div>
+      {/* 空状态 */}
+      <div className={styles.emptyState}>
+        <Icon icon="mdi:image-outline" className={styles.emptyIcon} />
+        <div className={styles.emptyText}>晒出你的旅行日记</div>
+        <Button
+          className={styles.publishBtn}
+          icon={<Icon icon="mdi:plus" />}
+          onClick={handlePublish}
+        >
+          去发布
+        </Button>
+      </div>
+    </>
   );
 };
 
-export default TabContent;
+export default ProfileContent;

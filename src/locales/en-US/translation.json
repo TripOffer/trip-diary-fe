@@ -30,6 +30,21 @@
     "registerFailed": "Registration failed, please try again later",
     "loginFailed": "Login failed, please check your email and password",
     "loginSuccess": "Login successful",
-    "registerSuccess": "Registration successful"
+    "registerSuccess": "Registration successful",
+
+    "appName": "Trip Diary",
+    "loginTab": "Login",
+    "registerTab": "Register",
+    "emailPlaceholder": "Email address",
+    "passwordPlaceholder": "Password",
+    "codePlaceholder": "Verification code",
+    "forgotPassword": "Forgot password?",
+    "login": "Login",
+    "sendCode": "Send Code",
+    "orUse": "Or use",
+    "footerTerms": "Terms of Service",
+    "footerPrivacy": "Privacy Policy",
+    "footerHelp": "Help Center",
+    "footerVersion": "Version 1.0.0"
   }
 }

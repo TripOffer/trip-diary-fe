@@ -1,35 +1,46 @@
 import React from 'react';
-import { Upload, UploadFile } from 'tdesign-mobile-react';
+import { Upload, Toast } from 'tdesign-mobile-react';
+import type { UploadFile } from 'tdesign-mobile-react/es/upload/type';
 
 interface ImageUploadProps {
-  uploadImage: File | null;
-  loading: boolean;
-  imageExts: string[];
-  onChange: (files: UploadFile[]) => void;
+  fileList: UploadFile[];
+  setFileList: (files: UploadFile[]) => void;
 }
 
-const ImageUpload: React.FC<ImageUploadProps> = ({ uploadImage, loading, imageExts, onChange }) => {
+const ImageUpload: React.FC<ImageUploadProps> = ({ fileList, setFileList }) => {
+  // 选择图片回调
+  const handleChange = (newFiles: UploadFile[]) => {
+    if (newFiles.length > 100) {
+      Toast({ message: '最多只能选择100张图片', duration: 2000 });
+      setFileList(newFiles.slice(0, 100));
+      return;
+    }
+    setFileList(newFiles);
+  };
+
   return (
-    <>
+    <div>
       <Upload
-        files={
-          uploadImage
-            ? [
-                {
-                  raw: uploadImage,
-                  url: URL.createObjectURL(uploadImage),
-                  name: uploadImage.name,
-                },
-              ]
-            : []
-        }
+        files={fileList}
+        onChange={handleChange}
         max={100}
-        accept={imageExts.map((e) => '.' + e).join(',')}
-        onChange={onChange}
-        disabled={loading}
+        multiple
+        accept="image/*"
+        autoUpload={false}
+        gridConfig={{ column: 4 }}
+        requestMethod={() => Promise.resolve({ status: 'success', response: {} })}
+        onRemove={({ index }) => {
+          if (typeof index === 'number') {
+            const newList = [...fileList];
+            newList.splice(index, 1);
+            setFileList(newList);
+          }
+        }}
       />
-      <div className="text-xs text-gray-400 mt-2">支持{imageExts.join('/')}格式</div>
-    </>
+      <div className="mt-4 text-sm text-gray-500 text-center">
+        已选择 {fileList.length} 张图片，最多100张
+      </div>
+    </div>
   );
 };
 

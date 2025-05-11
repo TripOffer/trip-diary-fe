@@ -27,16 +27,26 @@ const PublishPage = () => {
   };
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      navigate('/publish/edit', { state: { file, type: 'image' } });
+    const files = e.target.files;
+    if (files && files.length > 0) {
+      if (files.length > 100) {
+        if (window?.Android && typeof window.Android.showToast === 'function') {
+          window.Android.showToast('最多只能选择100张图片');
+        } else {
+          alert('最多只能选择100张图片');
+        }
+        return;
+      }
+      // 将 FileList 转为数组传递
+      navigate('/publish/edit', { state: { files: Array.from(files), type: 'image' } });
     }
   };
 
   const handleVideoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
-      navigate('/publish/edit', { state: { file, type: 'video' } });
+      // 传递 type: 'video' 和单个文件
+      navigate('/publish/edit', { state: { file: file, type: 'video' } });
     }
   };
 
@@ -49,6 +59,7 @@ const PublishPage = () => {
         ref={imageInputRef}
         style={{ display: 'none' }}
         onChange={handleImageChange}
+        multiple // 支持多选
       />
       <input
         type="file"

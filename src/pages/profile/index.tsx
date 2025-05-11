@@ -1,11 +1,10 @@
 import React, { useEffect, useState } from 'react';
+import { Message, Loading } from 'tdesign-mobile-react';
 import styles from './index.module.scss';
 import ProfileHeader from './ProfileHeader';
 import ProfileContent from './ProfileContent';
 import { userApi } from '@/service/api/user';
 import { MyUserDetailData } from '@/service/api/user/types';
-import { ApiRes } from '@/service/api/shared';
-import { Message } from 'tdesign-mobile-react';
 
 interface ApiResponse {
   code: number;
@@ -22,7 +21,6 @@ const Profile: React.FC = () => {
     const fetchUserData = async () => {
       try {
         setLoading(true);
-        // 使用类型断言
         const result = (await userApi.getMyDetail()) as unknown as ApiResponse;
 
         if (result && result.code === 0 && result.data) {
@@ -44,7 +42,6 @@ const Profile: React.FC = () => {
     fetchUserData();
   }, []);
 
-  // 构建传递给ProfileHeader的数据
   const headerUserData = userData
     ? {
         name: userData.name,
@@ -59,21 +56,30 @@ const Profile: React.FC = () => {
     ? {
         followCount: userData.followingCount || 0,
         fansCount: userData.followersCount || 0,
-        likeCount: 0, // API返回数据中没有赞的数量，暂时设为0
       }
     : null;
 
   if (loading) {
-    return <div className={styles.container}>加载中...</div>;
+    return (
+      <div className={`${styles.container} ${styles.loading}`}>
+        <Loading />
+      </div>
+    );
   }
 
   return (
     <div className={styles.container}>
-      {/* 顶部个人信息区 */}
-      {userData && <ProfileHeader userData={headerUserData!} statsData={statsData!} />}
+      <div className={styles.content}>
+        {/* 用户信息卡片 */}
+        <div className={styles.card}>
+          {userData && <ProfileHeader userData={headerUserData!} statsData={statsData!} />}
+        </div>
 
-      {/* 内容区Content */}
-      <ProfileContent />
+        {/* 内容展示区 */}
+        <div className={styles.card}>
+          <ProfileContent />
+        </div>
+      </div>
     </div>
   );
 };

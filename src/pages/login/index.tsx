@@ -13,6 +13,7 @@ type FormType = 'login' | 'register';
 const Login: React.FC = () => {
   const { t } = useTranslation();
   const setToken = useAuthStore((state) => state.setToken);
+  const setUser = useAuthStore((state) => state.setUser);
 
   // 当前表单类型
   const [formType, setFormType] = useState<FormType>('login');
@@ -151,6 +152,9 @@ const Login: React.FC = () => {
       if (response?.data?.token) {
         setToken(response.data.token);
       }
+      if (response?.data?.user) {
+        setUser(response.data.user);
+      }
 
       Message.success({
         content: t('login.loginSuccess'),
@@ -217,6 +221,9 @@ const Login: React.FC = () => {
       if (response?.data?.token) {
         setToken(response.data.token);
         console.log('注册成功，Token已存储');
+      }
+      if (response?.data?.user) {
+        setUser(response.data.user);
       }
 
       Message.success({

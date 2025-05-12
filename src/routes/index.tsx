@@ -9,9 +9,11 @@ import Profile from '../pages/profile';
 import Search from '../pages/search';
 import UserProfile from '../pages/user';
 import PublishEditPage from '../pages/publish/edit';
+import { useAuthStore } from '@/store/auth';
 
 const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
-  const isAuthenticated = localStorage.getItem('token') !== null;
+  const token = useAuthStore((state) => state.token);
+  const isAuthenticated = !!token;
 
   if (!isAuthenticated) {
     return <Navigate to="/login" replace />;

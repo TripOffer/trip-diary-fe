@@ -29,37 +29,10 @@ const AppRoutes: React.FC = () => (
   <Routes>
     <Route path="/" element={<App />}>
       <Route index element={<Home />} />
-<<<<<<< Updated upstream
-      <Route
-        path="publish"
-        element={
-          <ProtectedRoute>
-            <PublishPage />
-          </ProtectedRoute>
-        }
-      />
-      <Route
-        path="publish/edit"
-        element={
-          <ProtectedRoute>
-            <PublishEditPage />
-          </ProtectedRoute>
-        }
-      />
-      <Route
-        path="profile"
-        element={
-          <ProtectedRoute>
-            <Profile />
-          </ProtectedRoute>
-        }
-      />
-=======
       <Route path="publish" element={<PublishPage />} />
       <Route path="publish/edit" element={<PublishEditPage />} />
       <Route path="profile" element={<Profile />} />
       <Route path="profile/edit" element={<ProfileEdit />} />
->>>>>>> Stashed changes
       <Route path="login" element={<Login />} />
       <Route path="diary/:id" element={<DiaryDetail />} />
       <Route path="user/:id" element={<UserProfile />} />

@@ -1,38 +1,48 @@
 import { ApiRes } from '../shared';
 
+// 标签
+export interface Tag {
+  id: string;
+  name: string;
+}
+
+// 作者
+export interface Author {
+  id: string | number;
+  name: string;
+  avatar: string | null;
+}
+
 // 缩略图元数据
 export interface ThumbnailMeta {
   id: string;
   key: string;
-  userId: number;
+  userId: string | number;
   ext: string;
   width: number;
   height: number;
-  duration: number | null;
+  duration?: number | null;
   type: string;
   createdAt: string;
 }
 
-// 日记基础信息
+// 日记基础信息（列表用）
 export interface DiaryBase {
-  id: number;
-  userId: number;
-  userName: string;
-  userAvatar: string | null;
+  id: string;
+  authorId: string | number;
   title: string;
-  cover: string | null;
-  thumbnailMeta?: ThumbnailMeta;
-  summary: string;
-  createdAt: string;
-  updatedAt: string;
-  published: boolean;
-  liked?: boolean;
-  isLiked?: boolean;
-  favorited?: boolean;
+  slug: string;
+  thumbnail: string | null;
+  viewCount: number;
   likeCount: number;
   favoriteCount: number;
   commentCount: number;
-  viewCount: number;
+  shareCount: number;
+  publishedAt: string;
+  updatedAt: string;
+  tags: Tag[];
+  author: Author;
+  thumbnailMeta?: ThumbnailMeta;
 }
 
 // 日记详情
@@ -41,7 +51,6 @@ export interface DiaryDetail extends DiaryBase {
   images: string[];
   status?: 'pending' | 'approved' | 'rejected';
   reason?: string;
-  thumbnailMeta?: ThumbnailMeta;
   liked?: boolean;
   isLiked?: boolean;
 }
@@ -57,7 +66,7 @@ export interface DiaryListData {
   total: number;
   page: number;
   size: number;
-  totalPages: number;
+  totalPage: number;
 }
 export type DiaryListRes = ApiRes<DiaryListData>;
 
@@ -150,7 +159,7 @@ export type UnlikeCommentRes = ApiRes<null>;
 
 // 搜索/推荐
 export interface SearchDiaryQuery {
-  keyword: string;
+  query: string;
   page?: number;
   size?: number;
 }

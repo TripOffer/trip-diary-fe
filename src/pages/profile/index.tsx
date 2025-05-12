@@ -42,6 +42,15 @@ const Profile: React.FC = () => {
     fetchUserData();
   }, []);
 
+  const handleAvatarChange = (newAvatar: string) => {
+    if (userData) {
+      setUserData({
+        ...userData,
+        avatar: newAvatar,
+      });
+    }
+  };
+
   const headerUserData = userData
     ? {
         name: userData.name,
@@ -72,7 +81,13 @@ const Profile: React.FC = () => {
       <div className={styles.content}>
         {/* 用户信息卡片 */}
         <div className={styles.card}>
-          {userData && <ProfileHeader userData={headerUserData!} statsData={statsData!} />}
+          {userData && (
+            <ProfileHeader
+              userData={headerUserData!}
+              statsData={statsData!}
+              onAvatarChange={handleAvatarChange}
+            />
+          )}
         </div>
 
         {/* 内容展示区 */}

@@ -2,6 +2,7 @@ import React, { useRef, useEffect, useState, RefObject } from 'react';
 import styles from './TopBar.module.scss';
 import { Icon } from '@iconify/react';
 import { Button } from 'tdesign-mobile-react';
+import { getStatusBarHeight } from '@/utils/getStatusBarHeight';
 
 interface TopBarProps {
   scrollContainerRef: RefObject<HTMLDivElement>;
@@ -16,6 +17,7 @@ const TopBar: React.FC<TopBarProps> = ({
   onSearchChange,
   onSearchSubmit,
 }) => {
+  const statusBarHeight = getStatusBarHeight();
   const [hidden, setHidden] = useState(false);
   const lastScroll = useRef(0);
 
@@ -45,7 +47,10 @@ const TopBar: React.FC<TopBarProps> = ({
   }, [scrollContainerRef]);
 
   return (
-    <div className={styles.topBar + (hidden ? ' ' + styles.hide : '')}>
+    <div
+      className={styles.topBar + (hidden ? ' ' + styles.hide : '')}
+      style={{ paddingTop: statusBarHeight, height: 60 + statusBarHeight }}
+    >
       <div className={styles.searchBox} style={{ padding: 0 }}>
         <span className={styles.searchIcon}>
           <Icon icon="mdi:magnify" width="20" height="20" />

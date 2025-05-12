@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { Message, Loading } from 'tdesign-mobile-react';
 import styles from './index.module.scss';
-import ProfileHeader from './ProfileHeader';
-import ProfileContent from './ProfileContent';
+import ProfileHeader from './components/ProfileHeader';
+import ProfileContent from './components/ProfileContent';
 import { userApi } from '@/service/api/user';
 import { MyUserDetailData } from '@/service/api/user/types';
 

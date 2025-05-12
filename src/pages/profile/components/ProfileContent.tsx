@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Icon } from '@iconify/react';
 import { Button } from 'tdesign-mobile-react';
 import { useNavigate } from 'react-router-dom';
-import styles from './index.module.scss';
+import styles from '../index.module.scss';
 
 type TabType = '笔记' | '收藏' | '赞过';
 

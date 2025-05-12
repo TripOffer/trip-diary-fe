@@ -6,6 +6,7 @@ import DiaryDetail from '../pages/diary';
 import Home from '../pages/home';
 import Login from '../pages/login';
 import Profile from '../pages/profile';
+import ProfileEdit from '../pages/profile/edit';
 import Search from '../pages/search';
 import UserProfile from '../pages/user';
 import PublishEditPage from '../pages/publish/edit';
@@ -28,6 +29,7 @@ const AppRoutes: React.FC = () => (
   <Routes>
     <Route path="/" element={<App />}>
       <Route index element={<Home />} />
+<<<<<<< Updated upstream
       <Route
         path="publish"
         element={
@@ -52,6 +54,12 @@ const AppRoutes: React.FC = () => (
           </ProtectedRoute>
         }
       />
+=======
+      <Route path="publish" element={<PublishPage />} />
+      <Route path="publish/edit" element={<PublishEditPage />} />
+      <Route path="profile" element={<Profile />} />
+      <Route path="profile/edit" element={<ProfileEdit />} />
+>>>>>>> Stashed changes
       <Route path="login" element={<Login />} />
       <Route path="diary/:id" element={<DiaryDetail />} />
       <Route path="user/:id" element={<UserProfile />} />

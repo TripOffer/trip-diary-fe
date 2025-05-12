@@ -1,6 +1,7 @@
 import React, { useRef } from 'react';
 import { Avatar, Button, Message } from 'tdesign-mobile-react';
 import { Icon } from '@iconify/react';
+import { useNavigate } from 'react-router-dom';
 import styles from './ProfileHeader.module.scss';
 import { userApi } from '@/service/api/user';
 import { uploadResource } from '@/utils/upload';
@@ -27,6 +28,7 @@ const OSS_PREFIX = import.meta.env.VITE_OSS_URL || '';
 
 const ProfileHeader: React.FC<ProfileHeaderProps> = ({ userData, statsData, onAvatarChange }) => {
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const navigate = useNavigate();
 
   let avatarUrl = '';
   if (userData.avatar) {
@@ -58,6 +60,10 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = ({ userData, statsData, onAv
     } catch {
       Message.error('头像更新失败，请重试');
     }
+  };
+
+  const handleEditProfile = () => {
+    navigate('/profile/edit');
   };
 
   return (
@@ -102,7 +108,11 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = ({ userData, statsData, onAv
       </div>
 
       <div className={styles.actions}>
-        <Button className={styles.editBtn} icon={<Icon icon="mdi:pencil" />}>
+        <Button
+          className={styles.editBtn}
+          icon={<Icon icon="mdi:pencil" />}
+          onClick={handleEditProfile}
+        >
           编辑个人资料
         </Button>
         <Button className={styles.settingsBtn} icon={<Icon icon="mdi:cog" />} />

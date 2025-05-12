@@ -4,6 +4,7 @@ import { Icon } from '@iconify/react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { authApi } from '@/service/api/auth';
+import { useAuthStore } from '@/store/auth';
 import styles from './index.module.scss';
 
 // 定义表单类型
@@ -11,6 +12,7 @@ type FormType = 'login' | 'register';
 
 const Login: React.FC = () => {
   const { t } = useTranslation();
+  const setToken = useAuthStore((state) => state.setToken);
 
   // 当前表单类型
   const [formType, setFormType] = useState<FormType>('login');
@@ -79,7 +81,7 @@ const Login: React.FC = () => {
       setCounting(true);
       setCountdown(60);
 
-      const res = await authApi.sendCode({ email: registerForm.email });
+      await authApi.sendCode({ email: registerForm.email });
 
       // 倒计时
       const timer = setInterval(() => {
@@ -141,10 +143,14 @@ const Login: React.FC = () => {
     setLoading(true);
 
     try {
-      const res = await authApi.login({
+      const response = await authApi.login({
         email: loginForm.email,
         password: loginForm.password,
       });
+
+      if (response?.data?.token) {
+        setToken(response.data.token);
+      }
 
       Message.success({
         content: t('login.loginSuccess'),
@@ -201,11 +207,17 @@ const Login: React.FC = () => {
     setLoading(true);
 
     try {
-      const res = await authApi.register({
+      const response = await authApi.register({
         email: registerForm.email,
         password: registerForm.password,
         code: registerForm.verifyCode,
       });
+
+      // 存储token
+      if (response?.data?.token) {
+        setToken(response.data.token);
+        console.log('注册成功，Token已存储');
+      }
 
       Message.success({
         content: t('login.registerSuccess'),
@@ -220,6 +232,7 @@ const Login: React.FC = () => {
       setLoginForm(newLoginForm);
       setFormType('login');
     } catch (error) {
+      console.error('注册失败:', error);
       Message.error({
         content: error instanceof Error ? error.message : t('login.registerFailed'),
         duration: 3000,
@@ -229,132 +242,129 @@ const Login: React.FC = () => {
     }
   };
 
-  const renderLoginForm = () => (
-    <>
-      <div className={styles.formTitle}>
-        {formType === 'login' ? t('login.loginTitle') : t('login.registerTitle')}
-      </div>
-
-      <div className={styles.formItem}>
-        <Input
-          placeholder={t('login.email')}
-          value={loginForm.email}
-          onChange={(val) => handleLoginInputChange(val, 'email')}
-          prefixIcon={<Icon icon="material-symbols:mail" />}
-          type="text"
-        />
-      </div>
-
-      <div className={styles.formItem}>
-        <Input
-          placeholder={t('login.password')}
-          value={loginForm.password}
-          onChange={(val) => handleLoginInputChange(val, 'password')}
-          prefixIcon={<Icon icon="material-symbols:lock" />}
-          type="password"
-        />
-      </div>
-    </>
-  );
-
-  const renderRegisterForm = () => (
-    <>
-      <div className={styles.formTitle}>
-        {formType === 'login' ? t('login.loginTitle') : t('login.registerTitle')}
-      </div>
-
-      <div className={styles.formItem}>
-        <Input
-          placeholder={t('login.email')}
-          value={registerForm.email}
-          onChange={(val) => handleRegisterInputChange(val, 'email')}
-          prefixIcon={<Icon icon="material-symbols:mail" />}
-          type="text"
-        />
-      </div>
-
-      <div className={styles.formItem}>
-        <Input
-          placeholder={t('login.password')}
-          value={registerForm.password}
-          onChange={(val) => handleRegisterInputChange(val, 'password')}
-          prefixIcon={<Icon icon="material-symbols:lock" />}
-          type="password"
-        />
-      </div>
-
-      <div className={styles.formItem}>
-        <div className={styles.codeInput}>
-          <Input
-            placeholder={t('login.verifyCode')}
-            value={registerForm.verifyCode}
-            onChange={(val) => handleRegisterInputChange(val, 'verifyCode')}
-            prefixIcon={<Icon icon="material-symbols:shield-lock" />}
-            type="text"
-          />
-          <Button
-            variant="outline"
-            className={styles.codeButton}
-            onClick={handleSendCode}
-            disabled={counting}
-          >
-            {counting ? `${countdown}${t('login.resendAfter')}` : t('login.getVerifyCode')}
-          </Button>
-        </div>
-      </div>
-    </>
-  );
-
-  const renderActionButton = () => (
-    <Button
-      block
-      className={styles.actionButton}
-      loading={loading}
-      onClick={formType === 'login' ? handleLogin : handleRegister}
-    >
-      {formType === 'login' ? t('login.loginButton') : t('login.registerButton')}
-    </Button>
-  );
-
   return (
-    <div className={styles.loginContainer}>
-      <div className={styles.loginHeader}>
-        <div className={styles.headerImage}></div>
-        <h1 className={styles.title}>{t('login.title')}</h1>
-        <p className={styles.subtitle}>{t('login.subtitle')}</p>
+    <div className={styles.container}>
+      <div className={styles.logo}>
+        <Icon icon="mdi:map-marker" width="28" height="28" />
+        <h1>{t('login.appName')}</h1>
       </div>
 
-      {/* 表单区域 */}
       <div className={styles.formContainer}>
-        <div className={styles.loginForm}>
-          {formType === 'login' ? renderLoginForm() : renderRegisterForm()}
+        <div className={styles.formHeader}>
+          <div
+            className={`${styles.formTab} ${formType === 'login' ? styles.active : ''}`}
+            onClick={() => toggleFormType('login')}
+          >
+            {t('login.loginTab')}
+          </div>
+          <div
+            className={`${styles.formTab} ${formType === 'register' ? styles.active : ''}`}
+            onClick={() => toggleFormType('register')}
+          >
+            {t('login.registerTab')}
+          </div>
+        </div>
 
-          <div className={styles.formActions}>{renderActionButton()}</div>
+        {formType === 'login' ? (
+          <div className={styles.form}>
+            <div className={styles.formItem}>
+              <Input
+                placeholder={t('login.emailPlaceholder')}
+                prefixIcon={<Icon icon="mdi:email" width="20" height="20" />}
+                value={loginForm.email}
+                onChange={(value) => handleLoginInputChange(value, 'email')}
+              />
+            </div>
+            <div className={styles.formItem}>
+              <Input
+                type="password"
+                placeholder={t('login.passwordPlaceholder')}
+                prefixIcon={<Icon icon="mdi:lock" width="20" height="20" />}
+                value={loginForm.password}
+                onChange={(value) => handleLoginInputChange(value, 'password')}
+              />
+            </div>
+            <div className={styles.forgotPassword}>
+              <span>{t('login.forgotPassword')}</span>
+            </div>
+            <Button
+              block
+              theme="primary"
+              className={styles.submitBtn}
+              loading={loading}
+              onClick={handleLogin}
+            >
+              {t('login.login')}
+            </Button>
+          </div>
+        ) : (
+          <div className={styles.form}>
+            <div className={styles.formItem}>
+              <Input
+                placeholder={t('login.emailPlaceholder')}
+                prefixIcon={<Icon icon="mdi:email" width="20" height="20" />}
+                value={registerForm.email}
+                onChange={(value) => handleRegisterInputChange(value, 'email')}
+              />
+            </div>
+            <div className={styles.formItem}>
+              <Input
+                type="password"
+                placeholder={t('login.passwordPlaceholder')}
+                prefixIcon={<Icon icon="mdi:lock" width="20" height="20" />}
+                value={registerForm.password}
+                onChange={(value) => handleRegisterInputChange(value, 'password')}
+              />
+            </div>
+            <div className={styles.formItem}>
+              <div className={styles.codeInputWrapper}>
+                <Input
+                  placeholder={t('login.codePlaceholder')}
+                  prefixIcon={<Icon icon="mdi:shield" width="20" height="20" />}
+                  value={registerForm.verifyCode}
+                  onChange={(value) => handleRegisterInputChange(value, 'verifyCode')}
+                />
+                <Button
+                  size="small"
+                  variant="outline"
+                  disabled={counting}
+                  onClick={handleSendCode}
+                  className={styles.sendCodeBtn}
+                >
+                  {counting ? `${countdown}s` : t('login.sendCode')}
+                </Button>
+              </div>
+            </div>
+            <Button
+              block
+              theme="primary"
+              className={styles.submitBtn}
+              loading={loading}
+              onClick={handleRegister}
+            >
+              {t('login.register')}
+            </Button>
+          </div>
+        )}
 
-          <div className={styles.switchButtons}>
-            {formType === 'login' ? (
-              <div className={styles.switchText}>
-                <span>{t('login.noAccount')}</span>
-                <span className={styles.switchLink} onClick={() => toggleFormType('register')}>
-                  {t('login.register')}
-                </span>
-              </div>
-            ) : (
-              <div className={styles.switchText}>
-                <span>{t('login.hasAccount')}</span>
-                <span className={styles.switchLink} onClick={() => toggleFormType('login')}>
-                  {t('login.goLogin')}
-                </span>
-              </div>
-            )}
+        <div className={styles.divider}>
+          <span>{t('login.orUse')}</span>
+        </div>
+
+        <div className={styles.socialLogin}>
+          <div className={styles.socialIcon}>
+            <Icon icon="mdi:wechat" width="28" height="28" />
+          </div>
+          <div className={styles.socialIcon}>
+            <Icon icon="mdi:apple" width="28" height="28" />
           </div>
         </div>
       </div>
 
-      <div className={styles.loginFooter}>
+      <div className={styles.footer}>
         <p>
-          {t('login.agreement')} {t('login.userAgreement')} {t('login.and')}{' '}
-          {t('login.privacyPolicy')}
+          {t('login.footerTerms')} {t('login.footerPrivacy')} {t('login.footerHelp')}{' '}
+          {t('login.footerVersion')}
         </p>
       </div>
     </div>

@@ -14,7 +14,7 @@ export interface PresignData {
   url: string;
   key: string;
 }
-export type PresignRes = ApiRes<PresignData>;
+export type PresignRes = PresignData;
 
 // 确认上传
 export interface ConfirmUploadReq {

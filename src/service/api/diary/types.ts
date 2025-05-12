@@ -78,8 +78,9 @@ export interface CreateDiaryReq {
   title: string;
   content: string;
   images?: string[];
-  cover?: string;
-  summary?: string;
+  video?: string;
+  thumbnail?: string;
+  tags?: string[];
 }
 export type CreateDiaryRes = ApiRes<{ id: number }>;
 export interface UpdateDiaryReq extends Partial<CreateDiaryReq> {

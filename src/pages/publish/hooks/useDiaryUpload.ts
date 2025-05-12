@@ -110,11 +110,11 @@ const useDiaryUpload = () => {
       if (isVideo && initVideoFile) {
         const videoDuration = (initVideoFile as any).duration || undefined;
         videoOss = await uploadResource(initVideoFile, 'video', { duration: videoDuration });
-        setProgress((++done / total) * 100);
+        setProgress(Math.round((++done / total) * 100));
         if (coverImage?.raw instanceof File) {
           const compressed = await compressImage(coverImage.raw, 854, 480);
           coverOss = await uploadResource(compressed, 'thumb');
-          setProgress((++done / total) * 100);
+          setProgress(Math.round((++done / total) * 100));
         }
       } else {
         // 图文日记，先上传所有图片（origin）
@@ -124,14 +124,14 @@ const useDiaryUpload = () => {
             const compressed = await compressImage(f.raw, 1920, 1080);
             const oss = await uploadResource(compressed, 'origin');
             imageOssList.push(oss);
-            setProgress((++done / total) * 100);
+            setProgress(Math.round((++done / total) * 100));
           }
         }
         // 封面始终用第一张图片压缩 854x480 上传
         if (imageFileList[0]?.raw instanceof File) {
           const compressedCover = await compressImage(imageFileList[0].raw, 854, 480);
           coverOss = await uploadResource(compressedCover, 'thumb');
-          setProgress((++done / total) * 100);
+          setProgress(Math.round((++done / total) * 100));
         } else {
           coverOss = undefined;
         }

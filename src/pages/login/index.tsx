@@ -4,6 +4,7 @@ import { Icon } from '@iconify/react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { authApi } from '@/service/api/auth';
+import { useAuthStore } from '@/store/auth';
 import styles from './index.module.scss';
 
 // 定义表单类型
@@ -145,7 +146,11 @@ const Login: React.FC = () => {
         email: loginForm.email,
         password: loginForm.password,
       });
-
+      // 新增：存储 token 和 user
+      if (res?.data?.token && res?.data?.user) {
+        useAuthStore.getState().setToken(res.data.token);
+        useAuthStore.getState().setUser(res.data.user);
+      }
       Message.success({
         content: t('login.loginSuccess'),
         duration: 1500,
@@ -206,7 +211,11 @@ const Login: React.FC = () => {
         password: registerForm.password,
         code: registerForm.verifyCode,
       });
-
+      // 新增：存储 token 和 user
+      if (res?.data?.token && res?.data?.user) {
+        useAuthStore.getState().setToken(res.data.token);
+        useAuthStore.getState().setUser(res.data.user);
+      }
       Message.success({
         content: t('login.registerSuccess'),
         duration: 1500,

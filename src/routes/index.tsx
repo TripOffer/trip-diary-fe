@@ -6,6 +6,7 @@ import DiaryDetail from '../pages/diary';
 import Home from '../pages/home';
 import Login from '../pages/login';
 import Profile from '../pages/profile';
+import ProfileEdit from '../pages/profile/edit';
 import Search from '../pages/search';
 import UserProfile from '../pages/user';
 import PublishEditPage from '../pages/publish/edit';
@@ -28,30 +29,10 @@ const AppRoutes: React.FC = () => (
   <Routes>
     <Route path="/" element={<App />}>
       <Route index element={<Home />} />
-      <Route
-        path="publish"
-        element={
-          <ProtectedRoute>
-            <PublishPage />
-          </ProtectedRoute>
-        }
-      />
-      <Route
-        path="publish/edit"
-        element={
-          <ProtectedRoute>
-            <PublishEditPage />
-          </ProtectedRoute>
-        }
-      />
-      <Route
-        path="profile"
-        element={
-          <ProtectedRoute>
-            <Profile />
-          </ProtectedRoute>
-        }
-      />
+      <Route path="publish" element={<PublishPage />} />
+      <Route path="publish/edit" element={<PublishEditPage />} />
+      <Route path="profile" element={<Profile />} />
+      <Route path="profile/edit" element={<ProfileEdit />} />
       <Route path="login" element={<Login />} />
       <Route path="diary/:id" element={<DiaryDetail />} />
       <Route path="user/:id" element={<UserProfile />} />

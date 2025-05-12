@@ -59,6 +59,18 @@ const KeepAliveOutlet = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [location.pathname, isKeepAlive]);
 
+  useEffect(() => {
+    // 监听清空缓存事件，只删除 /publish 和 /profile 的缓存
+    const clearCache = () => {
+      delete pagesRef.current['/publish'];
+      delete pagesRef.current['/profile'];
+    };
+    window.addEventListener('clear-keep-alive-cache', clearCache);
+    return () => {
+      window.removeEventListener('clear-keep-alive-cache', clearCache);
+    };
+  }, []);
+
   if (isKeepAlive) {
     pagesRef.current[location.pathname] = outlet;
   }

@@ -26,6 +26,31 @@ $background: #ffffff;
   overflow: hidden;
   box-sizing: border-box;
 
+  // 返回按钮
+  .backBtn {
+    position: absolute;
+    top: 24px;
+    left: 20px;
+    background: transparent;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    z-index: 10;
+    padding: 4px;
+    display: flex;
+    align-items: center;
+    transition: background 0.2s;
+
+    &:hover {
+      background: rgba(0, 0, 0, 0.06);
+      border-radius: 50%;
+    }
+
+    svg {
+      color: $white;
+    }
+  }
+
   // Logo区域
   .logo {
     display: flex;

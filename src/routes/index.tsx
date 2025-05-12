@@ -16,6 +16,8 @@ const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
   const isAuthenticated = !!token;
 
   if (!isAuthenticated) {
+    // 派发清空 KeepAlive 缓存事件
+    window.dispatchEvent(new Event('clear-keep-alive-cache'));
     return <Navigate to="/login" replace />;
   }
 

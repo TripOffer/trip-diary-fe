@@ -35,9 +35,9 @@ class DiaryApi extends BaseApi {
     myList: '/user/me/diary',
     userList: (userId: number) => `/diary/user/${userId}/list`,
     favoriteList: '/diary/favorite-list',
-    detail: (id: number) => `/diary/${id}`,
+    detail: (id: string) => `/diary/${id}/detail`,
     create: '/diary',
-    update: '/diary',
+    update: (id: string) => `/diary/${id}`,
     delete: (id: string) => `/diary/${id}`,
     publish: (id: string) => `/diary/${id}/publish`,
     review: (id: string) => `/diary/${id}/review`,
@@ -69,7 +69,7 @@ class DiaryApi extends BaseApi {
     return this.http.get<DiaryListRes>(this.urls.favoriteList, { params });
   }
 
-  async getDiaryDetail(id: number) {
+  async getDiaryDetail(id: string) {
     return this.http.get<DiaryDetailRes>(this.urls.detail(id));
   }
 
@@ -77,8 +77,8 @@ class DiaryApi extends BaseApi {
     return this.http.post<CreateDiaryRes>(this.urls.create, data);
   }
 
-  async updateDiary(data: UpdateDiaryReq) {
-    return this.http.patch<UpdateDiaryRes>(this.urls.update, data);
+  async updateDiary(id: string, data: UpdateDiaryReq) {
+    return this.http.patch<UpdateDiaryRes>(this.urls.update(id), data);
   }
 
   async deleteDiary(id: string) {

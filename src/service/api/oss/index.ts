@@ -17,7 +17,7 @@ class OssApi extends BaseApi {
   tag = 'OSS';
 
   async getPresignUrl(params: PresignQuery) {
-    return this.http.post<PresignRes>(this.urls.presign, params);
+    return this.http.get<PresignRes>(this.urls.presign, { params });
   }
 
   async confirmUpload(data: ConfirmUploadReq) {

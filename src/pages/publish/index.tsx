@@ -35,11 +35,14 @@ const PublishPage = () => {
         } else {
           alert('最多只能选择100张图片');
         }
+        e.target.value = '';
         return;
       }
       // 将 FileList 转为数组传递
       navigate('/publish/edit', { state: { files: Array.from(files), type: 'image' } });
     }
+    // 关键：重置 input 的 value，确保同一文件可重复选择
+    e.target.value = '';
   };
 
   const handleVideoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -48,6 +51,8 @@ const PublishPage = () => {
       // 传递 type: 'video' 和单个文件
       navigate('/publish/edit', { state: { file: file, type: 'video' } });
     }
+    // 关键：重置 input 的 value，确保同一文件可重复选择
+    e.target.value = '';
   };
 
   return (

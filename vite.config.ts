@@ -1,7 +1,8 @@
-import { defineConfig } from 'vite';
-import react from '@vitejs/plugin-react-swc';
 import tailwindcss from '@tailwindcss/vite';
-import path from 'path';
+import react from '@vitejs/plugin-react-swc';
+import dotenv from 'dotenv';
+import { defineConfig } from 'vite';
+dotenv.config();
 
 // 读取 .env 配置
 const port = Number(process.env.VITE_TAURI_DEV_PORT) || 1420;

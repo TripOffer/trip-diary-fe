@@ -35,9 +35,9 @@ http.interceptors.response.use(
         return response.data;
       }
     }
-    // 处理服务器返回200但实际上是错误的情况（例如：返回code: 403）
-    if (response.data && response.data.code === 403) {
-      console.log('服务器返回403权限错误，正在跳转到登录页面');
+    // 处理服务器返回200但实际上是错误的情况（例如：返回code: 401）
+    if (response.data && response.data.code === 401) {
+      console.log('服务器返回401错误，正在跳转到登录页面');
       window.location.href = '/auth/login';
       return Promise.reject(new Error('Unauthorized'));
     }
@@ -46,12 +46,13 @@ http.interceptors.response.use(
   (error) => {
     // 处理响应错误
     console.error('API 错误:', error.response || error.message);
-    // 处理 403 错误，跳转到登录页面
-    if (error.response && error.response.status === 403) {
+    // 处理 401 错误，跳转到登录页面
+    if (error.response && error.response.status === 401) {
       console.log('权限错误或Token无效，正在跳转到登录页面');
       // 清除 token
       useAuthStore.getState().clearToken();
-      window.location.href = '/auth/login';
+      useAuthStore.getState().clearUser();
+      window.location.href = '/login';
     }
     return Promise.reject(error);
   },

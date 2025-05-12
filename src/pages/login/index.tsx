@@ -13,6 +13,7 @@ type FormType = 'login' | 'register';
 const Login: React.FC = () => {
   const { t } = useTranslation();
   const setToken = useAuthStore((state) => state.setToken);
+  const setUser = useAuthStore((state) => state.setUser);
 
   // 当前表单类型
   const [formType, setFormType] = useState<FormType>('login');
@@ -151,13 +152,16 @@ const Login: React.FC = () => {
       if (response?.data?.token) {
         setToken(response.data.token);
       }
+      if (response?.data?.user) {
+        setUser(response.data.user);
+      }
 
       Message.success({
         content: t('login.loginSuccess'),
         duration: 1500,
       });
 
-      setTimeout(() => navigate('/'), 1600);
+      setTimeout(() => navigate('/', { replace: true }), 1600);
     } catch (error) {
       Message.error({
         content: error instanceof Error ? error.message : t('login.loginFailed'),
@@ -218,6 +222,9 @@ const Login: React.FC = () => {
         setToken(response.data.token);
         console.log('注册成功，Token已存储');
       }
+      if (response?.data?.user) {
+        setUser(response.data.user);
+      }
 
       Message.success({
         content: t('login.registerSuccess'),
@@ -231,6 +238,8 @@ const Login: React.FC = () => {
       };
       setLoginForm(newLoginForm);
       setFormType('login');
+      // 注册成功后跳转到首页并替换历史记录
+      setTimeout(() => navigate('/', { replace: true }), 1600);
     } catch (error) {
       console.error('注册失败:', error);
       Message.error({
@@ -242,8 +251,21 @@ const Login: React.FC = () => {
     }
   };
 
+  // 返回按钮处理
+  const handleBack = () => {
+    if (window.history.length <= 1) {
+      navigate('/');
+    } else {
+      navigate(-1);
+    }
+  };
+
   return (
     <div className={styles.container}>
+      {/* 返回按钮 */}
+      <button className={styles.backBtn} onClick={handleBack}>
+        <Icon icon="mdi:arrow-left" width="24" height="24" />
+      </button>
       <div className={styles.logo}>
         <Icon icon="mdi:map-marker" width="28" height="28" />
         <h1>{t('login.appName')}</h1>

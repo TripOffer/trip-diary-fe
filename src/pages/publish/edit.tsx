@@ -10,6 +10,7 @@ import { useNavigate } from 'react-router-dom';
 import PublishDialog from './components/PublishDialog';
 import PublishResult from './components/PublishResult';
 import useDiaryUpload from './hooks/useDiaryUpload';
+import { Icon } from '@iconify/react';
 
 // Helper function to generate video thumbnail (implementation will be refined)
 const generateVideoThumbnail = async (videoFile: File): Promise<UploadFile | null> => {
@@ -181,7 +182,17 @@ const PublishEditPage = () => {
         onClose={() => setShowDialog(false)}
       />
       <div className="max-w-3xl mx-auto pb-12">
-        <h2 className="text-2xl font-bold mb-8 text-center text-gray-800 relative">
+        <h2 className="text-2xl font-bold mb-8 text-center text-gray-800 relative flex items-center justify-center">
+          {/* 返回按钮 */}
+          <button
+            className="absolute left-0 top-1/2 -translate-y-1/2 flex items-center px-2 py-1 text-blue-500 hover:text-blue-700 focus:outline-none"
+            onClick={() => navigate(-1)}
+            aria-label="返回"
+            type="button"
+          >
+            <Icon icon="mingcute:arrow-left-line" className="text-xl" />
+            <span className="ml-1 hidden sm:inline">返回</span>
+          </button>
           <span className="relative inline-block">
             {pageTitle}
             <span className="absolute bottom-0 left-0 w-full h-1 bg-blue-400 rounded-full transform translate-y-1"></span>

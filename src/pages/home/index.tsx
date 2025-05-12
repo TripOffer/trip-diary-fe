@@ -5,8 +5,10 @@ import Api from '@/service/api';
 import Loading from 'tdesign-mobile-react/es/loading';
 import { PullDownRefresh } from 'tdesign-mobile-react';
 import styles from './index.module.scss';
+import { getStatusBarHeight } from '@/utils/getStatusBarHeight';
 
 const Home: React.FC = () => {
+  const statusBarHeight = getStatusBarHeight();
   const scrollRef = useRef<HTMLDivElement>(null);
   const [items, setItems] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
@@ -81,7 +83,7 @@ const Home: React.FC = () => {
       />
       <PullDownRefresh
         className={styles.pullDownRefresh}
-        style={{ WebkitOverflowScrolling: 'touch' }}
+        style={{ WebkitOverflowScrolling: 'touch', paddingTop: `${statusBarHeight}px` }}
         loadingBarHeight={60}
         loadingProps={{}}
         loadingTexts={['', '松开刷新', '正在刷新', '']}

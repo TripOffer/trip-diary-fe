@@ -37,6 +37,10 @@ export interface Diary {
   liked?: boolean;
   width?: number;
   height?: number;
+  thumbnailMeta?: {
+    width?: number;
+    height?: number;
+  };
 }
 
 export interface DiaryCardProps {
@@ -64,12 +68,17 @@ function getAuthorInfo(author?: Author) {
 
 const DiaryCard: React.FC<DiaryCardProps> = ({ diary }) => {
   const navigate = useNavigate();
-  const { thumbnail, title, author, likeCount, isLiked, liked, width, height, id } = diary;
-  const [autoWidth, setAutoWidth] = React.useState<number | undefined>(width);
-  const [autoHeight, setAutoHeight] = React.useState<number | undefined>(height);
+  const { thumbnail, title, author, likeCount, isLiked, liked, id, thumbnailMeta } = diary;
+  // 优先使用 thumbnailMeta 的宽高
+  const metaWidth = thumbnailMeta?.width;
+  const metaHeight = thumbnailMeta?.height;
+  const [autoWidth, setAutoWidth] = React.useState<number | undefined>(metaWidth ?? diary.width);
+  const [autoHeight, setAutoHeight] = React.useState<number | undefined>(
+    metaHeight ?? diary.height,
+  );
 
   const handleImageLoad = (context: { e: React.SyntheticEvent<HTMLImageElement> }) => {
-    if (!width || !height) {
+    if (!autoWidth || !autoHeight) {
       const target = context.e.target as HTMLImageElement;
       setAutoWidth(target.naturalWidth);
       setAutoHeight(target.naturalHeight);

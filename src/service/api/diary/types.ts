@@ -159,7 +159,7 @@ export type UnlikeCommentRes = ApiRes<null>;
 
 // 搜索/推荐
 export interface SearchDiaryQuery {
-  keyword: string;
+  query: string;
   page?: number;
   size?: number;
 }

@@ -13,20 +13,27 @@ const Home: React.FC = () => {
   const [page, setPage] = useState(1);
   const [totalPage, setTotalPage] = useState(1);
   const [loadMoreLoading, setLoadMoreLoading] = useState(false);
+  const [searchInput, setSearchInput] = useState(''); // 输入框内容
+  const [searchValue, setSearchValue] = useState(''); // 实际搜索内容
 
   // 获取第一页
   const fetchDiaries = useCallback(async () => {
     setLoading(true);
     try {
-      const res = await Api.diaryApi.getRecommendDiaries({ page: 1, size: 10 });
+      let res;
+      if (!searchValue) {
+        res = await Api.diaryApi.getRecommendDiaries({ page: 1, size: 10 });
+      } else {
+        res = await Api.diaryApi.searchDiaries({ query: searchValue, page: 1, size: 10 });
+      }
       const data = res.data as any;
       setItems(data?.list || []);
       setPage(1);
-      setTotalPage(data?.totalPage || 1);
+      setTotalPage(data?.totalPage || data?.totalPages || 1);
     } finally {
       setLoading(false);
     }
-  }, []);
+  }, [searchValue]);
 
   // 加载更多
   const loadMore = useCallback(async () => {
@@ -35,15 +42,20 @@ const Home: React.FC = () => {
     setLoadMoreLoading(true);
     try {
       const nextPage = page + 1;
-      const res = await Api.diaryApi.getRecommendDiaries({ page: nextPage, size: 10 });
+      let res;
+      if (!searchValue) {
+        res = await Api.diaryApi.getRecommendDiaries({ page: nextPage, size: 10 });
+      } else {
+        res = await Api.diaryApi.searchDiaries({ query: searchValue, page: nextPage, size: 10 });
+      }
       const data = res.data as any;
       setItems((prev) => [...prev, ...(data?.list || [])]);
       setPage(nextPage);
-      setTotalPage(data?.totalPage || totalPage);
+      setTotalPage(data?.totalPage || data?.totalPages || totalPage);
     } finally {
       setLoadMoreLoading(false);
     }
-  }, [page, totalPage, loadMoreLoading, loading]);
+  }, [page, totalPage, loadMoreLoading, loading, searchValue]);
 
   useEffect(() => {
     fetchDiaries();
@@ -54,9 +66,19 @@ const Home: React.FC = () => {
     await fetchDiaries();
   };
 
+  // 搜索确认
+  const handleSearchSubmit = () => {
+    setSearchValue(searchInput);
+  };
+
   return (
     <>
-      <TopBar scrollContainerRef={scrollRef} />
+      <TopBar
+        scrollContainerRef={scrollRef}
+        searchValue={searchInput}
+        onSearchChange={setSearchInput}
+        onSearchSubmit={handleSearchSubmit}
+      />
       <PullDownRefresh
         className={styles.pullDownRefresh}
         style={{ WebkitOverflowScrolling: 'touch' }}

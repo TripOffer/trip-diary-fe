@@ -44,6 +44,7 @@ export interface Diary {
   };
 }
 
+// DiaryCardProps 不再包含 cardRef，forwardRef 由 React 处理
 export interface DiaryCardProps {
   diary: Diary;
 }
@@ -67,7 +68,7 @@ function getAuthorInfo(author?: Author) {
   };
 }
 
-const DiaryCard: React.FC<DiaryCardProps> = ({ diary }) => {
+const DiaryCard = React.forwardRef<HTMLDivElement, DiaryCardProps>(({ diary }, ref) => {
   const navigate = useNavigate();
   const { thumbnail, title, author, likeCount, isLiked, liked, id, thumbnailMeta } = diary;
   // 优先使用 thumbnailMeta 的宽高
@@ -117,7 +118,8 @@ const DiaryCard: React.FC<DiaryCardProps> = ({ diary }) => {
 
   return (
     <div
-      className="w-full box-border bg-white overflow-hidden rounded-md shadow-sm flex flex-col p-0"
+      ref={ref}
+      className="w-full box-border bg-white overflow-hidden rounded-md shadow-sm flex flex-col p-0 mb-2"
       style={{ boxShadow: '0 2px 8px 0 rgba(0,0,0,0.06)' }}
       onClick={() => navigate(`/diary/${id}`)}
     >
@@ -152,6 +154,6 @@ const DiaryCard: React.FC<DiaryCardProps> = ({ diary }) => {
       </div>
     </div>
   );
-};
+});
 
 export default DiaryCard;

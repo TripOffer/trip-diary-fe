@@ -1,8 +1,8 @@
-import PageTransition from '@/components/PageTransition';
 import { Icon } from '@iconify/react';
-import { Outlet, useLocation, useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { TabBar, TabBarItem } from 'tdesign-mobile-react';
 import './index.css';
+import KeepAliveOutlet from '@/components/KeepAliveOutlet';
 
 const tabList = [
   { value: '/', icon: 'material-symbols:home-rounded', label: '首页' },
@@ -21,13 +21,10 @@ function App() {
       navigate(value);
     }
   };
-
   return (
     <div className="app-container">
-      <div className="app-content">
-        <PageTransition>
-          <Outlet />
-        </PageTransition>
+      <div className="app-content" style={{ position: 'relative', overflow: 'hidden' }}>
+        <KeepAliveOutlet />
       </div>
       {showTabBar && (
         <div className="transform -translate-y-4 z-100">

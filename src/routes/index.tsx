@@ -49,10 +49,10 @@ const AppRoutes: React.FC = () => (
         }
       />
       <Route path="login" element={<Login />} />
+      <Route path="diary/:id" element={<DiaryDetail />} />
+      <Route path="user/:id" element={<UserProfile />} />
     </Route>
     <Route path="search" element={<Search />} />
-    <Route path="diary/:id" element={<DiaryDetail />} />
-    <Route path="user/:id" element={<UserProfile />} />
   </Routes>
 );
 

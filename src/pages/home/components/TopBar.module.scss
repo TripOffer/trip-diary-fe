@@ -17,7 +17,8 @@
   transform: translateY(-100%);
 }
 
-.fakeSearchBox {
+.searchBox {
+  overflow: hidden;
   display: flex;
   align-items: center;
   background: #f3f4f6;
@@ -30,6 +31,7 @@
 }
 
 .searchIcon {
+  margin-left: 16px;
   margin-right: 8px;
   font-size: 18px;
 }

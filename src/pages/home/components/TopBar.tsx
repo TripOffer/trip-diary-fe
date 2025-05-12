@@ -1,14 +1,21 @@
 import React, { useRef, useEffect, useState, RefObject } from 'react';
 import styles from './TopBar.module.scss';
 import { Icon } from '@iconify/react';
-import { useNavigate } from 'react-router-dom';
+import { Button } from 'tdesign-mobile-react';
 
 interface TopBarProps {
   scrollContainerRef: RefObject<HTMLDivElement>;
+  searchValue: string;
+  onSearchChange: (val: string) => void;
+  onSearchSubmit: () => void;
 }
 
-const TopBar: React.FC<TopBarProps> = ({ scrollContainerRef }) => {
-  const navigator = useNavigate();
+const TopBar: React.FC<TopBarProps> = ({
+  scrollContainerRef,
+  searchValue,
+  onSearchChange,
+  onSearchSubmit,
+}) => {
   const [hidden, setHidden] = useState(false);
   const lastScroll = useRef(0);
 
@@ -39,11 +46,38 @@ const TopBar: React.FC<TopBarProps> = ({ scrollContainerRef }) => {
 
   return (
     <div className={styles.topBar + (hidden ? ' ' + styles.hide : '')}>
-      <div className={styles.fakeSearchBox} onClick={() => navigator('/search')}>
+      <div className={styles.searchBox} style={{ padding: 0 }}>
         <span className={styles.searchIcon}>
           <Icon icon="mdi:magnify" width="20" height="20" />
         </span>
-        <span className={styles.placeholder}>搜索日记、用户、标签</span>
+        <input
+          className={styles.placeholder}
+          type="search"
+          enterKeyHint="search"
+          placeholder="搜索日记、@用户、#标签"
+          value={searchValue}
+          onChange={(e) => onSearchChange(e.target.value)}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter') onSearchSubmit();
+          }}
+          style={{
+            border: 'none',
+            outline: 'none',
+            background: 'transparent',
+            flex: 1,
+            fontSize: 16,
+            color: '#333',
+          }}
+        />
+        <Button
+          className={styles.searchButton}
+          theme="light"
+          size="medium"
+          onClick={onSearchSubmit}
+          style={{ marginLeft: 8 }}
+        >
+          搜索
+        </Button>
       </div>
     </div>
   );

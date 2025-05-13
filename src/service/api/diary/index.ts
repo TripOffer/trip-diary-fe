@@ -69,8 +69,10 @@ class DiaryApi extends BaseApi {
     return this.http.get<DiaryListRes>(this.urls.favoriteList, { params });
   }
 
-  async getDiaryDetail(id: string) {
-    return this.http.get<DiaryDetailRes>(this.urls.detail(id));
+  async getDiaryDetail(id: string, noHistory = false) {
+    return this.http.get<DiaryDetailRes>(this.urls.detail(id), {
+      params: { noHistory },
+    });
   }
 
   async createDiary(data: CreateDiaryReq) {

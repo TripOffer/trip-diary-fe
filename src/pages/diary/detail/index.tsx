@@ -7,35 +7,8 @@ import BottomBar from '../components/BottomBar';
 import CommentPopup from '../components/CommentPopup';
 import DetailContent from '../components/DetailContent';
 import Api from '@/service/api';
+import { DiaryDetail } from '@/types/diary';
 import styles from './index.module.scss';
-
-interface DiaryDetail {
-  id: string;
-  title: string;
-  content: string;
-  images?: string[];
-  thumbnail?: string;
-  createdAt: string;
-  updatedAt: string;
-  publishedAt: string;
-  viewCount: number;
-  author: {
-    id: string | number;
-    name: string;
-    avatar: string;
-  };
-  likeCount: number;
-  favoriteCount: number;
-  commentCount: number;
-  isLiked?: boolean;
-  isFavorite?: boolean;
-  tags?: Array<{ id: string; name: string }>;
-  isFollowedAuthor?: boolean;
-  thumbnailMeta?: {
-    width: number;
-    height: number;
-  };
-}
 
 const DiaryDetailPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -67,7 +40,6 @@ const DiaryDetailPage: React.FC = () => {
       try {
         const response = await Api.diaryApi.getDiaryDetail(id);
         if (response && response.data) {
-          // 强制类型转换，确保安全
           const diaryDetail = response.data as unknown as DiaryDetail;
           setDiaryData(diaryDetail);
 
@@ -239,7 +211,6 @@ const DiaryDetailPage: React.FC = () => {
         onCommentSubmit={handleCommentSubmit}
       />
 
-      {/* 评论弹窗 */}
       <CommentPopup
         visible={commentPopupVisible}
         onVisibleChange={setCommentPopupVisible}

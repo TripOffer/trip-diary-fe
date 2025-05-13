@@ -115,7 +115,6 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = ({ userData, statsData, onAv
         >
           编辑个人资料
         </Button>
-        <Button className={styles.settingsBtn} icon={<Icon icon="mdi:cog" />} />
       </div>
     </div>
   );

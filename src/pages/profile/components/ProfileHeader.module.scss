@@ -9,11 +9,12 @@
 .userInfo {
   display: flex;
   align-items: center;
-  gap: 16px;
+  gap: 30px;
 
   .avatar {
     width: 72px;
     height: 72px;
+    margin-left: 16px;
     border-radius: 50%;
     overflow: hidden;
     flex-shrink: 0;
@@ -138,27 +139,6 @@
 
     &:active {
       background: #e9ecef;
-    }
-  }
-
-  .settingsBtn {
-    width: 36px;
-    height: 36px;
-    padding: 0;
-    background: #f8f9fa;
-    border: none;
-    color: #000;
-
-    &:hover {
-      background: #f0f1f2;
-    }
-
-    &:active {
-      background: #e9ecef;
-    }
-
-    :global(.t-icon) {
-      font-size: 18px;
     }
   }
 }

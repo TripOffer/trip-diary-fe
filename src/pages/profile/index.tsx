@@ -42,7 +42,7 @@ const Profile: React.FC = () => {
     };
 
     fetchUserData();
-  }, [location.key]); 
+  }, [location.key]);
   const handleAvatarChange = (newAvatar: string) => {
     if (userData) {
       setUserData({

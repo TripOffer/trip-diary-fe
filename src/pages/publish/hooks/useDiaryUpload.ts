@@ -59,10 +59,11 @@ const useDiaryUpload = () => {
     if (extra.duration) params.duration = extra.duration;
     const presignRes = await Api.ossApi.getPresignUrl(params);
     console.log('获取预签名URL成功', presignRes);
-    const { url: uploadUrl, key } = presignRes.data;
+    const { url: uploadUrl, key, contentType } = presignRes.data;
 
-    // 新增：fetch 上传时检查 response.ok，并加上 Content-Type
+    // 新增：设置 Content-Type
     const uploadResp = await axios.put(uploadUrl, file, {
+      headers: contentType ? { 'Content-Type': contentType } : undefined,
       validateStatus: () => true, // 允许自定义错误处理
     });
     if (!(uploadResp.status >= 200 && uploadResp.status < 300)) {
@@ -75,6 +76,7 @@ const useDiaryUpload = () => {
 
   // 主发布/存草稿流程
   const handleSubmit = async (options: {
+    id?: string; // 新增：支持编辑模式
     published: boolean;
     isVideo: boolean;
     initVideoFile?: File;
@@ -87,6 +89,7 @@ const useDiaryUpload = () => {
     onError?: () => void;
   }) => {
     const {
+      id,
       published,
       isVideo,
       initVideoFile,
@@ -101,6 +104,8 @@ const useDiaryUpload = () => {
     if (uploading) return;
     setUploading(true);
     setProgress(0);
+    const OSS_PREFIX =
+      typeof import.meta.env.VITE_OSS_URL === 'string' ? import.meta.env.VITE_OSS_URL : '';
     try {
       let coverOss,
         imageOssList: any[] = [],
@@ -117,21 +122,53 @@ const useDiaryUpload = () => {
           setProgress(Math.round((++done / total) * 100));
         }
       } else {
+        console.log('图文日记，开始上传图片', imageFileList);
         // 图文日记，先上传所有图片（origin）
         for (let i = 0; i < imageFileList.length; i++) {
           const f = imageFileList[i];
+          // 新增：只处理本地图片（raw 为 File），已上传的网络图片跳过
           if (f.raw instanceof File) {
             const compressed = await compressImage(f.raw, 1920, 1080);
             const oss = await uploadResource(compressed, 'origin');
             imageOssList.push(oss);
             setProgress(Math.round((++done / total) * 100));
+          } else if (f.url && f.url.startsWith(OSS_PREFIX)) {
+            // 用 OSS_PREFIX 去除前缀，只保留 key
+            let key = f.url;
+            if (OSS_PREFIX && key.startsWith(OSS_PREFIX)) {
+              key = key.slice(OSS_PREFIX.length);
+            }
+            imageOssList.push({ key });
+            setProgress(Math.round((++done / total) * 100));
           }
         }
-        // 封面始终用第一张图片压缩 854x480 上传
+        // 封面始终用第一张图片压缩 854x480 上传（本地图片或网络图片）
         if (imageFileList[0]?.raw instanceof File) {
           const compressedCover = await compressImage(imageFileList[0].raw, 854, 480);
           coverOss = await uploadResource(compressedCover, 'thumb');
           setProgress(Math.round((++done / total) * 100));
+        } else if (imageFileList[0]?.url && imageFileList[0].url.startsWith(OSS_PREFIX)) {
+          // 新增：网络图片也要压缩
+          try {
+            const response = await axios.get(imageFileList[0].url, {
+              responseType: 'blob',
+            });
+            const blob = response.data;
+            // 尝试获取扩展名
+            const ext = imageFileList[0].url.split('.').pop()?.split('?')[0] || 'jpg';
+            const file = new File([blob], `cover.${ext}`, { type: blob.type });
+            const compressedCover = await compressImage(file, 854, 480);
+            coverOss = await uploadResource(compressedCover, 'thumb');
+            setProgress(Math.round((++done / total) * 100));
+          } catch (err) {
+            // 若下载或压缩失败，降级为直接取 key
+            let key = imageFileList[0].url;
+            if (OSS_PREFIX && key.startsWith(OSS_PREFIX)) {
+              key = key.slice(OSS_PREFIX.length);
+            }
+            coverOss = { key };
+            setProgress(Math.round((++done / total) * 100));
+          }
         } else {
           coverOss = undefined;
         }
@@ -142,12 +179,17 @@ const useDiaryUpload = () => {
         content,
         images: imageOssList.map((o) => o.key),
         thumbnail: coverOss?.key,
-        summary: content.slice(0, 100),
         tags,
         published,
       };
       if (isVideo && videoOss) req.video = videoOss.key;
-      await Api.diaryApi.createDiary(req);
+      if (id) {
+        // 编辑模式，调用 updateDiary
+        await Api.diaryApi.updateDiary(id, req);
+      } else {
+        // 新建，调用 createDiary
+        await Api.diaryApi.createDiary(req);
+      }
       setResultType('success');
       setResultMsg(published ? '发布成功！' : '已存入草稿箱');
       if (onSuccess) onSuccess();

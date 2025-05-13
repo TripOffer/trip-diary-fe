@@ -26,10 +26,13 @@ export interface ThumbnailMeta {
   createdAt: string;
 }
 
+export type DiaryStatus = 'Pending' | 'Approved' | 'Rejected';
+
 // 日记基础信息（列表用）
 export interface DiaryBase {
   id: string;
   authorId: string | number;
+  parentId: string | null;
   title: string;
   slug: string;
   thumbnail: string | null;
@@ -38,10 +41,17 @@ export interface DiaryBase {
   favoriteCount: number;
   commentCount: number;
   shareCount: number;
-  publishedAt: string;
+  published: boolean;
+  publishedAt: string | null;
+  status: DiaryStatus;
+  rejectedReason: string | null;
+  reviewedAt: string | null;
+  createdAt: string;
   updatedAt: string;
   tags: Tag[];
-  author: Author;
+  author?: Author;
+  isLiked?: boolean;
+  isFavorite?: boolean;
   thumbnailMeta?: ThumbnailMeta;
 }
 
@@ -49,10 +59,7 @@ export interface DiaryBase {
 export interface DiaryDetail extends DiaryBase {
   content: string;
   images: string[];
-  status?: 'pending' | 'approved' | 'rejected';
-  reason?: string;
-  liked?: boolean;
-  isLiked?: boolean;
+  video?: string;
 }
 
 // 日记列表

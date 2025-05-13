@@ -19,7 +19,6 @@ const DetailContent: React.FC<DetailContentProps> = ({
   const diaryTitle = diaryData?.title || '';
   const content = diaryData?.content || '';
 
-  // 将内容分段，使其更美观
   const formatContent = (text: string) => {
     if (!text) return [];
     // 按照段落分割文本

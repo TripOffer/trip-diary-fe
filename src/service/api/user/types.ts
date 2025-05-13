@@ -2,6 +2,7 @@ import { ApiRes } from '../shared';
 
 export type Gender = 'secret' | 'male' | 'female';
 export type Role = 'User' | 'Admin' | 'Reviewer' | 'Super';
+export type DiaryStatus = 'Pending' | 'Approved' | 'Rejected';
 
 // 用户基础信息
 export interface UserBasicInfo {
@@ -129,3 +130,89 @@ export interface FollowStatsData {
   followersCount: number;
 }
 export type FollowStatsRes = ApiRes<FollowStatsData>;
+
+// 标签
+export interface Tag {
+  id: string;
+  name: string;
+}
+
+// 作者
+export interface Author {
+  id: string | number;
+  name: string;
+  avatar: string | null;
+}
+
+// 缩略图元数据
+export interface ThumbnailMeta {
+  id: string;
+  key: string;
+  userId: string | number;
+  ext: string;
+  width: number;
+  height: number;
+  duration?: number | null;
+  type: string;
+  createdAt: string;
+}
+
+// 日记基础信息（列表用）
+export interface DiaryBase {
+  id: string;
+  authorId: string | number;
+  parentId: string | null;
+  title: string;
+  slug: string;
+  thumbnail: string | null;
+  viewCount: number;
+  likeCount: number;
+  favoriteCount: number;
+  commentCount: number;
+  shareCount: number;
+  published: boolean;
+  publishedAt: string | null;
+  status: DiaryStatus;
+  rejectedReason: string | null;
+  reviewedAt: string | null;
+  createdAt: string;
+  updatedAt: string;
+  tags: Tag[];
+  author?: Author;
+  isLiked?: boolean;
+  isFavorite?: boolean;
+  thumbnailMeta?: ThumbnailMeta;
+}
+
+// 分页响应数据结构
+export interface PaginatedResponse {
+  list: DiaryBase[];
+  total: number;
+  page: number;
+  size: number;
+  totalPage: number;
+}
+
+// 我的日记列表
+export interface MyListQuery {
+  userId?: string | number;
+  page?: number;
+  size?: number;
+}
+export type MyListRes = ApiRes<PaginatedResponse>;
+
+// 我的收藏列表
+export interface MyFavoriteListQuery {
+  userId?: string | number;
+  page?: number;
+  size?: number;
+}
+export type MyFavoriteListRes = ApiRes<PaginatedResponse>;
+
+// 我的点赞列表
+export interface MyLikeListQuery {
+  userId?: string | number;
+  page?: number;
+  size?: number;
+}
+export type MyLikeListRes = ApiRes<PaginatedResponse>;

@@ -3,7 +3,9 @@ import { Icon } from '@iconify/react';
 import { Button } from 'tdesign-mobile-react';
 import { useNavigate } from 'react-router-dom';
 import DiaryMasonry from '@/components/DiaryMasonry';
-import { mockFetchMoreDiaries, DiaryItem } from '@/mock/diaries';
+import { DiaryBase } from '@/service/api/user/types';
+import { userApi } from '@/service/api/user';
+import Toast from '@/utils/toast';
 import styles from '../index.module.scss';
 
 type TabType = '笔记' | '收藏' | '赞过';
@@ -12,7 +14,8 @@ const ProfileContent: React.FC = () => {
   const [activeTab, setActiveTab] = useState<TabType>('笔记');
   const [loading, setLoading] = useState(false);
   const [page, setPage] = useState(1);
-  const [diaries, setDiaries] = useState<DiaryItem[]>([]);
+  const [diaries, setDiaries] = useState<DiaryBase[]>([]);
+  const [hasMore, setHasMore] = useState(true);
   const navigate = useNavigate();
 
   const tabs: TabType[] = ['笔记', '收藏', '赞过'];
@@ -20,39 +23,80 @@ const ProfileContent: React.FC = () => {
 
   // 初始加载数据
   useEffect(() => {
-    const type = activeTab === '笔记' ? 'my' : activeTab === '收藏' ? 'favorite' : 'liked';
     setLoading(true);
+    setPage(1);
 
-    mockFetchMoreDiaries(type, 1)
-      .then((data) => {
-        setDiaries(data);
-        setPage(1);
-      })
-      .finally(() => {
+    const fetchData = async () => {
+      try {
+        let response;
+
+        if (activeTab === '笔记') {
+          response = await userApi.getMyDiaries({ page: 1, size: 10 });
+        } else if (activeTab === '收藏') {
+          response = await userApi.getFavoriteDiaries({ page: 1, size: 10 });
+        } else {
+          response = await userApi.getLinkDiaries({ page: 1, size: 10 });
+        }
+
+        // @ts-ignore
+        if (response.data && response.data.list) {
+          // @ts-ignore
+          setDiaries(response.data.list);
+          // @ts-ignore
+          setHasMore(response.data.page < response.data.totalPage);
+        } else {
+          setDiaries([]);
+          setHasMore(false);
+        }
+      } catch (error) {
+        console.error('获取数据失败:', error);
+        Toast.error('获取数据失败，请稍后重试');
+        setDiaries([]);
+        setHasMore(false);
+      } finally {
         setLoading(false);
-      });
+      }
+    };
+
+    fetchData();
   }, [activeTab]);
 
   const handlePublish = () => {
     navigate('/publish');
   };
 
-  const handleLoadMore = useCallback(() => {
-    // 加载更多日记
-    const nextPage = page + 1;
-    const type = activeTab === '笔记' ? 'my' : activeTab === '收藏' ? 'favorite' : 'liked';
+  const handleLoadMore = useCallback(async () => {
+    if (!hasMore || loading) return;
 
+    const nextPage = page + 1;
     setLoading(true);
 
-    mockFetchMoreDiaries(type, nextPage)
-      .then((newData) => {
-        setDiaries((prev) => [...prev, ...newData]);
+    try {
+      let response;
+
+      if (activeTab === '笔记') {
+        response = await userApi.getMyDiaries({ page: nextPage, size: 10 });
+      } else if (activeTab === '收藏') {
+        response = await userApi.getFavoriteDiaries({ page: nextPage, size: 10 });
+      } else {
+        response = await userApi.getLinkDiaries({ page: nextPage, size: 10 });
+      }
+
+      // @ts-ignore
+      if (response.data && response.data.list) {
+        // @ts-ignore
+        setDiaries((prev) => [...prev, ...response.data.list]);
         setPage(nextPage);
-      })
-      .finally(() => {
-        setLoading(false);
-      });
-  }, [activeTab, page]);
+        // @ts-ignore
+        setHasMore(response.data.page < response.data.totalPage);
+      }
+    } catch (error) {
+      console.error('加载更多数据失败:', error);
+      Toast.error('加载更多数据失败，请稍后重试');
+    } finally {
+      setLoading(false);
+    }
+  }, [activeTab, page, hasMore, loading]);
 
   // 处理标签切换
   const handleTabChange = (tab: TabType) => {
@@ -84,12 +128,17 @@ const ProfileContent: React.FC = () => {
       </div>
 
       {/* 内容区域 */}
-      {hasContent ? (
+      {loading && !hasContent ? (
+        <div className={styles.loadingState}>
+          <Icon icon="mdi:loading" className={`${styles.loadingIcon} ${styles.spinning}`} />
+          <div className={styles.loadingText}>加载中...</div>
+        </div>
+      ) : hasContent ? (
         <div className={styles.masonryContainer}>
           <DiaryMasonry
             items={diaries}
             onLoadMore={handleLoadMore}
-            hasMore={true}
+            hasMore={hasMore}
             loading={loading}
           />
         </div>

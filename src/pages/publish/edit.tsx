@@ -89,9 +89,11 @@ const PublishEditPage = () => {
   const [showResult, setShowResult] = useState(false);
   const [showDialog, setShowDialog] = useState(false);
   const [dialogType, setDialogType] = useState<'publish' | 'archive'>('publish');
+  const [videoKey, setVideoKey] = useState<string | null>(null); // 新增 videoKey
 
   // 上传/发布相关状态和方法
-  const { uploading, progress, resultType, resultMsg, handleSubmit } = useDiaryUpload();
+  const { uploading, progress, resultType, resultMsg, handleSubmit, setResultType, setResultMsg } =
+    useDiaryUpload();
 
   // 新增：编辑模式下获取详情并初始化表单
   useEffect(() => {
@@ -107,7 +109,8 @@ const PublishEditPage = () => {
           // 处理图片/视频/封面
           if (data.video) {
             setIsVideo(true);
-            setVideoPreviewUrl(data.videoUrl || '');
+            setVideoPreviewUrl(data.videoUrl || getOssUrl(data.video) || '');
+            setVideoKey(data.video || null); // 赋值 videoKey
             setCoverImage(
               data.thumbnail
                 ? {
@@ -121,6 +124,7 @@ const PublishEditPage = () => {
             setImageFileList([]);
           } else {
             setIsVideo(false);
+            setVideoKey(null); // 清空 videoKey
             setImageFileList(
               (data.images || []).map((img: any, idx: number) => ({
                 name: `图片${idx + 1}`,
@@ -199,17 +203,44 @@ const PublishEditPage = () => {
   // 编辑模式标题
   const pageTitle = isEditMode ? '编辑日记' : isVideo ? '发布视频日记' : '发布图文日记';
 
-  // 触发Dialog
+  // 触发Dialog（提前校验）
   const handleBarClick = (type: 'publish' | 'archive') => {
+    // 必填项校验
+    if (!title.trim()) {
+      setResultType('error');
+      setResultMsg('标题为必填项');
+      setShowResult(true);
+      return;
+    }
+    if (!content.trim()) {
+      setResultType('error');
+      setResultMsg('正文为必填项');
+      setShowResult(true);
+      return;
+    }
+    if (isVideo) {
+      if (!initVideoFile && !videoPreviewUrl) {
+        setResultType('error');
+        setResultMsg('请上传视频');
+        setShowResult(true);
+        return;
+      }
+    } else {
+      if (!imageFileList || imageFileList.length === 0) {
+        setResultType('error');
+        setResultMsg('请上传图片');
+        setShowResult(true);
+        return;
+      }
+    }
     setDialogType(type);
     setShowDialog(true);
   };
 
-  // Dialog确认
+  // Dialog确认（只负责提交）
   const handleDialogConfirm = () => {
     setShowDialog(false);
     handleSubmit({
-      // 修正：handleSubmit 传递 id
       ...(isEditMode ? { id: diaryId } : {}),
       published: dialogType === 'publish',
       isVideo,
@@ -219,16 +250,24 @@ const PublishEditPage = () => {
       title,
       content,
       tags,
+      ...(videoKey ? { videoKey } : {}), // 仅 videoKey 存在时传递
       onSuccess: () => {
         setShowResult(true);
-        setTimeout(() => navigate('/'), 1500);
+        // 通知上一个页面刷新稿件列表
+        navigate(-1);
+        setTimeout(() => {
+          window.dispatchEvent(new CustomEvent('refresh-diary-list'));
+        }, 300);
       },
       onError: () => setShowResult(true),
     });
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-blue-50 to-white pt-8 px-4 pb-20">
+    <div
+      className="min-h-screen bg-gradient-to-b from-blue-50 to-white pt-8 px-4 pb-20 overflow-y-auto"
+      style={{ maxHeight: '100vh' }}
+    >
       {/* 进度条 */}
       {/* {uploading && (
         <div className="fixed top-0 left-0 w-full z-50">

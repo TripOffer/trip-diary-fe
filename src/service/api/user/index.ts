@@ -17,6 +17,14 @@ import {
   FollowersListRes,
   FollowStatsRes,
 } from './types';
+import {
+  MyListQuery,
+  MyListRes,
+  MyFavoriteListQuery,
+  MyFavoriteListRes,
+  MyLikeListQuery,
+  MyLikeListRes,
+} from './types';
 
 class UserApi extends BaseApi {
   urls = {
@@ -26,12 +34,27 @@ class UserApi extends BaseApi {
     update: '/user/me',
     updateAvatar: '/user/me/avatar',
     changeRole: (id: number | string) => `/user/profile/${id}/role`,
+    myList: '/user/me/diary',
+    likeList: '/user/me/like',
+    favoriteList: '/user/me/favorite',
   };
 
   tag = 'User';
 
   async getUserList(params: UserListQuery) {
     return this.http.get<UserListRes>(this.urls.list, { params });
+  }
+
+  async getMyDiaries(params: MyListQuery) {
+    return this.http.get<MyListRes>(this.urls.myList, { params });
+  }
+
+  async getFavoriteDiaries(params: MyFavoriteListQuery) {
+    return this.http.get<MyFavoriteListRes>(this.urls.favoriteList, { params });
+  }
+
+  async getLinkDiaries(params: MyLikeListQuery) {
+    return this.http.get<MyLikeListRes>(this.urls.likeList, { params });
   }
 
   async getUserDetail(id: number | string) {

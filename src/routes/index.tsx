@@ -2,7 +2,7 @@ import PublishPage from '@/pages/publish';
 import React from 'react';
 import { Navigate, Route, Routes } from 'react-router-dom';
 import App from '../App';
-import DiaryDetail from '../pages/diary';
+import DiaryDetail from '../pages/diary/detail';
 import Home from '../pages/home';
 import Login from '../pages/login';
 import Profile from '../pages/profile';

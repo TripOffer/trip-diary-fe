@@ -10,6 +10,7 @@ import ProfileEdit from '../pages/profile/edit';
 import Search from '../pages/search';
 import UserProfile from '../pages/user';
 import PublishEditPage from '../pages/publish/edit';
+import SettingPage from '../pages/setting';
 import { useAuthStore } from '@/store/auth';
 
 const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
@@ -29,10 +30,46 @@ const AppRoutes: React.FC = () => (
   <Routes>
     <Route path="/" element={<App />}>
       <Route index element={<Home />} />
-      <Route path="publish" element={<PublishPage />} />
-      <Route path="publish/edit" element={<PublishEditPage />} />
-      <Route path="profile" element={<Profile />} />
-      <Route path="profile/edit" element={<ProfileEdit />} />
+      <Route
+        path="publish"
+        element={
+          <ProtectedRoute>
+            <PublishPage />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="publish/edit"
+        element={
+          <ProtectedRoute>
+            <PublishEditPage />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="profile"
+        element={
+          <ProtectedRoute>
+            <Profile />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="profile/edit"
+        element={
+          <ProtectedRoute>
+            <ProfileEdit />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="setting"
+        element={
+          <ProtectedRoute>
+            <SettingPage />
+          </ProtectedRoute>
+        }
+      />
       <Route path="login" element={<Login />} />
       <Route path="diary/:id" element={<DiaryDetail />} />
       <Route path="user/:id" element={<UserProfile />} />

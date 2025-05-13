@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Popup, List, Cell, PullDownRefresh, Avatar, Divider, Message } from 'tdesign-mobile-react';
 import { Icon } from '@iconify/react';
 import { Comment, generateMockComments } from '@/mock/comments';

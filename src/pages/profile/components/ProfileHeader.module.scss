@@ -3,17 +3,17 @@
   flex-direction: column;
   gap: 24px;
   width: 100%;
-  padding-bottom: 16px;
 }
 
 .userInfo {
   display: flex;
   align-items: center;
-  gap: 16px;
+  gap: 30px;
 
   .avatar {
     width: 72px;
     height: 72px;
+    margin-left: 16px;
     border-radius: 50%;
     overflow: hidden;
     flex-shrink: 0;
@@ -122,9 +122,10 @@
   display: flex;
   align-items: center;
   gap: 12px;
+  padding: 0 16px;
 
   .editBtn {
-    flex: 1;
+    flex: 3;
     height: 36px;
     font-size: 14px;
     font-weight: 500;
@@ -141,24 +142,20 @@
     }
   }
 
-  .settingsBtn {
-    width: 36px;
+  .settingBtn {
+    flex: 1;
     height: 36px;
-    padding: 0;
-    background: #f8f9fa;
-    border: none;
-    color: #000;
+    font-size: 14px;
+    font-weight: 500;
+    color: #666;
+    border-color: #e0e0e0;
 
     &:hover {
-      background: #f0f1f2;
+      background: #f8f9fa;
     }
 
     &:active {
-      background: #e9ecef;
-    }
-
-    :global(.t-icon) {
-      font-size: 18px;
+      background: #f0f1f2;
     }
   }
 }

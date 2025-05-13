@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import { Message } from 'tdesign-mobile-react';
 import { useParams } from 'react-router-dom';
 import dayjs from 'dayjs';
 import DetailNavBar from '../components/DetailNavBar';
@@ -7,35 +6,9 @@ import BottomBar from '../components/BottomBar';
 import CommentPopup from '../components/CommentPopup';
 import DetailContent from '../components/DetailContent';
 import Api from '@/service/api';
+import { DiaryDetail } from '@/types/diary';
+import Toast from '@/utils/toast';
 import styles from './index.module.scss';
-
-interface DiaryDetail {
-  id: string;
-  title: string;
-  content: string;
-  images?: string[];
-  thumbnail?: string;
-  createdAt: string;
-  updatedAt: string;
-  publishedAt: string;
-  viewCount: number;
-  author: {
-    id: string | number;
-    name: string;
-    avatar: string;
-  };
-  likeCount: number;
-  favoriteCount: number;
-  commentCount: number;
-  isLiked?: boolean;
-  isFavorite?: boolean;
-  tags?: Array<{ id: string; name: string }>;
-  isFollowedAuthor?: boolean;
-  thumbnailMeta?: {
-    width: number;
-    height: number;
-  };
-}
 
 const DiaryDetailPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -67,7 +40,6 @@ const DiaryDetailPage: React.FC = () => {
       try {
         const response = await Api.diaryApi.getDiaryDetail(id);
         if (response && response.data) {
-          // 强制类型转换，确保安全
           const diaryDetail = response.data as unknown as DiaryDetail;
           setDiaryData(diaryDetail);
 
@@ -94,10 +66,7 @@ const DiaryDetailPage: React.FC = () => {
         }
       } catch (error) {
         console.error('Failed to fetch diary detail:', error);
-        Message.error({
-          content: '获取日记详情失败',
-          duration: 2000,
-        });
+        Toast.error('获取日记详情失败');
       } finally {
         setIsLoading(false);
       }
@@ -117,23 +86,14 @@ const DiaryDetailPage: React.FC = () => {
       }
 
       setIsFollowing(!isFollowing);
-      Message.success({
-        content: isFollowing ? '已取消关注' : '已关注',
-        duration: 1000,
-      });
+      Toast.success(isFollowing ? '已取消关注' : '已关注', { duration: 1000 });
     } catch {
-      Message.error({
-        content: '操作失败，请重试',
-        duration: 2000,
-      });
+      Toast.error('操作失败，请重试');
     }
   };
 
   const handleShareClick = () => {
-    Message.info({
-      content: '分享功能开发中',
-      duration: 1000,
-    });
+    Toast.info('分享功能开发中', { duration: 1000 });
   };
 
   const handleLikeChange = async (liked: boolean) => {
@@ -148,15 +108,9 @@ const DiaryDetailPage: React.FC = () => {
 
       setIsLiked(liked);
       setLikeCount((prev) => (liked ? prev + 1 : Math.max(0, prev - 1)));
-      Message.success({
-        content: liked ? '已点赞' : '已取消点赞',
-        duration: 1000,
-      });
+      Toast.success(liked ? '已点赞' : '已取消点赞', { duration: 1000 });
     } catch {
-      Message.error({
-        content: '操作失败，请重试',
-        duration: 2000,
-      });
+      Toast.error('操作失败，请重试');
     }
   };
 
@@ -172,16 +126,10 @@ const DiaryDetailPage: React.FC = () => {
 
       setIsStarred(starred);
       setStarCount((prev) => (starred ? prev + 1 : Math.max(0, prev - 1)));
-      Message.success({
-        content: starred ? '已收藏' : '已取消收藏',
-        duration: 1000,
-      });
+      Toast.success(starred ? '已收藏' : '已取消收藏', { duration: 1000 });
     } catch (error) {
       console.error('Failed to favorite/unfavorite:', error);
-      Message.error({
-        content: '操作失败，请重试',
-        duration: 2000,
-      });
+      Toast.error('操作失败，请重试');
     }
   };
 
@@ -194,16 +142,10 @@ const DiaryDetailPage: React.FC = () => {
 
     try {
       setCommentCount((prev) => prev + 1);
-      Message.success({
-        content: '评论成功',
-        duration: 1000,
-      });
+      Toast.success('评论成功', { duration: 1000 });
     } catch (error) {
       console.error('Failed to submit comment:', error);
-      Message.error({
-        content: '评论失败，请重试',
-        duration: 2000,
-      });
+      Toast.error('评论失败，请重试');
     }
   };
 
@@ -239,7 +181,6 @@ const DiaryDetailPage: React.FC = () => {
         onCommentSubmit={handleCommentSubmit}
       />
 
-      {/* 评论弹窗 */}
       <CommentPopup
         visible={commentPopupVisible}
         onVisibleChange={setCommentPopupVisible}

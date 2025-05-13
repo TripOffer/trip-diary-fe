@@ -1,34 +1,7 @@
 import React from 'react';
 import { Tag } from 'tdesign-mobile-react';
+import { DiaryDetail } from '@/types/diary';
 import styles from './DetailContent.module.scss';
-
-interface DiaryDetail {
-  id: string;
-  title: string;
-  content: string;
-  images?: string[];
-  thumbnail?: string;
-  createdAt: string;
-  updatedAt: string;
-  publishedAt: string;
-  viewCount: number;
-  author: {
-    id: string | number;
-    name: string;
-    avatar: string;
-  };
-  likeCount: number;
-  favoriteCount: number;
-  commentCount: number;
-  isLiked?: boolean;
-  isFavorite?: boolean;
-  tags?: Array<{ id: string; name: string }>;
-  isFollowedAuthor?: boolean;
-  thumbnailMeta?: {
-    width: number;
-    height: number;
-  };
-}
 
 interface DetailContentProps {
   diaryData: DiaryDetail | null;
@@ -46,7 +19,6 @@ const DetailContent: React.FC<DetailContentProps> = ({
   const diaryTitle = diaryData?.title || '';
   const content = diaryData?.content || '';
 
-  // 将内容分段，使其更美观
   const formatContent = (text: string) => {
     if (!text) return [];
     // 按照段落分割文本
@@ -54,6 +26,11 @@ const DetailContent: React.FC<DetailContentProps> = ({
   };
 
   const paragraphs = formatContent(content);
+
+  // 处理资源URL，添加OSS前缀
+  const getResourceUrl = (path: string) => {
+    return path.startsWith('http') ? path : `${OSS_PREFIX}${path}`;
+  };
 
   return (
     <div className={styles.content}>
@@ -74,13 +51,29 @@ const DetailContent: React.FC<DetailContentProps> = ({
               )}
             </div>
 
+            {/* 视频展示区域 */}
+            {diaryData?.video && (
+              <div className={styles.videoContainer}>
+                <div className={styles.videoWrapper}>
+                  <video
+                    controls
+                    poster={diaryData.thumbnail ? getResourceUrl(diaryData.thumbnail) : undefined}
+                  >
+                    <source src={getResourceUrl(diaryData.video)} type="video/mp4" />
+                    您的浏览器不支持视频播放
+                  </video>
+                  <div className={styles.videoControls}></div>
+                </div>
+              </div>
+            )}
+
             {/* 图片展示区域 */}
             {diaryData?.images && diaryData.images.length > 0 && (
               <div className={styles.imageContainer}>
                 {diaryData.images.map((image, index) => (
                   <div key={index} className={styles.imageWrapper}>
                     <img
-                      src={image.startsWith('http') ? image : `${OSS_PREFIX}${image}`}
+                      src={getResourceUrl(image)}
                       alt={`${diaryTitle} - 图片${index + 1}`}
                       className={styles.diaryImage}
                     />
@@ -101,7 +94,7 @@ const DetailContent: React.FC<DetailContentProps> = ({
                       {formatDate(diaryData.publishedAt).split(' ')[0]}
                     </div>
                   )}
-                  <div className={styles.place}>福建</div>
+                  <div className={styles.place}>中国大陆</div>
                 </div>
                 <div className={styles.hashTags}>
                   {diaryData?.tags &&

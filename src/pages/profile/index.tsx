@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Message, Loading } from 'tdesign-mobile-react';
+import { useLocation } from 'react-router-dom';
 import styles from './index.module.scss';
 import ProfileHeader from './components/ProfileHeader';
 import ProfileContent from './components/ProfileContent';
@@ -15,6 +16,7 @@ interface ApiResponse {
 const Profile: React.FC = () => {
   const [userData, setUserData] = useState<MyUserDetailData | null>(null);
   const [loading, setLoading] = useState(true);
+  const location = useLocation();
 
   // 获取用户详情数据
   useEffect(() => {
@@ -40,8 +42,7 @@ const Profile: React.FC = () => {
     };
 
     fetchUserData();
-  }, []);
-
+  }, [location.key]);
   const handleAvatarChange = (newAvatar: string) => {
     if (userData) {
       setUserData({

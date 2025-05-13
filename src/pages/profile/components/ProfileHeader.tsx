@@ -1,10 +1,11 @@
 import React, { useRef } from 'react';
-import { Avatar, Button, Message } from 'tdesign-mobile-react';
+import { Avatar, Button } from 'tdesign-mobile-react';
 import { Icon } from '@iconify/react';
 import { useNavigate } from 'react-router-dom';
 import styles from './ProfileHeader.module.scss';
 import { userApi } from '@/service/api/user';
 import { uploadResource } from '@/utils/upload';
+import Toast from '@/utils/toast';
 
 interface UserData {
   name: string;
@@ -54,16 +55,20 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = ({ userData, statsData, onAv
       const response = await userApi.updateAvatar({ avatar: ossObject.key });
       if (response && response.data) {
         const newAvatarUrl = OSS_PREFIX + ossObject.key;
-        Message.success('头像更新成功');
+        Toast.success('头像更新成功');
         onAvatarChange?.(newAvatarUrl);
       }
     } catch {
-      Message.error('头像更新失败，请重试');
+      Toast.error('头像更新失败，请重试');
     }
   };
 
   const handleEditProfile = () => {
     navigate('/profile/edit');
+  };
+
+  const handleGoToSettings = () => {
+    navigate('/setting');
   };
 
   return (
@@ -115,7 +120,14 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = ({ userData, statsData, onAv
         >
           编辑个人资料
         </Button>
-        <Button className={styles.settingsBtn} icon={<Icon icon="mdi:cog" />} />
+        <Button
+          className={styles.settingBtn}
+          icon={<Icon icon="mdi:cog" />}
+          onClick={handleGoToSettings}
+          variant="outline"
+        >
+          设置
+        </Button>
       </div>
     </div>
   );

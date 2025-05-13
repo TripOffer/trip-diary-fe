@@ -30,12 +30,12 @@
 .content {
   position: relative;
   z-index: 1;
-  padding: 16px 16px 0;
   flex: 1;
 
   .card {
     background: #fff;
     padding: 16px;
+    padding-bottom: 0;
   }
 }
 
@@ -81,6 +81,39 @@
   }
 }
 
+.loadingState {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 0;
+  color: #999;
+
+  .loadingIcon {
+    width: 32px;
+    height: 32px;
+    margin-bottom: 12px;
+    color: #999;
+  }
+
+  .loadingText {
+    font-size: 14px;
+  }
+
+  .spinning {
+    animation: spin 1s linear infinite;
+  }
+
+  @keyframes spin {
+    from {
+      transform: rotate(0deg);
+    }
+    to {
+      transform: rotate(360deg);
+    }
+  }
+}
+
 .emptyState {
   display: flex;
   flex-direction: column;
@@ -119,5 +152,40 @@
     &:active {
       opacity: 0.8;
     }
+  }
+}
+
+.masonryContainer {
+  margin: -16px;
+  height: calc(100vh - 130px);
+  overflow: auto;
+  -webkit-overflow-scrolling: touch;
+  position: relative;
+  background-color: #fafafa;
+
+  :global {
+    .w-full.h-full.overflow-auto {
+      height: 100% !important;
+      padding-top: 8px !important;
+      padding-bottom: 80px !important;
+    }
+
+    .pr-1,
+    .pl-1 {
+      padding-right: 4px !important;
+      padding-left: 4px !important;
+    }
+
+    .py-20.px-4 {
+      padding: 12px 12px 0 !important;
+    }
+
+    .mb-2 {
+      margin-bottom: 8px !important;
+    }
+  }
+
+  &::-webkit-scrollbar {
+    display: none;
   }
 }

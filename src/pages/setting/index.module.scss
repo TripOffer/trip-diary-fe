@@ -1,0 +1,153 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  background-color: #f8f8f8;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 56px;
+  padding: 0 16px;
+  background-color: #fff;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+
+  .backButton {
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    color: #333;
+    cursor: pointer;
+  }
+
+  .title {
+    font-size: 18px;
+    font-weight: 600;
+    margin: 0;
+    color: #333;
+  }
+
+  .dummySpace {
+    width: 32px;
+  }
+}
+
+.content {
+  flex: 1;
+  padding: 16px 0;
+}
+
+.section {
+  margin-bottom: 16px;
+  background-color: #fff;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+}
+
+.cell {
+  :global {
+    .t-cell__left-icon {
+      font-size: 20px;
+      margin-right: 12px;
+      color: #3e7aff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .t-cell__title {
+      font-size: 16px;
+      font-weight: 500;
+      color: #333;
+    }
+
+    .t-cell__description {
+      font-size: 14px;
+      color: #999;
+    }
+
+    .t-cell__note {
+      display: flex;
+      align-items: center;
+    }
+
+    .t-cell {
+      padding-top: 16px;
+      padding-bottom: 16px;
+      align-items: center;
+    }
+  }
+}
+
+.storageCell {
+  :global {
+    .t-cell__left-icon {
+      color: #3373f3;
+    }
+
+    .t-cell__description {
+      margin-right: 4px;
+    }
+
+    .t-cell__right {
+      display: flex;
+      align-items: center;
+    }
+  }
+}
+
+.accountActions {
+  margin: 24px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+
+  .switchBtn {
+    height: 44px;
+    font-size: 16px;
+    font-weight: 500;
+    border-radius: 8px;
+    background-color: #fff;
+    color: #333;
+    border: 1px solid #e0e0e0;
+  }
+
+  .logoutBtn {
+    height: 44px;
+    font-size: 16px;
+    font-weight: 500;
+    border-radius: 8px;
+  }
+}
+
+.privacyLinks {
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+  margin: 16px 0 32px;
+  padding: 0 16px;
+  text-align: center;
+  font-size: 12px;
+  color: #999;
+
+  span {
+    cursor: pointer;
+
+    &:hover {
+      color: #666;
+    }
+  }
+}

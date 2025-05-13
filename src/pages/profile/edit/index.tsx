@@ -172,8 +172,8 @@ const ProfileEdit: React.FC = () => {
         Message.success('个人资料更新成功');
         // 更新成功后返回个人主页
         setTimeout(() => {
-          navigate('/profile');
-        }, 1000);
+          navigate('/profile', { replace: true });
+        }, 1200);
       } else {
         throw new Error('Update failed');
       }

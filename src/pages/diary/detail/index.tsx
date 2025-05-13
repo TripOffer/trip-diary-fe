@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { Message } from 'tdesign-mobile-react';
 import { useParams } from 'react-router-dom';
+import dayjs from 'dayjs';
 import DetailNavBar from '../components/DetailNavBar';
 import BottomBar from '../components/BottomBar';
 import CommentPopup from '../components/CommentPopup';
+import DetailContent from '../components/DetailContent';
 import Api from '@/service/api';
 import styles from './index.module.scss';
 
@@ -11,6 +13,12 @@ interface DiaryDetail {
   id: string;
   title: string;
   content: string;
+  images?: string[];
+  thumbnail?: string;
+  createdAt: string;
+  updatedAt: string;
+  publishedAt: string;
+  viewCount: number;
   author: {
     id: string | number;
     name: string;
@@ -21,6 +29,12 @@ interface DiaryDetail {
   commentCount: number;
   isLiked?: boolean;
   isFavorite?: boolean;
+  tags?: Array<{ id: string; name: string }>;
+  isFollowedAuthor?: boolean;
+  thumbnailMeta?: {
+    width: number;
+    height: number;
+  };
 }
 
 const DiaryDetailPage: React.FC = () => {
@@ -38,6 +52,11 @@ const DiaryDetailPage: React.FC = () => {
   const [authorAvatar, setAuthorAvatar] = useState('');
   const [authorId, setAuthorId] = useState<string | number>('');
   const OSS_PREFIX = import.meta.env.VITE_OSS_URL || '';
+
+  // 格式化日期
+  const formatDate = (dateString: string) => {
+    return dayjs(dateString).format('YYYY-MM-DD HH:mm');
+  };
 
   // 获取日记详情数据
   useEffect(() => {
@@ -58,6 +77,7 @@ const DiaryDetailPage: React.FC = () => {
           setLikeCount(diaryDetail.likeCount || 0);
           setStarCount(diaryDetail.favoriteCount || 0);
           setCommentCount(diaryDetail.commentCount || 0);
+          setIsFollowing(diaryDetail.isFollowedAuthor || false);
 
           // 设置作者信息
           if (diaryDetail.author) {
@@ -188,8 +208,6 @@ const DiaryDetailPage: React.FC = () => {
   };
 
   const title = authorName || '加载中...';
-  const content = diaryData?.content || '';
-  const diaryTitle = diaryData?.title || '';
 
   return (
     <div className={styles.container}>
@@ -202,18 +220,12 @@ const DiaryDetailPage: React.FC = () => {
         onShareClick={handleShareClick}
       />
 
-      <div className={styles.content}>
-        {isLoading ? (
-          <div className={styles.placeholder}>加载中...</div>
-        ) : (
-          <>
-            <div className={styles.dummyContent}>
-              <h2>{diaryTitle}</h2>
-              <p>{content}</p>
-            </div>
-          </>
-        )}
-      </div>
+      <DetailContent
+        diaryData={diaryData}
+        isLoading={isLoading}
+        OSS_PREFIX={OSS_PREFIX}
+        formatDate={formatDate}
+      />
 
       <BottomBar
         likeCount={likeCount}

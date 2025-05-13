@@ -43,9 +43,9 @@ class DiaryApi extends BaseApi {
     review: (id: number) => `/diary/${id}/review`,
     reviewList: '/diary/review-list',
     like: (id: string) => `/diary/${id}/like`,
-    unlike: (id: string) => `/diary/${id}/unlike`,
+    unlike: (id: string) => `/diary/${id}/like`,
     favorite: (id: string | number) => `/diary/${id}/favorite`,
-    unfavorite: (id: string | number) => `/diary/${id}/unfavorite`,
+    unfavorite: (id: string | number) => `/diary/${id}/favorite`,
     comment: '/diary/comment',
     commentList: (diaryId: number) => `/diary/${diaryId}/comments`,
     replyList: (commentId: number) => `/diary/comment/${commentId}/replies`,
@@ -110,7 +110,7 @@ class DiaryApi extends BaseApi {
   }
 
   async unfavoriteDiary(id: string | number) {
-    return this.http.post<UnfavoriteDiaryRes>(this.urls.unfavorite(id));
+    return this.http.delete<UnfavoriteDiaryRes>(this.urls.unfavorite(id));
   }
 
   async createComment(data: CreateCommentReq) {

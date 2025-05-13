@@ -69,6 +69,16 @@ const ManageEntries: React.FC = () => {
     // eslint-disable-next-line
   }, []);
 
+  useEffect(() => {
+    const handler = () => {
+      fetchEntries();
+    };
+    window.addEventListener('refresh-diary-list', handler);
+    return () => {
+      window.removeEventListener('refresh-diary-list', handler);
+    };
+  }, []);
+
   // 下拉刷新回调
   const handleRefresh = async () => {
     await fetchEntries(true);

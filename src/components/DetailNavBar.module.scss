@@ -48,7 +48,7 @@
   .followButton {
     height: 32px;
     min-width: 64px;
-    border-radius: 16px;
+    border-radius: 10px;
     font-size: 14px;
     padding: 0 12px;
     display: flex;
@@ -63,6 +63,10 @@
       border: 1px solid #ddd;
       color: #666;
     }
+
+    &::after {
+      display: none !important;
+    }
   }
 
   .shareIcon {
@@ -74,5 +78,11 @@
     color: #333;
     width: 36px;
     height: 36px;
+  }
+}
+
+:global {
+  .t-button::after {
+    display: none !important;
   }
 }

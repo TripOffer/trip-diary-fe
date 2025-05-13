@@ -1,0 +1,185 @@
+.content {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  padding-bottom: 24px;
+  background-color: #f8f8f8;
+  width: 100%;
+  overflow-x: hidden;
+}
+
+.placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 200px;
+  background-color: #fafafa;
+  border-radius: 8px;
+  color: #999;
+  font-size: 14px;
+  margin: 0 20px;
+}
+
+.diaryContent {
+  border-radius: 12px;
+  margin-bottom: 16px;
+  width: 100%;
+
+  .diaryTitle {
+    font-size: 32px;
+    font-weight: bold;
+    margin: 32px 20px 28px;
+    color: #222;
+    line-height: 1.3;
+    text-align: center;
+    letter-spacing: -0.5px;
+    font-family:
+      'PingFang SC',
+      -apple-system,
+      BlinkMacSystemFont,
+      'Segoe UI',
+      Roboto,
+      'Helvetica Neue',
+      Arial,
+      sans-serif;
+    position: relative;
+
+    &::after {
+      content: '';
+      position: absolute;
+      bottom: -12px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 40px;
+      height: 3px;
+      background-color: #f35369;
+      border-radius: 3px;
+    }
+  }
+
+  .diaryText {
+    margin: 0 20px 32px;
+    font-size: 18px;
+    line-height: 1.8;
+    color: #333;
+    white-space: pre-wrap;
+    word-break: break-word;
+    text-align: left;
+    font-family:
+      'PingFang SC',
+      -apple-system,
+      BlinkMacSystemFont,
+      'Segoe UI',
+      Roboto,
+      'Helvetica Neue',
+      Arial,
+      sans-serif;
+    letter-spacing: 0.3px;
+
+    p {
+      margin-bottom: 20px;
+      position: relative;
+
+      &:nth-child(2n) {
+        position: relative;
+
+        &::after {
+          content: '';
+          position: absolute;
+          bottom: 2px;
+          left: 0;
+          width: 100%;
+          height: 8px;
+          background-color: rgba(255, 230, 0, 0.4);
+          z-index: -1;
+          border-radius: 4px;
+        }
+      }
+
+      &:nth-child(2n + 1) {
+        position: relative;
+
+        &::after {
+          content: '';
+          position: absolute;
+          bottom: 2px;
+          left: 0;
+          width: 100%;
+          height: 8px;
+          background-color: rgba(255, 230, 0, 0.4);
+          z-index: -1;
+          border-radius: 4px;
+        }
+      }
+
+      &:first-letter {
+        font-size: 24px;
+        font-weight: 600;
+        color: #111;
+      }
+    }
+  }
+
+  .imageContainer {
+    width: 100vw; // 设置为视窗宽度
+    margin-left: calc(-50vw + 50%); // 居中对齐
+    position: relative;
+
+    .imageWrapper {
+      margin-bottom: 16px;
+      overflow: hidden;
+
+      .diaryImage {
+        width: 100%;
+        height: auto;
+        display: block;
+        object-fit: cover;
+      }
+    }
+  }
+
+  .diaryFooter {
+    margin: 24px 20px 0;
+    padding-top: 16px;
+    border-top: 1px solid rgba(0, 0, 0, 0.05);
+
+    .bottomMeta {
+      .locationTime {
+        display: flex;
+        flex-wrap: wrap;
+        margin-bottom: 16px;
+        align-items: center;
+
+        .location {
+          font-size: 16px;
+          font-weight: 500;
+          margin-right: 12px;
+          color: #333;
+          background-color: rgba(0, 0, 0, 0.03);
+          padding: 4px 10px;
+          border-radius: 16px;
+        }
+
+        .time,
+        .place {
+          font-size: 14px;
+          color: #888;
+          margin-right: 12px;
+        }
+      }
+
+      .hashTags {
+        font-size: 14px;
+        margin-top: 12px;
+        line-height: 1.6;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+
+        .tag {
+          display: none;
+        }
+      }
+    }
+  }
+}

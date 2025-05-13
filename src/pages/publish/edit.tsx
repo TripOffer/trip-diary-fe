@@ -1,12 +1,11 @@
 import React, { useState, useEffect } from 'react'; // Removed unused useRef
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate, useSearchParams } from 'react-router-dom';
 import type { UploadFile } from 'tdesign-mobile-react/es/upload/type';
 import DiaryForm from './components/DiaryForm';
 import ImageUpload from './components/ImageUpload';
 import VideoSection from './components/VideoSection';
 import BottomBar from './components/BottomBar';
 import { Progress } from 'tdesign-mobile-react';
-import { useNavigate } from 'react-router-dom';
 import PublishDialog from './components/PublishDialog';
 import PublishResult from './components/PublishResult';
 import useDiaryUpload from './hooks/useDiaryUpload';
@@ -55,30 +54,98 @@ const generateVideoThumbnail = async (videoFile: File): Promise<UploadFile | nul
   });
 };
 
+const OSS_PREFIX = import.meta.env.VITE_OSS_URL || '';
+const getOssUrl = (key?: string) => {
+  if (!key) return '';
+  if (key.startsWith('http')) return key;
+  return OSS_PREFIX + key;
+};
+
 const PublishEditPage = () => {
   const location = useLocation();
   const navigate = useNavigate();
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const { files: initFiles, file: initVideoFile, type: contentType } = location.state || {};
+  // 新增：支持 URL 查询参数 id
+  const [searchParams] = useSearchParams();
+  const urlId = searchParams.get('id');
+  // 优先 location.state.id，否则取 urlId
+  const {
+    files: initFiles,
+    file: initVideoFile,
+    type: contentType,
+    id: stateId,
+  } = location.state || {};
+  const diaryId = stateId || urlId;
+
+  // 新增：编辑模式标志
+  const isEditMode = Boolean(diaryId);
 
   const [isVideo, setIsVideo] = useState(contentType === 'video');
-  // const [videoFile, setVideoFile] = useState<File | null>(null); // Marked as unused, commented out
   const [coverImage, setCoverImage] = useState<UploadFile | null>(null);
   const [videoPreviewUrl, setVideoPreviewUrl] = useState<string | null>(null);
-
-  // For image uploads (original logic)
   const [imageFileList, setImageFileList] = useState<UploadFile[]>([]);
-
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
   const [tags, setTags] = useState<string[]>([]);
-
   const [showResult, setShowResult] = useState(false);
   const [showDialog, setShowDialog] = useState(false);
   const [dialogType, setDialogType] = useState<'publish' | 'archive'>('publish');
 
-  // 替换原有上传/发布相关状态和方法
+  // 上传/发布相关状态和方法
   const { uploading, progress, resultType, resultMsg, handleSubmit } = useDiaryUpload();
+
+  // 新增：编辑模式下获取详情并初始化表单
+  useEffect(() => {
+    if (isEditMode && diaryId) {
+      // 获取详情
+      import('@/service/api').then(({ default: Api }) => {
+        Api.diaryApi.getDiaryDetail(diaryId).then((res: any) => {
+          const data = res.data;
+          setTitle(data.title || '');
+          setContent(data.content || '');
+          // 标签兼容对象/字符串
+          setTags(Array.isArray(data.tags) ? data.tags.map((t: any) => t.name || t) : []);
+          // 处理图片/视频/封面
+          if (data.video) {
+            setIsVideo(true);
+            setVideoPreviewUrl(data.videoUrl || '');
+            setCoverImage(
+              data.thumbnail
+                ? {
+                    name: '封面',
+                    url: getOssUrl(data.thumbnail),
+                    status: 'success',
+                    raw: undefined,
+                  }
+                : null,
+            );
+            setImageFileList([]);
+          } else {
+            setIsVideo(false);
+            setImageFileList(
+              (data.images || []).map((img: any, idx: number) => ({
+                name: `图片${idx + 1}`,
+                url: getOssUrl(img),
+                status: 'success',
+                raw: undefined,
+              })),
+            );
+            setCoverImage(
+              data.thumbnail
+                ? {
+                    name: '封面',
+                    url: getOssUrl(data.thumbnail),
+                    status: 'success',
+                    raw: undefined,
+                  }
+                : null,
+            );
+            setVideoPreviewUrl(null);
+          }
+        });
+      });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isEditMode, diaryId]);
 
   // 上传状态变化时，控制Result弹窗显示/隐藏
   useEffect(() => {
@@ -88,31 +155,31 @@ const PublishEditPage = () => {
   }, [uploading]);
 
   useEffect(() => {
-    if (contentType === 'video' && initVideoFile) {
-      setIsVideo(true);
-      // setVideoFile(initVideoFile); // Corresponding setter for the commented out state
-      setVideoPreviewUrl(URL.createObjectURL(initVideoFile));
-      generateVideoThumbnail(initVideoFile).then((thumbnail) => {
-        if (thumbnail) {
-          setCoverImage(thumbnail);
-        }
-      });
-      setImageFileList([]); // Clear image list if it's a video post
-    } else if (contentType === 'image' && initFiles) {
-      setIsVideo(false);
-      const initialUploadFiles: UploadFile[] = Array.isArray(initFiles)
-        ? initFiles.map((file: File, idx: number) => ({
-            name: file.name,
-            raw: file,
-            url: URL.createObjectURL(file),
-            status: 'success',
-            uid: `${Date.now()}-${idx}`,
-          }))
-        : [];
-      setImageFileList(initialUploadFiles);
-      // setVideoFile(null); // Corresponding setter for the commented out state
-      setCoverImage(null);
-      setVideoPreviewUrl(null);
+    if (!isEditMode) {
+      if (contentType === 'video' && initVideoFile) {
+        setIsVideo(true);
+        setVideoPreviewUrl(URL.createObjectURL(initVideoFile));
+        generateVideoThumbnail(initVideoFile).then((thumbnail) => {
+          if (thumbnail) {
+            setCoverImage(thumbnail);
+          }
+        });
+        setImageFileList([]); // Clear image list if it's a video post
+      } else if (contentType === 'image' && initFiles) {
+        setIsVideo(false);
+        const initialUploadFiles: UploadFile[] = Array.isArray(initFiles)
+          ? initFiles.map((file: File, idx: number) => ({
+              name: file.name,
+              raw: file,
+              url: URL.createObjectURL(file),
+              status: 'success',
+              uid: `${Date.now()}-${idx}`,
+            }))
+          : [];
+        setImageFileList(initialUploadFiles);
+        setCoverImage(null);
+        setVideoPreviewUrl(null);
+      }
     }
 
     // Cleanup object URLs on component unmount
@@ -127,9 +194,10 @@ const PublishEditPage = () => {
       });
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [contentType, initFiles, initVideoFile]);
+  }, [contentType, initFiles, initVideoFile, isEditMode]);
 
-  const pageTitle = isVideo ? '发布视频日记' : '发布图文日记';
+  // 编辑模式标题
+  const pageTitle = isEditMode ? '编辑日记' : isVideo ? '发布视频日记' : '发布图文日记';
 
   // 触发Dialog
   const handleBarClick = (type: 'publish' | 'archive') => {
@@ -141,6 +209,8 @@ const PublishEditPage = () => {
   const handleDialogConfirm = () => {
     setShowDialog(false);
     handleSubmit({
+      // 修正：handleSubmit 传递 id
+      ...(isEditMode ? { id: diaryId } : {}),
       published: dialogType === 'publish',
       isVideo,
       initVideoFile,

@@ -13,6 +13,7 @@ export interface PresignQuery {
 export interface PresignData {
   url: string;
   key: string;
+  contentType?: string; // 新增，兼容 contentType 字段
 }
 export type PresignRes = PresignData;
 

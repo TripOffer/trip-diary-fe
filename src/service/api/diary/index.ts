@@ -32,15 +32,15 @@ import {
 
 class DiaryApi extends BaseApi {
   urls = {
-    myList: '/diary/my-list',
+    myList: '/user/me/diary',
     userList: (userId: number) => `/diary/user/${userId}/list`,
     favoriteList: '/diary/favorite-list',
-    detail: (id: string | number) => `/diary/${id}/detail`,
+    detail: (id: string) => `/diary/${id}/detail`,
     create: '/diary',
-    update: '/diary',
-    delete: (id: number) => `/diary/${id}`,
-    publish: (id: number) => `/diary/${id}/publish`,
-    review: (id: number) => `/diary/${id}/review`,
+    update: (id: string) => `/diary/${id}`,
+    delete: (id: string) => `/diary/${id}`,
+    publish: (id: string) => `/diary/${id}/publish`,
+    review: (id: string) => `/diary/${id}/review`,
     reviewList: '/diary/review-list',
     like: (id: string) => `/diary/${id}/like`,
     unlike: (id: string) => `/diary/${id}/like`,
@@ -69,7 +69,7 @@ class DiaryApi extends BaseApi {
     return this.http.get<DiaryListRes>(this.urls.favoriteList, { params });
   }
 
-  async getDiaryDetail(id: string | number) {
+  async getDiaryDetail(id: string) {
     return this.http.get<DiaryDetailRes>(this.urls.detail(id));
   }
 
@@ -77,19 +77,19 @@ class DiaryApi extends BaseApi {
     return this.http.post<CreateDiaryRes>(this.urls.create, data);
   }
 
-  async updateDiary(data: UpdateDiaryReq) {
-    return this.http.put<UpdateDiaryRes>(this.urls.update, data);
+  async updateDiary(id: string, data: UpdateDiaryReq) {
+    return this.http.patch<UpdateDiaryRes>(this.urls.update(id), data);
   }
 
-  async deleteDiary(id: number) {
+  async deleteDiary(id: string) {
     return this.http.delete<DeleteDiaryRes>(this.urls.delete(id));
   }
 
-  async publishDiary(id: number, published: boolean) {
-    return this.http.put<PublishDiaryRes>(this.urls.publish(id), { published });
+  async publishDiary(id: string, published: boolean) {
+    return this.http.patch<PublishDiaryRes>(this.urls.publish(id), { published });
   }
 
-  async reviewDiary(id: number, data: ReviewDiaryReq) {
+  async reviewDiary(id: string, data: ReviewDiaryReq) {
     return this.http.put<ReviewDiaryRes>(this.urls.review(id), data);
   }
 

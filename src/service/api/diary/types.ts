@@ -57,7 +57,7 @@ export interface DiaryDetail extends DiaryBase {
 
 // 日记列表
 export interface DiaryListQuery {
-  userId?: number;
+  userId?: string | number;
   page?: number;
   size?: number;
 }
@@ -82,9 +82,9 @@ export interface CreateDiaryReq {
   thumbnail?: string;
   tags?: string[];
 }
-export type CreateDiaryRes = ApiRes<{ id: number }>;
+export type CreateDiaryRes = ApiRes<{ id: string | number }>;
 export interface UpdateDiaryReq extends Partial<CreateDiaryReq> {
-  id: number;
+  id: string | number;
 }
 export type UpdateDiaryRes = ApiRes<null>;
 
@@ -93,12 +93,12 @@ export type DeleteDiaryRes = ApiRes<null>;
 
 // 发布/审核日记
 export interface PublishDiaryReq {
-  id: number;
+  id: string | number;
   published: boolean;
 }
 export type PublishDiaryRes = ApiRes<null>;
 export interface ReviewDiaryReq {
-  id: number;
+  id: string | number;
   status: 'approved' | 'rejected';
   reason?: string;
 }
@@ -113,18 +113,18 @@ export type UnfavoriteDiaryRes = ApiRes<null>;
 
 // 评论
 export interface CreateCommentReq {
-  diaryId: number;
+  diaryId: string | number;
   content: string;
-  parentId?: number;
+  parentId?: string | number;
 }
-export type CreateCommentRes = ApiRes<{ id: number }>;
+export type CreateCommentRes = ApiRes<{ id: string | number }>;
 export interface DeleteCommentReq {
-  id: number;
+  id: string | number;
 }
 export type DeleteCommentRes = ApiRes<null>;
 export interface CommentBase {
-  id: number;
-  userId: number;
+  id: string | number;
+  userId: string | number;
   userName: string;
   userAvatar: string | null;
   content: string;
@@ -132,11 +132,11 @@ export interface CommentBase {
   likeCount: number;
   liked?: boolean;
   isLiked?: boolean;
-  parentId?: number;
+  parentId?: string | number;
   replyCount?: number;
 }
 export interface CommentListQuery {
-  diaryId: number;
+  diaryId?: string | number;
   page?: number;
   size?: number;
 }
@@ -149,7 +149,7 @@ export interface CommentListData {
 }
 export type CommentListRes = ApiRes<CommentListData>;
 export interface ReplyListQuery {
-  commentId: number;
+  commentId: string | number;
   page?: number;
   size?: number;
 }

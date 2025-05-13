@@ -5,11 +5,13 @@ import { Icon } from '@iconify/react';
 import { useAuthStore } from '@/store/auth';
 import Toast from '@/utils/toast';
 import styles from './index.module.scss';
+import { useTranslation } from 'react-i18next';
 
 const SettingPage: React.FC = () => {
   const navigate = useNavigate();
   const authStore = useAuthStore();
   const [dialogProps, setDialogProps] = useState<DialogProps>({ visible: false });
+  const { t } = useTranslation();
 
   const handleBack = () => {
     navigate(-1);
@@ -104,12 +106,7 @@ const SettingPage: React.FC = () => {
             className={styles.cell}
           />
 
-          <Cell
-            title="存储空间"
-            note="136 MB"
-            onClick={() => Toast.info('功能开发中')}
-            className={styles.cell}
-          />
+          <Cell title="存储空间" note="136 MB" className={styles.cell} />
         </div>
 
         {/* 账号操作 */}
@@ -125,8 +122,8 @@ const SettingPage: React.FC = () => {
 
         {/* 隐私政策 */}
         <div className={styles.privacyLinks}>
-          <span onClick={() => Toast.info('功能开发中')}>《个人信息收集清单》</span>
-          <span onClick={() => Toast.info('功能开发中')}>《第三方信息共享清单》</span>
+          <span onClick={() => navigate('/agreement')}>{t('legal.userAgreement')}</span>
+          <span onClick={() => navigate('/privacy')}>{t('legal.privacyPolicy')}</span>
         </div>
       </div>
 

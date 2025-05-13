@@ -95,7 +95,7 @@ const DetailContent: React.FC<DetailContentProps> = ({
                       {formatDate(diaryData.publishedAt).split(' ')[0]}
                     </div>
                   )}
-                  <div className={styles.place}>福建</div>
+                  <div className={styles.place}>中国大陆</div>
                 </div>
                 <div className={styles.hashTags}>
                   {diaryData?.tags &&

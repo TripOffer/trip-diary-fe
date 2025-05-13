@@ -20,6 +20,7 @@ const ManageEntries: React.FC = () => {
   const [dialogProps, setDialogProps] = useState<any>({ visible: false });
   const [deleteId, setDeleteId] = useState<string | null>(null);
   const [loadMoreLoading, setLoadMoreLoading] = useState(false);
+  const loadMoreLoadingRef = React.useRef(loadMoreLoading);
   const [refreshing, setRefreshing] = useState(false);
   const scrollRef = React.useRef<HTMLDivElement>(null);
 
@@ -45,9 +46,10 @@ const ManageEntries: React.FC = () => {
 
   // 加载更多
   const loadMore = async () => {
-    if (loadMoreLoading || loading) return;
+    if (loadMoreLoadingRef.current || loading) return;
     if (page * pageSize >= total) return;
     setLoadMoreLoading(true);
+    loadMoreLoadingRef.current = true;
     try {
       const nextPage = page + 1;
       // @ts-ignore
@@ -61,12 +63,27 @@ const ManageEntries: React.FC = () => {
       Toast.error('加载失败');
     } finally {
       setLoadMoreLoading(false);
+      loadMoreLoadingRef.current = false;
     }
   };
+
+  React.useEffect(() => {
+    loadMoreLoadingRef.current = loadMoreLoading;
+  }, [loadMoreLoading]);
 
   useEffect(() => {
     fetchEntries();
     // eslint-disable-next-line
+  }, []);
+
+  useEffect(() => {
+    const handler = () => {
+      fetchEntries();
+    };
+    window.addEventListener('refresh-diary-list', handler);
+    return () => {
+      window.removeEventListener('refresh-diary-list', handler);
+    };
   }, []);
 
   // 下拉刷新回调
@@ -76,12 +93,12 @@ const ManageEntries: React.FC = () => {
 
   // 滚动到底部自动加载更多
   const handleScroll = React.useCallback(() => {
-    if (!scrollRef.current || loadMoreLoading || loading) return;
+    if (!scrollRef.current || loadMoreLoadingRef.current || loading) return;
     const el = scrollRef.current;
     if (el.scrollHeight - el.scrollTop - el.clientHeight < 100) {
       loadMore();
     }
-  }, [loadMoreLoading, loading, loadMore]);
+  }, [loading, loadMore]);
 
   useEffect(() => {
     const el = scrollRef.current;

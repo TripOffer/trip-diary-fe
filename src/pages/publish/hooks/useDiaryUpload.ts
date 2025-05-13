@@ -11,7 +11,15 @@ const getFileExt = (file: File): PresignExt => {
   return 'jpg';
 };
 
-const compressImage = async (file: File, maxWidth: number, maxHeight: number) => {
+const compressImage = async (
+  file: File,
+  maxWidth: number,
+  maxHeight: number,
+  isCover: boolean = false,
+) => {
+  const ext = file.name.split('.').pop()?.toLowerCase();
+  // 如果不是封面且是 GIF，直接返回原文件
+  if (!isCover && ext === 'gif') return file;
   const img = document.createElement('img');
   const url = URL.createObjectURL(file);
   await new Promise((resolve) => {
@@ -85,6 +93,7 @@ const useDiaryUpload = () => {
     title: string;
     content: string;
     tags: string[];
+    videoKey?: string; // 新增 videoKey
     onSuccess?: () => void;
     onError?: () => void;
   }) => {
@@ -98,6 +107,7 @@ const useDiaryUpload = () => {
       title,
       content,
       tags,
+      videoKey, // 新增 videoKey
       onSuccess,
       onError,
     } = options;
@@ -117,7 +127,17 @@ const useDiaryUpload = () => {
         videoOss = await uploadResource(initVideoFile, 'video', { duration: videoDuration });
         setProgress(Math.round((++done / total) * 100));
         if (coverImage?.raw instanceof File) {
-          const compressed = await compressImage(coverImage.raw, 854, 480);
+          const compressed = await compressImage(coverImage.raw, 854, 480, true);
+          coverOss = await uploadResource(compressed, 'thumb');
+          setProgress(Math.round((++done / total) * 100));
+        }
+      } else if (isVideo && videoKey) {
+        // 编辑模式下未重新上传视频但有 videoKey
+        videoOss = { key: videoKey };
+        done++;
+        // 修复：编辑模式下如果更换了封面图片，也要上传新封面
+        if (coverImage?.raw instanceof File) {
+          const compressed = await compressImage(coverImage.raw, 854, 480, true);
           coverOss = await uploadResource(compressed, 'thumb');
           setProgress(Math.round((++done / total) * 100));
         }
@@ -128,7 +148,7 @@ const useDiaryUpload = () => {
           const f = imageFileList[i];
           // 新增：只处理本地图片（raw 为 File），已上传的网络图片跳过
           if (f.raw instanceof File) {
-            const compressed = await compressImage(f.raw, 1920, 1080);
+            const compressed = await compressImage(f.raw, 1920, 1080, false);
             const oss = await uploadResource(compressed, 'origin');
             imageOssList.push(oss);
             setProgress(Math.round((++done / total) * 100));
@@ -144,7 +164,7 @@ const useDiaryUpload = () => {
         }
         // 封面始终用第一张图片压缩 854x480 上传（本地图片或网络图片）
         if (imageFileList[0]?.raw instanceof File) {
-          const compressedCover = await compressImage(imageFileList[0].raw, 854, 480);
+          const compressedCover = await compressImage(imageFileList[0].raw, 854, 480, true);
           coverOss = await uploadResource(compressedCover, 'thumb');
           setProgress(Math.round((++done / total) * 100));
         } else if (imageFileList[0]?.url && imageFileList[0].url.startsWith(OSS_PREFIX)) {
@@ -157,7 +177,7 @@ const useDiaryUpload = () => {
             // 尝试获取扩展名
             const ext = imageFileList[0].url.split('.').pop()?.split('?')[0] || 'jpg';
             const file = new File([blob], `cover.${ext}`, { type: blob.type });
-            const compressedCover = await compressImage(file, 854, 480);
+            const compressedCover = await compressImage(file, 854, 480, true);
             coverOss = await uploadResource(compressedCover, 'thumb');
             setProgress(Math.round((++done / total) * 100));
           } catch (err) {

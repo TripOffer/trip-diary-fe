@@ -11,6 +11,8 @@ import Search from '../pages/search';
 import UserProfile from '../pages/user';
 import PublishEditPage from '../pages/publish/edit';
 import SettingPage from '../pages/setting';
+import UserAgreementPage from '../pages/agreement';
+import PrivacyPolicyPage from '../pages/privacy';
 import { useAuthStore } from '@/store/auth';
 
 const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
@@ -73,6 +75,8 @@ const AppRoutes: React.FC = () => (
       <Route path="login" element={<Login />} />
       <Route path="diary/:id" element={<DiaryDetail />} />
       <Route path="user/:id" element={<UserProfile />} />
+      <Route path="agreement" element={<UserAgreementPage />} />
+      <Route path="privacy" element={<PrivacyPolicyPage />} />
     </Route>
     <Route path="search" element={<Search />} />
   </Routes>

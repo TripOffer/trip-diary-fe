@@ -53,7 +53,14 @@ const EntryCard = ({ item, onEdit, onDelete, onPublish, onUnpublish, canUnpublis
 
       <div className="px-4 py-3">
         <div className="flex items-center justify-between mb-2">
-          <h3 className="font-medium text-base truncate mr-2">{item.title}</h3>
+          <div className="flex items-center gap-2 min-w-0">
+            <h3 className="font-medium text-base truncate mr-2">{item.title}</h3>
+            {item.parentId && (
+              <Tag theme="primary" size="small" className="opacity-90">
+                副本
+              </Tag>
+            )}
+          </div>
           <button
             className="p-1.5 rounded-full hover:bg-gray-100 transition-colors"
             onClick={(e) => {

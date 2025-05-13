@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Message } from 'tdesign-mobile-react';
 import DetailNavBar from '../components/DetailNavBar';
 import BottomBar from '../components/BottomBar';
+import CommentPopup from '../components/CommentPopup';
 import styles from './index.module.scss';
 
 const DiaryDetailPage: React.FC = () => {
@@ -11,6 +12,7 @@ const DiaryDetailPage: React.FC = () => {
   const [likeCount, setLikeCount] = useState(32);
   const [starCount, setStarCount] = useState(20);
   const [commentCount, setCommentCount] = useState(113);
+  const [commentPopupVisible, setCommentPopupVisible] = useState(false);
 
   const handleFollowClick = () => {
     setIsFollowing(!isFollowing);
@@ -46,10 +48,7 @@ const DiaryDetailPage: React.FC = () => {
   };
 
   const handleCommentClick = () => {
-    Message.info({
-      content: '评论功能开发中',
-      duration: 1000,
-    });
+    setCommentPopupVisible(true);
   };
 
   const handleCommentSubmit = (content: string) => {
@@ -90,6 +89,9 @@ const DiaryDetailPage: React.FC = () => {
         onCommentClick={handleCommentClick}
         onCommentSubmit={handleCommentSubmit}
       />
+
+      {/* 评论弹窗 */}
+      <CommentPopup visible={commentPopupVisible} onVisibleChange={setCommentPopupVisible} />
     </div>
   );
 };

@@ -1,4 +1,5 @@
 import React from 'react';
+import { Tag } from 'tdesign-mobile-react';
 import styles from './DetailContent.module.scss';
 
 interface DiaryDetail {
@@ -45,6 +46,15 @@ const DetailContent: React.FC<DetailContentProps> = ({
   const diaryTitle = diaryData?.title || '';
   const content = diaryData?.content || '';
 
+  // 将内容分段，使其更美观
+  const formatContent = (text: string) => {
+    if (!text) return [];
+    // 按照段落分割文本
+    return text.split('\n').filter((paragraph) => paragraph.trim() !== '');
+  };
+
+  const paragraphs = formatContent(content);
+
   return (
     <div className={styles.content}>
       {isLoading ? (
@@ -52,6 +62,18 @@ const DetailContent: React.FC<DetailContentProps> = ({
       ) : (
         <>
           <div className={styles.diaryContent}>
+            {/* 标题区域 */}
+            <h2 className={styles.diaryTitle}>{diaryTitle}</h2>
+
+            {/* 内容区域 */}
+            <div className={styles.diaryText}>
+              {paragraphs.length > 0 ? (
+                paragraphs.map((paragraph, index) => <p key={index}>{paragraph}</p>)
+              ) : (
+                <p>{content}</p>
+              )}
+            </div>
+
             {/* 图片展示区域 */}
             {diaryData?.images && diaryData.images.length > 0 && (
               <div className={styles.imageContainer}>
@@ -67,30 +89,37 @@ const DetailContent: React.FC<DetailContentProps> = ({
               </div>
             )}
 
-            {/* 标题区域 */}
-            <h2 className={styles.diaryTitle}>{diaryTitle}</h2>
-
-            {/* 内容区域 */}
-            <div className={styles.diaryText}>
-              <p>{content}</p>
-            </div>
-
             {/* 底部信息区域 */}
             <div className={styles.diaryFooter}>
               <div className={styles.bottomMeta}>
                 <div className={styles.locationTime}>
-                  <div className={styles.location}>
-                    {diaryData?.tags && diaryData.tags.length > 0 ? diaryData.tags[0].name : ''}
-                  </div>
-                  <div className={styles.time}>
-                    {diaryData?.publishedAt ? formatDate(diaryData.publishedAt).split(' ')[0] : ''}
-                  </div>
+                  {diaryData?.tags && diaryData.tags.length > 0 && (
+                    <div className={styles.location}>{diaryData.tags[0].name}</div>
+                  )}
+                  {diaryData?.publishedAt && (
+                    <div className={styles.time}>
+                      {formatDate(diaryData.publishedAt).split(' ')[0]}
+                    </div>
+                  )}
                   <div className={styles.place}>福建</div>
                 </div>
                 <div className={styles.hashTags}>
-                  {diaryData?.tags && diaryData.tags.length > 0 && (
-                    <span className={styles.tag}>#{diaryData.tags[0].name} #人生的意义</span>
-                  )}
+                  {diaryData?.tags &&
+                    diaryData.tags.map((tag, index) => (
+                      <Tag
+                        key={tag.id || index}
+                        shape="mark"
+                        theme={
+                          index % 3 === 0 ? 'primary' : index % 3 === 1 ? 'success' : 'warning'
+                        }
+                        variant="light"
+                      >
+                        #{tag.name}
+                      </Tag>
+                    ))}
+                  <Tag shape="mark" theme="danger" variant="light">
+                    #创作者新星计划
+                  </Tag>
                 </div>
               </div>
             </div>

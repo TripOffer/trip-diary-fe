@@ -27,13 +27,10 @@ const SettingPage: React.FC = () => {
   };
 
   const handleLogoutConfirm = () => {
-    // 清除用户token和信息
     authStore.clearToken();
     authStore.clearUser();
     Toast.success('已退出登录');
-    // 跳转到登录页
     navigate('/login', { replace: true });
-    // 关闭对话框
     setDialogProps({ ...dialogProps, visible: false });
   };
 
@@ -52,9 +49,7 @@ const SettingPage: React.FC = () => {
     // 清除用户token和信息
     authStore.clearToken();
     authStore.clearUser();
-    // 跳转到登录页
     navigate('/login');
-    // 关闭对话框
     setDialogProps({ ...dialogProps, visible: false });
   };
 
@@ -73,7 +68,7 @@ const SettingPage: React.FC = () => {
       </div>
 
       <div className={styles.content}>
-        {/* 账号与安全 */}
+        {/* 通用设置 */}
         <div className={styles.section}>
           <Cell
             title="通用设置"
@@ -82,23 +77,10 @@ const SettingPage: React.FC = () => {
             onClick={() => Toast.info('功能开发中')}
             className={styles.cell}
           />
-        </div>
-
-        {/* 存储空间 */}
-        <div className={styles.section}>
-        <Cell
+          <Cell
             title="内容偏好调节"
             leftIcon={<Icon icon="mdi:tune" />}
             arrow
-            onClick={() => Toast.info('功能开发中')}
-            className={styles.cell}
-          />
-
-          <Cell
-            title="存储空间"
-            leftIcon={<Icon icon="mdi:trash-can" />}
-            arrow
-            description="2.03 GB"
             onClick={() => Toast.info('功能开发中')}
             className={styles.cell}
           />
@@ -118,6 +100,13 @@ const SettingPage: React.FC = () => {
             title="关于旅行日记"
             leftIcon={<Icon icon="mdi:information" />}
             arrow
+            onClick={() => Toast.info('功能开发中')}
+            className={styles.cell}
+          />
+
+          <Cell
+            title="存储空间"
+            note="136 MB"
             onClick={() => Toast.info('功能开发中')}
             className={styles.cell}
           />

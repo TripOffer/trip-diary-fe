@@ -50,6 +50,7 @@
   background-color: #fff;
   border-radius: 12px;
   overflow: hidden;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
 
   &:last-child {
     margin-bottom: 0;
@@ -61,16 +62,49 @@
     .t-cell__left-icon {
       font-size: 20px;
       margin-right: 12px;
+      color: #3e7aff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
 
     .t-cell__title {
       font-size: 16px;
       font-weight: 500;
+      color: #333;
     }
 
     .t-cell__description {
       font-size: 14px;
       color: #999;
+    }
+
+    .t-cell__note {
+      display: flex;
+      align-items: center;
+    }
+
+    .t-cell {
+      padding-top: 16px;
+      padding-bottom: 16px;
+      align-items: center;
+    }
+  }
+}
+
+.storageCell {
+  :global {
+    .t-cell__left-icon {
+      color: #3373f3;
+    }
+
+    .t-cell__description {
+      margin-right: 4px;
+    }
+
+    .t-cell__right {
+      display: flex;
+      align-items: center;
     }
   }
 }

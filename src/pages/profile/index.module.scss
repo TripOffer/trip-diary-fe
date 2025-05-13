@@ -81,6 +81,39 @@
   }
 }
 
+.loadingState {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 0;
+  color: #999;
+
+  .loadingIcon {
+    width: 32px;
+    height: 32px;
+    margin-bottom: 12px;
+    color: #999;
+  }
+
+  .loadingText {
+    font-size: 14px;
+  }
+
+  .spinning {
+    animation: spin 1s linear infinite;
+  }
+
+  @keyframes spin {
+    from {
+      transform: rotate(0deg);
+    }
+    to {
+      transform: rotate(360deg);
+    }
+  }
+}
+
 .emptyState {
   display: flex;
   flex-direction: column;

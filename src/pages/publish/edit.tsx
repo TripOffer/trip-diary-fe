@@ -100,7 +100,7 @@ const PublishEditPage = () => {
     if (isEditMode && diaryId) {
       // 获取详情
       import('@/service/api').then(({ default: Api }) => {
-        Api.diaryApi.getDiaryDetail(diaryId).then((res: any) => {
+        Api.diaryApi.getDiaryDetail(diaryId, true).then((res: any) => {
           const data = res.data;
           setTitle(data.title || '');
           setContent(data.content || '');

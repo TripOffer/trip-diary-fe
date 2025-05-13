@@ -33,6 +33,7 @@ export interface DiaryItem {
   };
   content?: string;
   images?: string[];
+  video?: string;
 }
 
 // 我的日记列表
@@ -61,6 +62,9 @@ export const mockMyDiaries: DiaryItem[] = [
       width: 800,
       height: 600,
     },
+    video: 'https://samplelib.com/lib/preview/mp4/sample-5s.mp4',
+    content:
+      '武夷山是中国著名的风景区和世界文化与自然双重遗产。这次三日游让我领略了武夷山的壮丽景色和深厚的文化底蕴。\n\n第一天，我们游览了九曲溪，坐竹筏顺流而下，两岸的奇峰异石令人叹为观止。\n\n第二天，我们登上了天游峰，俯瞰整个武夷山景区，云雾缭绕，宛如仙境。\n\n第三天，我们参观了武夷宫和大红袍茶园，品尝了正宗的大红袍茶，感受茶文化的魅力。',
   },
   {
     id: '2',
@@ -191,6 +195,9 @@ export const mockFavoriteDiaries: DiaryItem[] = [
       width: 650,
       height: 850,
     },
+    video: 'https://samplelib.com/lib/preview/mp4/sample-10s.mp4',
+    content:
+      '大理古城位于云南省大理白族自治州，是一座历史悠久的古城，也是云南最著名的旅游目的地之一。\n\n古城内街道纵横交错，青石板路面，两旁是风格独特的白族民居和各种特色店铺。漫步其中，仿佛穿越回古代。\n\n这次徒步游记录了我在大理古城内的所见所闻，以及与当地居民的交流。大理的蓝天白云、苍山洱海，以及悠闲的生活节奏，让人流连忘返。',
   },
   {
     id: '7',
@@ -272,6 +279,9 @@ export const mockLikedDiaries: DiaryItem[] = [
       width: 700,
       height: 900,
     },
+    video: 'https://samplelib.com/lib/preview/mp4/sample-15s.mp4',
+    content:
+      '东京是一座美食天堂，从高级餐厅到街头小摊，处处都能找到令人惊叹的美食。\n\n这次我专门探访了东京的各种街头美食，包括筑地市场的新鲜寿司、浅草的人形烧、新宿的拉面馆、涩谷的可丽饼等等。\n\n每一种美食都有其独特的风味和制作工艺，背后还有有趣的文化故事。通过品尝这些美食，我更深入地了解了日本的饮食文化和生活方式。',
   },
   {
     id: '10',
@@ -317,10 +327,19 @@ export const generateMoreDiaries = (count: number = 5, baseId: number = 100): Di
     '九寨沟彩林之旅',
   ];
 
+  const videoUrls = [
+    'https://samplelib.com/lib/preview/mp4/sample-5s.mp4',
+    'https://samplelib.com/lib/preview/mp4/sample-10s.mp4',
+    'https://samplelib.com/lib/preview/mp4/sample-15s.mp4',
+    'https://samplelib.com/lib/preview/mp4/sample-20s.mp4',
+    'https://samplelib.com/lib/preview/mp4/sample-30s.mp4',
+  ];
+
   for (let i = 0; i < count; i++) {
     const id = baseId + i;
     const width = 600 + Math.floor(Math.random() * 400);
     const height = 400 + Math.floor(Math.random() * 500);
+    const hasVideo = Math.random() > 0.7; // 30%的概率有视频
 
     diaries.push({
       id: `${id}`,
@@ -353,6 +372,7 @@ export const generateMoreDiaries = (count: number = 5, baseId: number = 100): Di
         width,
         height,
       },
+      ...(hasVideo && { video: videoUrls[Math.floor(Math.random() * videoUrls.length)] }),
     });
   }
 

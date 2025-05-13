@@ -7,6 +7,7 @@ export interface DiaryDetail {
   title: string;
   content: string;
   images?: string[];
+  video?: string;
   thumbnail?: string;
   createdAt: string;
   updatedAt: string;

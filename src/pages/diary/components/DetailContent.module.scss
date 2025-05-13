@@ -138,6 +138,43 @@
     }
   }
 
+  .videoContainer {
+    width: 100vw;
+    margin-left: calc(-50vw + 50%);
+    position: relative;
+    margin-bottom: 24px;
+
+    .videoWrapper {
+      width: 100%;
+      overflow: hidden;
+      position: relative;
+      background-color: #000;
+
+      video {
+        width: 100%;
+        height: auto;
+        display: block;
+        max-height: 80vh;
+        object-fit: contain;
+      }
+
+      .videoControls {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background: linear-gradient(transparent, rgba(0, 0, 0, 0.5));
+        padding: 16px;
+        opacity: 0;
+        transition: opacity 0.3s;
+
+        &:hover {
+          opacity: 1;
+        }
+      }
+    }
+  }
+
   .diaryFooter {
     margin: 24px 20px 0;
     padding-top: 16px;

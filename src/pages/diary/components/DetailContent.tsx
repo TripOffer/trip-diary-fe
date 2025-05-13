@@ -28,6 +28,11 @@ const DetailContent: React.FC<DetailContentProps> = ({
 
   const paragraphs = formatContent(content);
 
+  // 处理资源URL，添加OSS前缀
+  const getResourceUrl = (path: string) => {
+    return path.startsWith('http') ? path : `${OSS_PREFIX}${path}`;
+  };
+
   return (
     <div className={styles.content}>
       {isLoading ? (
@@ -47,13 +52,29 @@ const DetailContent: React.FC<DetailContentProps> = ({
               )}
             </div>
 
+            {/* 视频展示区域 */}
+            {diaryData?.video && (
+              <div className={styles.videoContainer}>
+                <div className={styles.videoWrapper}>
+                  <video
+                    controls
+                    poster={diaryData.thumbnail ? getResourceUrl(diaryData.thumbnail) : undefined}
+                  >
+                    <source src={getResourceUrl(diaryData.video)} type="video/mp4" />
+                    您的浏览器不支持视频播放
+                  </video>
+                  <div className={styles.videoControls}></div>
+                </div>
+              </div>
+            )}
+
             {/* 图片展示区域 */}
             {diaryData?.images && diaryData.images.length > 0 && (
               <div className={styles.imageContainer}>
                 {diaryData.images.map((image, index) => (
                   <div key={index} className={styles.imageWrapper}>
                     <img
-                      src={image.startsWith('http') ? image : `${OSS_PREFIX}${image}`}
+                      src={getResourceUrl(image)}
                       alt={`${diaryTitle} - 图片${index + 1}`}
                       className={styles.diaryImage}
                     />

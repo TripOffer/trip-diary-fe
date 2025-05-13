@@ -50,9 +50,10 @@ export const uploadResource = async (
   if (height) params.height = height;
 
   const presignRes = await Api.ossApi.getPresignUrl(params);
-  const { url: uploadUrl, key } = presignRes.data;
+  const { url: uploadUrl, key, contentType } = presignRes.data;
 
   const uploadResp = await axios.put(uploadUrl, processedFile, {
+    headers: contentType ? { 'Content-Type': contentType } : undefined,
     validateStatus: () => true,
   });
 

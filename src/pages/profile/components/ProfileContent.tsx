@@ -13,7 +13,7 @@ const ProfileContent: React.FC = () => {
   const tabs: TabType[] = ['笔记', '收藏', '赞过'];
 
   const handlePublish = () => {
-    navigate('/create');
+    navigate('/publish');
   };
 
   return (

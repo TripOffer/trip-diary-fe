@@ -35,7 +35,7 @@ class DiaryApi extends BaseApi {
     myList: '/user/me/diary',
     userList: (userId: number) => `/diary/user/${userId}/list`,
     favoriteList: '/diary/favorite-list',
-    detail: (id: string) => `/diary/${id}/detail/detail`,
+    detail: (id: string) => `/diary/${id}/detail`,
     create: '/diary',
     update: (id: string) => `/diary/${id}`,
     delete: (id: string) => `/diary/${id}`,

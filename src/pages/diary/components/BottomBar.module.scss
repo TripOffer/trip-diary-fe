@@ -12,70 +12,68 @@
   left: 0;
   right: 0;
   z-index: 100;
-}
 
-.inputContainer {
-  flex: 1;
-  margin-right: 12px;
-}
-
-.commentInput {
-  width: 100%;
-  height: 36px;
-  padding: 8px 16px;
-  border-radius: 18px;
-  border: none;
-  background-color: #f5f5f5;
-  font-size: 14px;
-  color: #333;
-  outline: none;
-  transition: background-color 0.2s ease;
-
-  &::placeholder {
-    color: #999;
-  }
-
-  &:focus {
-    background-color: #f0f0f0;
-  }
-}
-
-.actionButtons {
-  display: flex;
-  align-items: center;
-  gap: 20px;
-}
-
-.actionButton {
-  display: flex;
-  align-items: center;
-  gap: 4px;
-  cursor: pointer;
-  user-select: none;
-  position: relative;
-  padding: 4px 0;
-}
-
-.actionIcon {
-  color: #666;
-  transition: color 0.2s ease;
-}
-
-.actionCount {
-  font-size: 14px;
-  color: #666;
-  transition: color 0.2s ease;
-}
-
-.starActive {
-  color: #ffca28;
-}
-
-// 添加安全区域的支持，适配不同机型的底部
-@supports (padding-bottom: env(safe-area-inset-bottom)) {
-  .bottomBar {
+  // 添加安全区域的支持，适配不同机型的底部
+  @supports (padding-bottom: env(safe-area-inset-bottom)) {
     padding-bottom: env(safe-area-inset-bottom);
     height: calc(56px + env(safe-area-inset-bottom));
+  }
+
+  .inputContainer {
+    flex: 1;
+    margin-right: 12px;
+
+    .commentInput {
+      width: 100%;
+      height: 36px;
+      padding: 8px 16px;
+      border-radius: 18px;
+      border: none;
+      background-color: #f5f5f5;
+      font-size: 14px;
+      color: #333;
+      outline: none;
+      transition: background-color 0.2s ease;
+
+      &::placeholder {
+        color: #999;
+      }
+
+      &:focus {
+        background-color: #f0f0f0;
+      }
+    }
+  }
+
+  .actionButtons {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+
+    .actionButton {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      cursor: pointer;
+      user-select: none;
+      position: relative;
+      padding: 4px 0;
+
+      .actionIcon {
+        color: #666;
+        transition: color 0.2s ease;
+      }
+
+      .actionCount {
+        font-size: 14px;
+        color: #666;
+        transition: color 0.2s ease;
+      }
+
+      .starActive {
+        color: #ffca28;
+      }
+    }
   }
 }
 

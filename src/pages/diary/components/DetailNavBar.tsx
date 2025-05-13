@@ -1,14 +1,15 @@
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
-import { Icon } from '@iconify/react';
 import { Button } from 'tdesign-mobile-react';
+import { Icon } from '@iconify/react';
+import { useNavigate } from 'react-router-dom';
 import styles from './DetailNavBar.module.scss';
 
 interface DetailNavBarProps {
   title: string;
-  showFollow?: boolean;
-  isFollowing?: boolean;
   authorId?: string | number;
+  authorAvatar?: string;
+  isFollowing?: boolean;
+  showFollow?: boolean;
   onFollowClick?: () => void;
   onShareClick?: () => void;
   onBackClick?: () => void;
@@ -16,15 +17,17 @@ interface DetailNavBarProps {
 
 const DetailNavBar: React.FC<DetailNavBarProps> = ({
   title,
-  showFollow = true,
+  authorId,
+  authorAvatar,
   isFollowing = false,
+  showFollow = true,
   onFollowClick,
   onShareClick,
   onBackClick,
 }) => {
   const navigate = useNavigate();
 
-  const handleBackClick = () => {
+  const handleBack = () => {
     if (onBackClick) {
       onBackClick();
     } else {
@@ -32,37 +35,56 @@ const DetailNavBar: React.FC<DetailNavBarProps> = ({
     }
   };
 
-  const handleFollowClick = () => {
-    onFollowClick?.();
+  const handleFollow = () => {
+    if (onFollowClick) {
+      onFollowClick();
+    }
   };
 
-  const handleShareClick = () => {
-    onShareClick?.();
+  const handleShare = () => {
+    if (onShareClick) {
+      onShareClick();
+    }
+  };
+
+  const goToUserProfile = () => {
+    if (authorId) {
+      navigate(`/profile/${authorId}`);
+    }
   };
 
   return (
     <div className={styles.navBar}>
-      <div className={styles.leftSection} onClick={handleBackClick}>
-        <Icon icon="mdi:arrow-left" className={styles.backIcon} />
+      <div className={styles.leftSection}>
+        <div className={styles.backIcon} onClick={handleBack}>
+          <Icon icon="mdi:arrow-left" width={24} height={24} />
+        </div>
       </div>
 
-      <div className={styles.centerSection}>
-        <span className={styles.title}>{title}</span>
+      <div className={styles.centerSection} onClick={goToUserProfile}>
+        {authorAvatar && (
+          <div className={styles.avatarWrapper}>
+            <img src={authorAvatar} className={styles.avatar} alt={title} />
+          </div>
+        )}
+        <div className={styles.title}>{title}</div>
       </div>
 
       <div className={styles.rightSection}>
-        {showFollow && (
-          <Button
-            className={`${styles.followButton} ${isFollowing ? styles.following : ''}`}
-            variant={isFollowing ? 'outline' : 'base'}
-            size="small"
-            onClick={handleFollowClick}
-          >
-            {isFollowing ? '已关注' : '关注'}
-          </Button>
+        {showFollow && authorId && (
+          <div className={styles.followButton} onClick={handleFollow}>
+            <Button
+              shape="round"
+              size="small"
+              variant={isFollowing ? 'outline' : 'base'}
+              className={isFollowing ? styles.following : ''}
+            >
+              {isFollowing ? '已关注' : '关注'}
+            </Button>
+          </div>
         )}
-        <div className={styles.shareIcon} onClick={handleShareClick}>
-          <Icon icon="mdi:share-variant" />
+        <div className={styles.shareIcon} onClick={handleShare}>
+          <Icon icon="mdi:share-variant-outline" width={24} height={24} />
         </div>
       </div>
     </div>

@@ -4,7 +4,7 @@ const APP_NAME = import.meta.env.VITE_APP_NAME || 'Trip Diary';
 const APP_NAME_EN_US = import.meta.env.VITE_APP_NAME_EN_US || 'Trip Diary';
 const APP_NAME_ZH_CN = import.meta.env.VITE_APP_NAME_ZH_CN || '旅行日记';
 
-const APP_VERSION = import.meta.env.VITE_APP_VERSION || '0.1.0';
+const APP_VERSION = import.meta.env.VITE_APP_VERSION || '1.0.0';
 
 class ClientEnvUtils {
   private ua: string;

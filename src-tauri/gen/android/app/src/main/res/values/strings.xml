@@ -1,4 +1,4 @@
 <resources>
-    <string name="app_name">trip-diary-fe</string>
-    <string name="main_activity_title">trip-diary-fe</string>
+    <string name="app_name">旅行日记</string>
+    <string name="main_activity_title">旅行日记</string>
 </resources>

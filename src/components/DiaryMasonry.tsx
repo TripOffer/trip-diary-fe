@@ -17,6 +17,16 @@ const DiaryMasonry: React.FC<DiaryMasonryProps> = ({
   hasMore = false,
   loading = false,
 }) => {
+  // items去重，基于id
+  const dedupedItems = React.useMemo(() => {
+    const seen = new Set();
+    return items.filter((item) => {
+      if (seen.has(item.id)) return false;
+      seen.add(item.id);
+      return true;
+    });
+  }, [items]);
+
   const [itemHeights, setItemHeights] = useState<{ [id: string]: number }>({});
   const [columns, setColumns] = useState<any[][]>(Array.from({ length: COLUMN_COUNT }, () => []));
   const [itemIndexMap, setItemIndexMap] = useState<{ [id: string]: number }>({});
@@ -34,7 +44,7 @@ const DiaryMasonry: React.FC<DiaryMasonryProps> = ({
   // 监听每个卡片高度
   useEffect(() => {
     const observers: ResizeObserver[] = [];
-    items.forEach((item) => {
+    dedupedItems.forEach((item) => {
       const id = item.id;
       const el = cardRefs.current[id];
       if (el) {
@@ -56,19 +66,19 @@ const DiaryMasonry: React.FC<DiaryMasonryProps> = ({
     return () => {
       observers.forEach((o) => o.disconnect());
     };
-  }, [items]);
+  }, [dedupedItems]);
 
   // 交替分配 items 到两列（左右左右）并记录原始索引
   useEffect(() => {
     const cols: any[][] = Array.from({ length: COLUMN_COUNT }, () => []);
     const itemIndexMap: { [id: string]: number } = {};
-    items.forEach((item, idx) => {
+    dedupedItems.forEach((item, idx) => {
       cols[idx % COLUMN_COUNT].push(item);
       itemIndexMap[item.id] = idx;
     });
     setColumns(cols);
     setItemIndexMap(itemIndexMap);
-  }, [items]);
+  }, [dedupedItems]);
 
   // 计算每列累计高度
   const getColumnMeta = useCallback(() => {

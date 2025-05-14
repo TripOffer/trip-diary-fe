@@ -39,18 +39,6 @@ const DetailContent: React.FC<DetailContentProps> = ({
       ) : (
         <>
           <div className={styles.diaryContent}>
-            {/* 标题区域 */}
-            <h2 className={styles.diaryTitle}>{diaryTitle}</h2>
-
-            {/* 内容区域 */}
-            <div className={styles.diaryText}>
-              {paragraphs.length > 0 ? (
-                paragraphs.map((paragraph, index) => <p key={index}>{paragraph}</p>)
-              ) : (
-                <p>{content}</p>
-              )}
-            </div>
-
             {/* 视频展示区域 */}
             {diaryData?.video && (
               <div className={styles.videoContainer}>
@@ -81,6 +69,18 @@ const DetailContent: React.FC<DetailContentProps> = ({
                 ))}
               </div>
             )}
+
+            {/* 标题区域 */}
+            <h2 className={styles.diaryTitle}>{diaryTitle}</h2>
+
+            {/* 内容区域 */}
+            <div className={styles.diaryText}>
+              {paragraphs.length > 0 ? (
+                paragraphs.map((paragraph, index) => <p key={index}>{paragraph}</p>)
+              ) : (
+                <p>{content}</p>
+              )}
+            </div>
 
             {/* 底部信息区域 */}
             <div className={styles.diaryFooter}>

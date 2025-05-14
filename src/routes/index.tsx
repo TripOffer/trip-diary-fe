@@ -13,6 +13,7 @@ import PublishEditPage from '../pages/publish/edit';
 import SettingPage from '../pages/setting';
 import UserAgreementPage from '../pages/agreement';
 import PrivacyPolicyPage from '../pages/privacy';
+import FollowingList from '../pages/profile/components/FollowList';
 import { useAuthStore } from '@/store/auth';
 
 const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
@@ -61,6 +62,14 @@ const AppRoutes: React.FC = () => (
         element={
           <ProtectedRoute>
             <ProfileEdit />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="profile/following"
+        element={
+          <ProtectedRoute>
+            <FollowingList />
           </ProtectedRoute>
         }
       />

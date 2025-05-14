@@ -9,24 +9,28 @@ import styles from './FollowList.module.scss';
 
 const OSS_PREFIX = import.meta.env.VITE_OSS_URL || '';
 
+type ListType = 'following' | 'followers';
+
 interface FollowListProps {
   userId?: string | number;
+  type?: ListType;
 }
 
-const FollowList: React.FC<FollowListProps> = () => {
+const FollowList: React.FC<FollowListProps> = ({ type = 'following' }) => {
   const navigate = useNavigate();
   const authUser = useAuthStore((state) => state.user);
-  const [followingList, setFollowingList] = useState<UserBasicInfo[]>([]);
+  const [userList, setUserList] = useState<UserBasicInfo[]>([]);
   const [loading, setLoading] = useState(false);
   const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(true);
-  const [totalFollowing, setTotalFollowing] = useState(0);
+  const [totalCount, setTotalCount] = useState(0);
+  // 记录用户关注状态
+  const [followStatusMap, setFollowStatusMap] = useState<Record<number, boolean>>({});
 
-  // 优先使用传入的userId，如果没有则使用store中的用户ID
   const userId = authUser?.id ? String(authUser.id) : undefined;
 
-  // 获取关注列表
-  const fetchFollowingList = async (query: FollowListQuery = {}) => {
+  // 获取列表数据
+  const fetchUserList = async (query: FollowListQuery = {}) => {
     if (!userId) {
       Message.error('未能获取用户信息，请重新登录');
       return;
@@ -35,40 +39,72 @@ const FollowList: React.FC<FollowListProps> = () => {
     try {
       setLoading(true);
       const params = { page: page, size: 10, ...query };
-      const response = await userApi.getFollowingList(userId, params);
+
+      const response =
+        type === 'following'
+          ? await userApi.getFollowingList(userId, params)
+          : await userApi.getFollowersList(userId, params);
 
       if (response && response.data) {
         const data = response.data as unknown as FollowListData;
 
         if (page === 1) {
-          setFollowingList(data.list);
+          setUserList(data.list);
         } else {
-          setFollowingList((prev) => [...prev, ...data.list]);
+          setUserList((prev) => [...prev, ...data.list]);
         }
 
-        setTotalFollowing(data.total);
+        setTotalCount(data.total);
         setHasMore(data.list.length > 0 && page < data.totalPages);
+
+        // 粉丝列表需检查是否已关注
+        if (type === 'followers' && data.list.length > 0) {
+          await checkFollowStatus(data.list);
+        }
       }
     } catch (error) {
-      console.error('获取关注列表失败:', error);
-      Message.error('获取关注列表失败，请重试');
+      console.error(`获取${type === 'following' ? '关注' : '粉丝'}列表失败:`, error);
+      Message.error(`获取${type === 'following' ? '关注' : '粉丝'}列表失败，请重试`);
     } finally {
       setLoading(false);
+    }
+  };
+
+  // 检查粉丝是否已被关注
+  const checkFollowStatus = async (users: UserBasicInfo[]) => {
+    if (users.length === 0 || !userId) return;
+
+    try {
+      const response = await userApi.getFollowingList(userId, { page: 1, size: 100 });
+      if (response && response.data) {
+        const data = response.data as unknown as FollowListData;
+        const followingIds = new Set(data.list.map((user) => user.id));
+
+        // 创建关注状态映射
+        const statusMap: Record<number, boolean> = {};
+        users.forEach((user) => {
+          statusMap[user.id] = followingIds.has(user.id);
+        });
+
+        setFollowStatusMap(statusMap);
+      }
+    } catch (error) {
+      console.error('检查关注状态失败:', error);
     }
   };
 
   useEffect(() => {
     if (userId) {
       setPage(1);
-      fetchFollowingList({ page: 1 });
+      fetchUserList({ page: 1 });
     }
-  }, [userId]);
+  }, [userId, type]);
 
   // 加载更多数据
   const loadMore = () => {
     if (!loading && hasMore) {
       setPage((prev) => prev + 1);
-      fetchFollowingList({ page: page + 1 });
+      fetchUserList({ page: page + 1 });
     }
   };
 
@@ -77,11 +113,28 @@ const FollowList: React.FC<FollowListProps> = () => {
     try {
       await userApi.unfollowUser(followingId);
       Message.success('取消关注成功');
-      // 刷新列表
-      setPage(1);
-      fetchFollowingList({ page: 1 });
+
+      // 更新关注状态映射
+      if (type === 'followers') {
+        setFollowStatusMap((prev) => ({ ...prev, [followingId]: false }));
+      } else {
+        // 刷新关注列表
+        setPage(1);
+        fetchUserList({ page: 1 });
+      }
     } catch (error) {
       Message.error('取消关注失败，请重试');
+    }
+  };
+
+  // 关注用户
+  const handleFollow = async (followerId: number) => {
+    try {
+      await userApi.followUser(followerId);
+      Message.success('关注成功');
+      setFollowStatusMap((prev) => ({ ...prev, [followerId]: true }));
+    } catch (error) {
+      Message.error('关注失败，请重试');
     }
   };
 
@@ -99,8 +152,45 @@ const FollowList: React.FC<FollowListProps> = () => {
     );
   };
 
+  // 渲染按钮
+  const renderButton = (user: UserBasicInfo) => {
+    if (type === 'following') {
+      return (
+        <Button
+          size="small"
+          className={styles.followButton}
+          onClick={() => handleUnfollow(user.id)}
+        >
+          已关注
+        </Button>
+      );
+    } else {
+      return followStatusMap[user.id] ? (
+        <Button
+          size="small"
+          className={styles.followButton}
+          onClick={() => handleUnfollow(user.id)}
+        >
+          已关注
+        </Button>
+      ) : (
+        <Button
+          size="small"
+          className={`${styles.followButton} ${styles.primaryButton}`}
+          onClick={() => handleFollow(user.id)}
+        >
+          回关
+        </Button>
+      );
+    }
+  };
+
   const handleBack = () => {
     navigate(-1); // 返回上一页
+  };
+
+  const getTitle = () => {
+    return type === 'following' ? '我的关注' : '我的粉丝';
   };
 
   return (
@@ -110,20 +200,20 @@ const FollowList: React.FC<FollowListProps> = () => {
         <div className={styles.backButton} onClick={handleBack}>
           <Icon icon="mdi:arrow-left" />
         </div>
-        <h1 className={styles.title}>我的关注</h1>
+        <h1 className={styles.title}>{getTitle()}</h1>
         <div className={styles.dummySpace}></div>
       </div>
 
-      {/* 关注计数 */}
+      {/* 计数 */}
       <div className={styles.countInfo}>
-        <span className={styles.count}>共 {totalFollowing} 人</span>
+        <span className={styles.count}>共 {totalCount} 人</span>
         <div className={styles.sortButton}>
           <span>综合排序</span>
           <Icon icon="mdi:sort" className={styles.sortIcon} />
         </div>
       </div>
 
-      {/* 关注列表 */}
+      {/* 用户列表 */}
       <div className={styles.listContainer}>
         {loading && page === 1 ? (
           <div className={styles.loadingContainer}>
@@ -134,14 +224,14 @@ const FollowList: React.FC<FollowListProps> = () => {
             <Icon icon="mdi:alert-circle-outline" className={styles.emptyIcon} />
             <span>获取用户信息失败</span>
           </div>
-        ) : followingList.length === 0 ? (
+        ) : userList.length === 0 ? (
           <div className={styles.emptyState}>
             <Icon icon="mdi:account-multiple-outline" className={styles.emptyIcon} />
-            <span>暂无关注</span>
+            <span>{type === 'following' ? '暂无关注' : '暂无粉丝'}</span>
           </div>
         ) : (
           <>
-            {followingList.map((user) => (
+            {userList.map((user) => (
               <div key={user.id} className={styles.userItem}>
                 <div className={styles.userInfo}>
                   {renderAvatar(user)}
@@ -153,13 +243,7 @@ const FollowList: React.FC<FollowListProps> = () => {
                   </div>
                 </div>
                 <div className={styles.actions}>
-                  <Button
-                    size="small"
-                    className={styles.followButton}
-                    onClick={() => handleUnfollow(user.id)}
-                  >
-                    已关注
-                  </Button>
+                  {renderButton(user)}
                   <Icon icon="mdi:dots-horizontal" className={styles.moreIcon} />
                 </div>
               </div>
@@ -178,9 +262,7 @@ const FollowList: React.FC<FollowListProps> = () => {
               </div>
             )}
 
-            {!hasMore && followingList.length > 0 && (
-              <div className={styles.noMore}>没有更多了</div>
-            )}
+            {!hasMore && userList.length > 0 && <div className={styles.noMore}>没有更多了</div>}
           </>
         )}
       </div>

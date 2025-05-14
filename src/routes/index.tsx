@@ -74,6 +74,14 @@ const AppRoutes: React.FC = () => (
         }
       />
       <Route
+        path="profile/followers"
+        element={
+          <ProtectedRoute>
+            <FollowList type="followers" />
+          </ProtectedRoute>
+        }
+      />
+      <Route
         path="setting"
         element={
           <ProtectedRoute>

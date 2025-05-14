@@ -16,6 +16,8 @@ import PrivacyPolicyPage from '../pages/privacy';
 import FollowList from '../pages/profile/components/FollowList';
 import PreferencePage from '../pages/setting/preference';
 import CommonSettingPage from '../pages/setting/common';
+import SupportChatPage from '../pages/setting/support';
+import AboutPage from '../pages/setting/about';
 import { useAuthStore } from '@/store/auth';
 
 const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
@@ -104,6 +106,22 @@ const AppRoutes: React.FC = () => (
         element={
           <ProtectedRoute>
             <CommonSettingPage />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="setting/support"
+        element={
+          <ProtectedRoute>
+            <SupportChatPage />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="setting/about"
+        element={
+          <ProtectedRoute>
+            <AboutPage />
           </ProtectedRoute>
         }
       />

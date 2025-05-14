@@ -87,8 +87,19 @@ const DiaryDetailPage: React.FC = () => {
     }
   };
 
-  const handleShareClick = () => {
-    Toast.info('分享功能开发中', { duration: 1000 });
+  const handleShareClick = async (diaryId?: string | number) => {
+    if (!diaryId) {
+      Toast.info('分享失败，无法获取日记ID', { duration: 1000 });
+      return;
+    }
+
+    try {
+      await Api.diaryApi.shareDiary(diaryId);
+      Toast.success('分享成功', { duration: 1000 });
+    } catch (error) {
+      console.error('分享失败:', error);
+      Toast.error('分享失败，请重试', { duration: 1000 });
+    }
   };
 
   const handleCommentClick = () => {
@@ -116,6 +127,7 @@ const DiaryDetailPage: React.FC = () => {
     <div className={styles.container}>
       <DetailNavBar
         title={title}
+        diaryId={id}
         isFollowing={isFollowing}
         authorId={authorId}
         authorAvatar={authorAvatar}

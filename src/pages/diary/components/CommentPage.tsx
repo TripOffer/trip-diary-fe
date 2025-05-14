@@ -157,7 +157,6 @@ const CommentPage: React.FC = () => {
 
       setComments(updatedComments);
 
-      // 调用API，同时传递日记ID和评论ID（不转换为数字）
       if (liked) {
         await Api.diaryApi.likeComment(diaryId, commentId);
       } else {
@@ -166,7 +165,6 @@ const CommentPage: React.FC = () => {
     } catch (error) {
       console.error('点赞/取消点赞评论失败:', error);
 
-      // 发生错误时回滚UI状态
       const originalComments = comments.map((comment) => {
         if (comment.id === commentId) {
           return {

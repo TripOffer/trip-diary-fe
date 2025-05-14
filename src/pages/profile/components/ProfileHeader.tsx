@@ -71,6 +71,16 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = ({ userData, statsData, onAv
     navigate('/setting');
   };
 
+  // 跳转到关注列表
+  const handleGoToFollowingList = () => {
+    navigate(`/profile/following`);
+  };
+
+  // 跳转到粉丝列表
+  const handleGoToFollowersList = () => {
+    navigate(`/profile/followers`);
+  };
+
   return (
     <div className={styles.profileHeader}>
       <div className={styles.userInfo}>
@@ -112,11 +122,11 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = ({ userData, statsData, onAv
             <span className={styles.userId}>@{userData.userId}</span>
           </div>
           <div className={styles.stats}>
-            <div className={styles.statItem}>
+            <div className={styles.statItem} onClick={handleGoToFollowingList}>
               <span className={styles.count}>{statsData.followCount}</span>
               <span className={styles.label}>正在关注</span>
             </div>
-            <div className={styles.statItem}>
+            <div className={styles.statItem} onClick={handleGoToFollowersList}>
               <span className={styles.count}>{statsData.fansCount}</span>
               <span className={styles.label}>关注者</span>
             </div>

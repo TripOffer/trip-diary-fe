@@ -154,6 +154,17 @@
     display: flex;
     align-items: center;
     gap: 4px;
+    cursor: pointer;
+    border-radius: 4px;
+    transition: background-color 0.2s;
+
+    &:hover {
+      background-color: rgba(0, 0, 0, 0.05);
+    }
+
+    &:active {
+      background-color: rgba(0, 0, 0, 0.1);
+    }
 
     .count {
       font-size: 14px;

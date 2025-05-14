@@ -1,12 +1,15 @@
 import React from 'react';
 import { Icon } from '@iconify/react';
 import { motion, useAnimation, AnimatePresence } from 'framer-motion';
+import { useAuthStore } from '@/store/auth';
+import toast from '@/utils/toast';
 
 export interface LikeButtonProps {
   liked: boolean;
   likeCount: number;
   onLikeChange?: (liked: boolean, likeCount: number) => void;
   iconSize?: number;
+  disabled?: boolean;
 }
 
 const popDotCount = 6;
@@ -18,6 +21,7 @@ const LikeButton: React.FC<LikeButtonProps> = ({
   onLikeChange,
   iconSize = 16,
 }) => {
+  const { token } = useAuthStore();
   const [likedState, setLikedState] = React.useState(liked);
   const [likeNum, setLikeNum] = React.useState(likeCount);
   const controls = useAnimation();
@@ -43,6 +47,10 @@ const LikeButton: React.FC<LikeButtonProps> = ({
 
   const handleLikeClick = async (e: React.MouseEvent) => {
     e.stopPropagation();
+    if (!token) {
+      toast.info('请先登录后再点赞');
+      return;
+    }
     if (likedState) {
       setLikedState(false);
       setLikeNum((n) => Math.max(0, n - 1));

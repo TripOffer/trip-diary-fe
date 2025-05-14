@@ -1,12 +1,10 @@
-import React from 'react';
-import { Image } from 'tdesign-mobile-react';
-import SimpleSkeleton from './SimpleSkeleton';
-import Avatar from 'tdesign-mobile-react/es/avatar/Avatar';
-import { Icon } from '@iconify/react';
-import { useNavigate } from 'react-router-dom';
-import { motion, useAnimation, AnimatePresence } from 'framer-motion';
-import LikeButton from './LikeButton';
 import Api from '@/service/api';
+import React from 'react';
+import { useNavigate } from 'react-router-dom';
+import { Image } from 'tdesign-mobile-react';
+import Avatar from 'tdesign-mobile-react/es/avatar/Avatar';
+import LikeButton from './LikeButton';
+import SimpleSkeleton from './SimpleSkeleton';
 
 export interface Tag {
   id: string;

@@ -1,45 +1,87 @@
-import React, { useState } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 import { Icon } from '@iconify/react';
 import LikeButton from '@/components/LikeButton';
+import Api from '@/service/api';
+import Toast from '@/utils/toast';
 import styles from './BottomBar.module.scss';
 
 interface BottomBarProps {
+  diaryId: string;
   likeCount: number;
   starCount: number;
   commentCount: number;
-  isLiked: boolean;
-  isStarred: boolean;
-  onLikeChange?: (liked: boolean) => void;
-  onStarChange?: (starred: boolean) => void;
   onCommentClick?: () => void;
   onCommentSubmit?: (content: string) => void;
 }
 
 const BottomBar: React.FC<BottomBarProps> = ({
+  diaryId,
   likeCount,
   starCount,
   commentCount,
-  isLiked,
-  isStarred,
-  onLikeChange,
-  onStarChange,
   onCommentClick,
   onCommentSubmit,
 }) => {
   const [commentText, setCommentText] = useState('');
+  const [localStarCount, setLocalStarCount] = useState(starCount);
+  const [localLikeCount, setLocalLikeCount] = useState(likeCount);
+  const [isLiked, setIsLiked] = useState(false);
+  const [isStarred, setIsStarred] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
 
-  const handleStarClick = () => {
-    onStarChange?.(!isStarred);
-  };
+  useEffect(() => {
+    setLocalLikeCount(likeCount);
+    setLocalStarCount(starCount);
+  }, [likeCount, starCount]);
+
+  const handleStarClick = useCallback(async () => {
+    try {
+      if (isStarred) {
+        setLocalStarCount((prev) => Math.max(0, prev - 1));
+        setIsStarred(false);
+        await Api.diaryApi.unfavoriteDiary(diaryId);
+        Toast.success('已取消收藏', { duration: 1000 });
+      } else {
+        setLocalStarCount((prev) => prev + 1);
+        setIsStarred(true);
+        await Api.diaryApi.favoriteDiary(diaryId);
+        Toast.success('已收藏', { duration: 1000 });
+      }
+    } catch (error) {
+      console.error('收藏操作失败:', error);
+      Toast.error('操作失败，请重试');
+      setLocalStarCount(isStarred ? Math.max(0, localStarCount - 1) : localStarCount + 1);
+      setIsStarred(!isStarred);
+    }
+  }, [diaryId, isStarred, localStarCount]);
 
   const handleCommentClick = () => {
     onCommentClick?.();
   };
 
-  const handleCommentSubmit = () => {
-    if (commentText.trim()) {
-      onCommentSubmit?.(commentText.trim());
+  const handleCommentSubmit = async () => {
+    if (!commentText.trim() || submitting) return;
+
+    setSubmitting(true);
+
+    try {
+      await Api.diaryApi.createComment({
+        diaryId: diaryId,
+        content: commentText.trim(),
+      });
+
+      //,清空输入框
       setCommentText('');
+
+      // 通知父组件
+      onCommentSubmit?.(commentText.trim());
+
+      Toast.success('评论发布成功', { duration: 1000 });
+    } catch (error) {
+      console.error('评论发布失败:', error);
+      Toast.error('评论发布失败，请重试');
+    } finally {
+      setSubmitting(false);
     }
   };
 
@@ -48,6 +90,11 @@ const BottomBar: React.FC<BottomBarProps> = ({
       e.preventDefault();
       handleCommentSubmit();
     }
+  };
+
+  const handleLikeCountChange = (liked: boolean, newCount: number) => {
+    setIsLiked(liked);
+    setLocalLikeCount(newCount);
   };
 
   return (
@@ -60,6 +107,7 @@ const BottomBar: React.FC<BottomBarProps> = ({
           value={commentText}
           onChange={(e) => setCommentText(e.target.value)}
           onKeyDown={handleKeyDown}
+          disabled={submitting}
         />
       </div>
 
@@ -67,8 +115,8 @@ const BottomBar: React.FC<BottomBarProps> = ({
         <div className={styles.actionButton}>
           <LikeButton
             liked={isLiked}
-            likeCount={likeCount}
-            onLikeChange={(liked) => onLikeChange?.(liked)}
+            likeCount={localLikeCount}
+            onLikeChange={handleLikeCountChange}
             iconSize={24}
           />
         </div>
@@ -81,7 +129,7 @@ const BottomBar: React.FC<BottomBarProps> = ({
             height="24"
           />
           <span className={`${styles.actionCount} ${isStarred ? styles.starActive : ''}`}>
-            {starCount}
+            {localStarCount}
           </span>
         </div>
 

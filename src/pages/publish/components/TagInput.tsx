@@ -9,28 +9,39 @@ interface TagInputProps {
 
 const TagInput: React.FC<TagInputProps> = ({ tags, onChange }) => {
   const [input, setInput] = useState('');
+  const [error, setError] = useState(''); // 新增错误提示状态
   const inputRef = useRef<HTMLInputElement>(null);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setInput(e.target.value);
+    setError(''); // 输入变化时清空错误
   };
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === 'Enter') {
+    if (e.key === 'Enter' || e.key === ' ') {
       e.preventDefault();
-      const value = input.trim();
-      if (value && !tags.includes(value) && tags.length < 10) {
-        onChange([...tags, value]);
-        setInput('');
+      let value = input.trim();
+      if (value.startsWith('#')) {
+        value = value.slice(1).trim();
+      }
+      if (value) {
+        if (tags.includes(value)) {
+          setError('标签已存在'); // 重复时提示
+        } else if (tags.length < 10) {
+          onChange([...tags, value]);
+          setInput('');
+          setError('');
+        }
       }
     } else if (e.key === 'Backspace' && !input && tags.length > 0) {
-      // 删除最后一个标签
       onChange(tags.slice(0, tags.length - 1));
+      setError('');
     }
   };
 
   const handleRemove = (removeIdx: number) => {
     onChange(tags.filter((_, idx) => idx !== removeIdx));
+    setError('');
   };
   return (
     <div className="mb-4">
@@ -62,6 +73,7 @@ const TagInput: React.FC<TagInputProps> = ({ tags, onChange }) => {
         />
       </div>
       <div className="text-xs text-gray-400 mt-1 text-right w-full">{tags.length}/10</div>
+      {error && <div className="text-xs text-red-500 mt-1 text-right w-full">{error}</div>}
     </div>
   );
 };

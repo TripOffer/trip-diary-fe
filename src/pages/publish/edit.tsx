@@ -254,10 +254,7 @@ const PublishEditPage = () => {
       onSuccess: () => {
         setShowResult(true);
         // 通知上一个页面刷新稿件列表
-        navigate(-1);
-        setTimeout(() => {
-          window.dispatchEvent(new CustomEvent('refresh-diary-list'));
-        }, 300);
+        navigate('/publish', { state: { refresh: true, tab: 'manage' } });
       },
       onError: () => setShowResult(true),
     });

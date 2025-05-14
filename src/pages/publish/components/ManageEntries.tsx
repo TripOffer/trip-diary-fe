@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Cell, Toast, Tag, Loading, Dialog, PullDownRefresh } from 'tdesign-mobile-react';
+import { useLocation, useNavigate } from 'react-router-dom';
 import Api from '@/service/api';
 import EntryItem from './EntryItem';
 import { getStatusBarHeight } from '@/utils/getStatusBarHeight';
@@ -12,6 +13,8 @@ const statusMap: Record<string, { theme: 'warning' | 'success' | 'danger'; text:
 
 const ManageEntries: React.FC = () => {
   const statusBarHeight = getStatusBarHeight();
+  const location = useLocation();
+  const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [data, setData] = useState<any[]>([]);
   const [page, setPage] = useState(1);
@@ -43,6 +46,16 @@ const ManageEntries: React.FC = () => {
       else setLoading(false);
     }
   };
+
+  // 检查是否需要刷新（从编辑页返回时）
+  useEffect(() => {
+    if (location.state?.refresh) {
+      fetchEntries();
+      // 清除 state，避免重复刷新
+      navigate(location.pathname, { replace: true, state: {} });
+    }
+    // eslint-disable-next-line
+  }, [location.state]);
 
   // 加载更多
   const loadMore = async () => {

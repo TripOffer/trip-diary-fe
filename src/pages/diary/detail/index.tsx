@@ -10,6 +10,7 @@ import Toast from '@/utils/toast';
 import styles from './index.module.scss';
 import { useTranslation } from 'react-i18next';
 import { getStatusBarHeight } from '@/utils/getStatusBarHeight';
+import { ClientEnv } from '@/utils/clientEnv';
 
 const DiaryDetailPage: React.FC = () => {
   const { t } = useTranslation('diary');
@@ -96,8 +97,28 @@ const DiaryDetailPage: React.FC = () => {
     }
   };
 
-  const handleShareClick = () => {
-    Toast.info(t('shareDev', { ns: 'diary', defaultValue: '分享功能开发中' }), { duration: 1000 });
+  const handleShareClick = async (diaryId?: string | number) => {
+    if (!diaryId) {
+      Toast.info(t('shareFailedNoId', { defaultValue: '分享失败，无法获取日记ID' }), {
+        duration: 1000,
+      });
+      return;
+    }
+    const shareUrl = `https://trip.mengchen.xyz/diary/${diaryId}`;
+    if (ClientEnv.isAndroidClient()) {
+      window.Android.shareText(shareUrl, t('shareArticleTitle', { defaultValue: '分享文章链接' }));
+    } else {
+      // 其他情况下复制链接到剪贴板
+      try {
+        await navigator.clipboard.writeText(shareUrl);
+        await Api.diaryApi.shareDiary(diaryId);
+        Toast.success(t('shareSuccess', { defaultValue: '分享成功' }), { duration: 1000 });
+      } catch {
+        Toast.error(t('copyFailed', { defaultValue: '分享失败，请重试' }), {
+          duration: 1000,
+        });
+      }
+    }
   };
 
   const handleCommentClick = () => {
@@ -112,12 +133,12 @@ const DiaryDetailPage: React.FC = () => {
 
     try {
       setCommentCount((prev) => prev + 1);
-      Toast.success(t('commentSuccess', { ns: 'diary', defaultValue: '评论成功' }), {
+      Toast.success(t('commentSuccess', { defaultValue: '评论成功' }), {
         duration: 1000,
       });
     } catch (error) {
       console.error('Failed to submit comment:', error);
-      Toast.error(t('commentFailed', { ns: 'diary', defaultValue: '评论失败，请重试' }));
+      Toast.error(t('commentFailed', { defaultValue: '评论失败，请重试' }));
     }
   };
 
@@ -127,6 +148,7 @@ const DiaryDetailPage: React.FC = () => {
     <div className={styles.container} style={{ paddingTop: statusBarHeight }}>
       <DetailNavBar
         title={title}
+        diaryId={id}
         isFollowing={isFollowing}
         authorId={authorId}
         authorAvatar={authorAvatar}

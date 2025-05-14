@@ -8,17 +8,19 @@ import { getStatusBarHeight } from '@/utils/getStatusBarHeight';
 
 interface DetailNavBarProps {
   title: string;
+  diaryId?: string | number;
   authorId?: string | number;
   authorAvatar?: string;
   isFollowing?: boolean;
   showFollow?: boolean;
   onFollowClick?: () => void;
-  onShareClick?: () => void;
+  onShareClick?: (diaryId?: string | number) => void;
   onBackClick?: () => void;
 }
 
 const DetailNavBar: React.FC<DetailNavBarProps> = ({
   title,
+  diaryId,
   authorId,
   authorAvatar,
   isFollowing = false,
@@ -47,7 +49,7 @@ const DetailNavBar: React.FC<DetailNavBarProps> = ({
 
   const handleShare = () => {
     if (onShareClick) {
-      onShareClick();
+      onShareClick(diaryId);
     }
   };
 

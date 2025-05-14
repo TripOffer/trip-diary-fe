@@ -111,5 +111,9 @@
     "uploading": "Uploading, please wait..."
   },
   "editDiaryTitle": "Edit Diary",
-  "back": "Back"
+  "back": "Back",
+  "shareFailedNoId": "Share failed, unable to get diary ID",
+  "shareArticleTitle": "Share article link",
+  "shareSuccess": "Share successful",
+  "copyFailed": "Share failed, please try again"
 }

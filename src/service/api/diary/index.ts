@@ -55,6 +55,7 @@ class DiaryApi extends BaseApi {
       `/diary/${diaryId}/comment/${commentId}/like`,
     search: '/diary/search',
     recommend: '/diary/recommend',
+    share: (id: string | number) => `/diary/${id}/share`,
   };
 
   tag = 'Diary';
@@ -150,6 +151,10 @@ class DiaryApi extends BaseApi {
 
   async getRecommendDiaries(params: DiaryListQuery) {
     return this.http.get<RecommendDiaryRes>(this.urls.recommend, { params });
+  }
+
+  async shareDiary(diaryId: string | number) {
+    return this.http.post<any>(this.urls.share(diaryId));
   }
 }
 

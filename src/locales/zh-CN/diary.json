@@ -111,5 +111,9 @@
     "uploading": "正在上传，请稍候…"
   },
   "editDiaryTitle": "编辑日记",
-  "back": "返回"
+  "back": "返回",
+  "shareFailedNoId": "分享失败，无法获取日记ID",
+  "shareArticleTitle": "分享文章链接",
+  "shareSuccess": "分享成功",
+  "copyFailed": "分享失败，请重试"
 }

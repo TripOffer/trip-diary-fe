@@ -27,6 +27,8 @@ const DiaryMasonry: React.FC<DiaryMasonryProps> = ({
   const [scrollTop, setScrollTop] = useState(0);
   const [containerHeight, setContainerHeight] = useState(0);
   const OVERSCAN = 400; // 预渲染区域高度
+  const lastScrollTop = useRef(0);
+  const [scrollDirection, setScrollDirection] = useState<'down' | 'up'>('down');
 
   // 监听每个卡片高度
   useEffect(() => {
@@ -100,7 +102,10 @@ const DiaryMasonry: React.FC<DiaryMasonryProps> = ({
   // 滚动事件
   const handleScroll = useCallback(() => {
     if (!containerRef.current) return;
-    setScrollTop(containerRef.current.scrollTop);
+    const newScrollTop = containerRef.current.scrollTop;
+    setScrollDirection(newScrollTop > lastScrollTop.current ? 'down' : 'up');
+    lastScrollTop.current = newScrollTop;
+    setScrollTop(newScrollTop);
     setContainerHeight(containerRef.current.clientHeight);
     if (loading || !hasMore) return;
     // 距底部 100px 内触发
@@ -131,6 +136,9 @@ const DiaryMasonry: React.FC<DiaryMasonryProps> = ({
     const [start, end] = getVisibleRange(colIdx);
     const top = meta.heights[start] || 0;
     const bottom = meta.total - (meta.heights[end] || meta.total);
+    const visibleSlice = col.slice(start, end);
+    const visibleCount = visibleSlice.length;
+    const maxDelay = 0.3; // 最大延迟总时长
     return (
       <div
         className={
@@ -139,19 +147,25 @@ const DiaryMasonry: React.FC<DiaryMasonryProps> = ({
         style={{ position: 'relative', minHeight: meta.total }}
       >
         <div style={{ height: top }} />
-        {col.slice(start, end).map((item: any, idx: number) => (
-          <motion.div
-            key={item.id}
-            initial={{ opacity: 0, y: 24 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.4, delay: (itemIndexMap[item.id] || 0) * 0.15 }}
-          >
-            <DiaryCard
-              diary={item}
-              ref={(el: HTMLDivElement | null) => (cardRefs.current[item.id] = el)}
-            />
-          </motion.div>
-        ))}
+        {visibleSlice.map((item: any, idx: number) => {
+          const delay =
+            scrollDirection === 'down'
+              ? idx * (maxDelay / Math.max(visibleCount - 1, 1))
+              : (visibleCount - 1 - idx) * (maxDelay / Math.max(visibleCount - 1, 1));
+          return (
+            <motion.div
+              key={item.id}
+              initial={{ opacity: 0, y: 24 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.4, delay }}
+            >
+              <DiaryCard
+                diary={item}
+                ref={(el: HTMLDivElement | null) => (cardRefs.current[item.id] = el)}
+              />
+            </motion.div>
+          );
+        })}
         <div style={{ height: bottom }} />
       </div>
     );

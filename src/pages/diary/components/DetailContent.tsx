@@ -1,5 +1,5 @@
 import React from 'react';
-import { Tag } from 'tdesign-mobile-react';
+import { Tag, Swiper } from 'tdesign-mobile-react';
 import { DiaryDetail } from '@/types/diary';
 import styles from './DetailContent.module.scss';
 
@@ -32,6 +32,52 @@ const DetailContent: React.FC<DetailContentProps> = ({
     return path.startsWith('http') ? path : `${OSS_PREFIX}${path}`;
   };
 
+  // 渲染图片轮播
+  const renderImageSwiper = () => {
+    if (!diaryData?.images || diaryData.images.length === 0) return null;
+
+    // 轮播组件
+    if (diaryData.images.length > 1) {
+      return (
+        <div className={styles.swiperContainer}>
+          <Swiper
+            height="320px"
+            autoplay={true}
+            interval={3000}
+            duration={500}
+            defaultCurrent={0}
+            navigation={{ type: 'dots' }}
+          >
+            {diaryData.images.map((image, index) => (
+              <Swiper.SwiperItem key={index}>
+                <div className={styles.swiperImageWrapper}>
+                  <img
+                    src={getResourceUrl(image)}
+                    alt={`${diaryTitle} - 图片${index + 1}`}
+                    className={styles.swiperImage}
+                  />
+                </div>
+              </Swiper.SwiperItem>
+            ))}
+          </Swiper>
+        </div>
+      );
+    }
+
+    // 单张图片
+    return (
+      <div className={styles.imageContainer}>
+        <div className={styles.imageWrapper}>
+          <img
+            src={getResourceUrl(diaryData.images[0])}
+            alt={`${diaryTitle} - 图片1`}
+            className={styles.diaryImage}
+          />
+        </div>
+      </div>
+    );
+  };
+
   return (
     <div className={styles.content}>
       {isLoading ? (
@@ -55,20 +101,8 @@ const DetailContent: React.FC<DetailContentProps> = ({
               </div>
             )}
 
-            {/* 图片展示区域 */}
-            {diaryData?.images && diaryData.images.length > 0 && (
-              <div className={styles.imageContainer}>
-                {diaryData.images.map((image, index) => (
-                  <div key={index} className={styles.imageWrapper}>
-                    <img
-                      src={getResourceUrl(image)}
-                      alt={`${diaryTitle} - 图片${index + 1}`}
-                      className={styles.diaryImage}
-                    />
-                  </div>
-                ))}
-              </div>
-            )}
+            {/* 图片展示区域 - 使用轮播或单张显示 */}
+            {diaryData?.images && diaryData.images.length > 0 && renderImageSwiper()}
 
             {/* 标题区域 */}
             <h2 className={styles.diaryTitle}>{diaryTitle}</h2>

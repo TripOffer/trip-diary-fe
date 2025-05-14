@@ -3,6 +3,7 @@ import React from 'react';
 import { Navigate, Route, Routes } from 'react-router-dom';
 import App from '../App';
 import DiaryDetail from '../pages/diary/detail';
+import CommentPage from '../pages/diary/components/CommentPage';
 import Home from '../pages/home';
 import Login from '../pages/login';
 import Profile from '../pages/profile';
@@ -127,6 +128,14 @@ const AppRoutes: React.FC = () => (
       />
       <Route path="login" element={<Login />} />
       <Route path="diary/:id" element={<DiaryDetail />} />
+      <Route
+        path="diary/:id/comments"
+        element={
+          <ProtectedRoute>
+            <CommentPage />
+          </ProtectedRoute>
+        }
+      />
       <Route path="user/:id" element={<UserProfile />} />
       <Route path="agreement" element={<UserAgreementPage />} />
       <Route path="privacy" element={<PrivacyPolicyPage />} />

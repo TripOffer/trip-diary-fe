@@ -46,11 +46,13 @@ class DiaryApi extends BaseApi {
     unlike: (id: string) => `/diary/${id}/like`,
     favorite: (id: string | number) => `/diary/${id}/favorite`,
     unfavorite: (id: string | number) => `/diary/${id}/favorite`,
-    comment: '/diary/comment',
-    commentList: (diaryId: number) => `/diary/${diaryId}/comments`,
+    comment: (diaryId: string | number) => `/diary/${diaryId}/comment`,
+    commentList: (diaryId: string | number) => `/diary/${diaryId}/comments`,
     replyList: (commentId: number) => `/diary/comment/${commentId}/replies`,
-    likeComment: (id: number) => `/diary/comment/${id}/like`,
-    unlikeComment: (id: number) => `/diary/comment/${id}/unlike`,
+    likeComment: (diaryId: string | number, commentId: string | number) =>
+      `/diary/${diaryId}/comment/${commentId}/like`,
+    unlikeComment: (diaryId: string | number, commentId: string | number) =>
+      `/diary/${diaryId}/comment/${commentId}/like`,
     search: '/diary/search',
     recommend: '/diary/recommend',
   };
@@ -116,14 +118,17 @@ class DiaryApi extends BaseApi {
   }
 
   async createComment(data: CreateCommentReq) {
-    return this.http.post<CreateCommentRes>(this.urls.comment, data);
+    return this.http.post<CreateCommentRes>(this.urls.comment(data.diaryId), {
+      content: data.content,
+      parentId: data.parentId,
+    });
   }
 
   async deleteComment(id: number) {
     return this.http.delete<DeleteCommentRes>(`${this.urls.comment}/${id}`);
   }
 
-  async getComments(diaryId: number, params: CommentListQuery) {
+  async getComments(diaryId: string | number, params: CommentListQuery) {
     return this.http.get<CommentListRes>(this.urls.commentList(diaryId), { params });
   }
 
@@ -131,12 +136,12 @@ class DiaryApi extends BaseApi {
     return this.http.get<ReplyListRes>(this.urls.replyList(commentId), { params });
   }
 
-  async likeComment(id: number) {
-    return this.http.post<LikeCommentRes>(this.urls.likeComment(id));
+  async likeComment(diaryId: string | number, commentId: string | number) {
+    return this.http.post<LikeCommentRes>(this.urls.likeComment(diaryId, commentId));
   }
 
-  async unlikeComment(id: number) {
-    return this.http.post<UnlikeCommentRes>(this.urls.unlikeComment(id));
+  async unlikeComment(diaryId: string | number, commentId: string | number) {
+    return this.http.delete<UnlikeCommentRes>(this.urls.unlikeComment(diaryId, commentId));
   }
 
   async searchDiaries(params: SearchDiaryQuery) {

@@ -46,3 +46,19 @@ export interface ImageProcessQuery {
   quality?: string;
 }
 // 返回为图片流或处理后图片 URL，通常不定义严格类型
+
+// 获取图片元数据
+export interface ImageMetaQuery {
+  key: string;
+}
+
+export interface ImageMetaRes {
+  width: number;
+  height: number;
+  id: string;
+  key: string;
+  userId: number;
+  ext: string;
+  type: string;
+  createdAt: string;
+}

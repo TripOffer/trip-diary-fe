@@ -29,6 +29,7 @@ const DiaryMasonry: React.FC<DiaryMasonryProps> = ({
   const OVERSCAN = 400; // 预渲染区域高度
   const lastScrollTop = useRef(0);
   const [scrollDirection, setScrollDirection] = useState<'down' | 'up'>('down');
+  const [isLoadingMore, setIsLoadingMore] = useState(false); // 本地加载锁
 
   // 监听每个卡片高度
   useEffect(() => {
@@ -107,7 +108,7 @@ const DiaryMasonry: React.FC<DiaryMasonryProps> = ({
     lastScrollTop.current = newScrollTop;
     setScrollTop(newScrollTop);
     setContainerHeight(containerRef.current.clientHeight);
-    if (loading || !hasMore) return;
+    if (loading || isLoadingMore || !hasMore) return;
     // 距底部 100px 内触发
     if (
       containerRef.current.scrollHeight -
@@ -115,9 +116,17 @@ const DiaryMasonry: React.FC<DiaryMasonryProps> = ({
         containerRef.current.clientHeight <
       100
     ) {
+      setIsLoadingMore(true);
       onLoadMore && onLoadMore();
     }
-  }, [onLoadMore, loading, hasMore]);
+  }, [onLoadMore, loading, hasMore, isLoadingMore]);
+
+  // 监听外部 loading 变化，重置本地加载锁
+  useEffect(() => {
+    if (!loading) {
+      setIsLoadingMore(false);
+    }
+  }, [loading]);
 
   useEffect(() => {
     const el = containerRef.current;

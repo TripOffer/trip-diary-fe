@@ -6,6 +6,7 @@ import Api from '@/service/api';
 import LikeButton from '@/components/LikeButton';
 import dayjs from 'dayjs';
 import styles from './CommentPage.module.scss';
+import { useTranslation } from 'react-i18next';
 
 interface Author {
   id: number;
@@ -41,6 +42,7 @@ interface CommentListRes {
 }
 
 const CommentPage: React.FC = () => {
+  const { t } = useTranslation('diary');
   const { id } = useParams<{ id: string }>();
   const diaryId = id;
   const navigate = useNavigate();
@@ -62,7 +64,7 @@ const CommentPage: React.FC = () => {
     if (!diaryId) {
       console.error('无效的日记ID');
       Message.error({
-        content: '无效的日记ID',
+        content: t('invalidDiaryId', { ns: 'diary', defaultValue: '无效的日记ID' }),
         duration: 2000,
       });
       return;
@@ -96,7 +98,7 @@ const CommentPage: React.FC = () => {
     } catch (error) {
       console.error('获取评论失败:', error);
       Message.error({
-        content: '加载评论失败',
+        content: t('fetchCommentFailed', { ns: 'diary', defaultValue: '加载评论失败' }),
         duration: 2000,
       });
     } finally {
@@ -137,7 +139,7 @@ const CommentPage: React.FC = () => {
     if (!diaryId) {
       console.error('无效的日记ID');
       Message.error({
-        content: '操作失败，无效的日记ID',
+        content: t('invalidDiaryId', { ns: 'diary', defaultValue: '操作失败，无效的日记ID' }),
         duration: 2000,
       });
       return;
@@ -181,7 +183,7 @@ const CommentPage: React.FC = () => {
       setComments(originalComments);
 
       Message.error({
-        content: '操作失败，请重试',
+        content: t('actionFailed', { ns: 'diary', defaultValue: '操作失败，请重试' }),
         duration: 2000,
       });
     }
@@ -205,13 +207,13 @@ const CommentPage: React.FC = () => {
       setCommentText('');
 
       Message.success({
-        content: '评论发布成功',
+        content: t('commentSuccess', { ns: 'diary', defaultValue: '评论发布成功' }),
         duration: 2000,
       });
     } catch (error) {
       console.error('提交评论失败:', error);
       Message.error({
-        content: '评论发布失败',
+        content: t('commentFailed', { ns: 'diary', defaultValue: '评论发布失败' }),
         duration: 2000,
       });
     }
@@ -258,7 +260,7 @@ const CommentPage: React.FC = () => {
               />
             </div>
             <div className={styles.replyAction}>
-              <span>回复</span>
+              <span>{t('reply', { ns: 'diary', defaultValue: '回复' })}</span>
             </div>
           </div>
         </div>
@@ -269,7 +271,7 @@ const CommentPage: React.FC = () => {
   return (
     <div className={styles.commentPageContainer}>
       <DetailNavBar
-        title={`评论 (${totalComments})`}
+        title={`${t('comment', { ns: 'diary', defaultValue: '评论' })} (${totalComments})`}
         onBackClick={handleBackClick}
         showFollow={false}
       />
@@ -279,18 +281,30 @@ const CommentPage: React.FC = () => {
           value={refreshing}
           onChange={(val) => setRefreshing(val)}
           onRefresh={onRefresh}
-          loadingTexts={['下拉刷新', '释放刷新', '加载中...']}
+          loadingTexts={[
+            t('pullToRefresh', { ns: 'diary', defaultValue: '下拉刷新' }),
+            t('releaseToRefresh', { ns: 'diary', defaultValue: '释放刷新' }),
+            t('loading', { ns: 'diary', defaultValue: '加载中...' }),
+          ]}
         >
           <List asyncLoading={loading} onScroll={onScroll}>
             {comments.map((comment) => (
               <Cell key={comment.id} title={renderCommentItem(comment)} />
             ))}
-            {loading && <div className={styles.loadingMore}>加载更多评论...</div>}
+            {loading && (
+              <div className={styles.loadingMore}>
+                {t('loadingMoreComments', { ns: 'diary', defaultValue: '加载更多评论...' })}
+              </div>
+            )}
             {!loading && !hasMore && comments.length > 0 && (
-              <div className={styles.noMore}>没有更多评论了</div>
+              <div className={styles.noMore}>
+                {t('noMoreComments', { ns: 'diary', defaultValue: '没有更多评论了' })}
+              </div>
             )}
             {!loading && comments.length === 0 && (
-              <div className={styles.empty}>暂无评论，来抢沙发吧!</div>
+              <div className={styles.empty}>
+                {t('noComments', { ns: 'diary', defaultValue: '暂无评论，来抢沙发吧!' })}
+              </div>
             )}
           </List>
         </PullDownRefresh>
@@ -299,7 +313,7 @@ const CommentPage: React.FC = () => {
       <div className={styles.commentInputContainer}>
         <input
           type="text"
-          placeholder="说点什么..."
+          placeholder={t('saySomething', { ns: 'diary', defaultValue: '说点什么...' })}
           className={styles.commentInput}
           value={commentText}
           onChange={(e) => setCommentText(e.target.value)}
@@ -309,7 +323,7 @@ const CommentPage: React.FC = () => {
           className={`${styles.sendButton} ${!commentText.trim() ? styles.disabled : ''}`}
           onClick={handleCommentSubmit}
         >
-          发送
+          {t('send', { ns: 'diary', defaultValue: '发送' })}
         </div>
       </div>
     </div>

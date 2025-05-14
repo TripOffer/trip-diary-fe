@@ -1,6 +1,7 @@
 import React from 'react';
 import { Textarea, TextareaValue } from 'tdesign-mobile-react';
 import { Icon } from '@iconify/react/dist/iconify.js';
+import { useTranslation } from 'react-i18next';
 
 interface ContentInputProps {
   value: string;
@@ -10,16 +11,17 @@ interface ContentInputProps {
 const MAX_LENGTH = 2000;
 
 const ContentInput: React.FC<ContentInputProps> = ({ value, onChange }) => {
+  const { t } = useTranslation('diary');
   // 只做长度提示，不做强制限制
   const overLimit = value.length > MAX_LENGTH;
   return (
     <div className="mb-5">
       <label className="flex items-center text-sm font-medium text-gray-600 mb-2">
         <Icon icon="mdi:text-box-outline" className="mr-1 text-blue-500" />
-        正文内容
+        {t('content.label')}
       </label>{' '}
       <Textarea
-        placeholder="记录你的旅行故事和精彩瞬间..."
+        placeholder={t('content.placeholder')}
         value={value}
         onChange={(value: TextareaValue) => onChange(String(value))}
         autosize={{ minRows: 5, maxRows: 15 }}

@@ -2,6 +2,7 @@ import React from 'react';
 import { Tag, Swiper } from 'tdesign-mobile-react';
 import { DiaryDetail } from '@/types/diary';
 import styles from './DetailContent.module.scss';
+import { useTranslation } from 'react-i18next';
 
 interface DetailContentProps {
   diaryData: DiaryDetail | null;
@@ -16,6 +17,7 @@ const DetailContent: React.FC<DetailContentProps> = ({
   OSS_PREFIX,
   formatDate,
 }) => {
+  const { t } = useTranslation('diary');
   const diaryTitle = diaryData?.title || '';
   const content = diaryData?.content || '';
 
@@ -53,7 +55,7 @@ const DetailContent: React.FC<DetailContentProps> = ({
                 <div className={styles.swiperImageWrapper}>
                   <img
                     src={getResourceUrl(image)}
-                    alt={`${diaryTitle} - 图片${index + 1}`}
+                    alt={`${diaryTitle} - ${t('image', { ns: 'diary', defaultValue: '图片' })}${index + 1}`}
                     className={styles.swiperImage}
                   />
                 </div>
@@ -70,7 +72,7 @@ const DetailContent: React.FC<DetailContentProps> = ({
         <div className={styles.imageWrapper}>
           <img
             src={getResourceUrl(diaryData.images[0])}
-            alt={`${diaryTitle} - 图片1`}
+            alt={`${diaryTitle} - ${t('image', { ns: 'diary', defaultValue: '图片' })}1`}
             className={styles.diaryImage}
           />
         </div>
@@ -81,7 +83,9 @@ const DetailContent: React.FC<DetailContentProps> = ({
   return (
     <div className={styles.content}>
       {isLoading ? (
-        <div className={styles.placeholder}>加载中...</div>
+        <div className={styles.placeholder}>
+          {t('loading', { ns: 'diary', defaultValue: '加载中...' })}
+        </div>
       ) : (
         <>
           <div className={styles.diaryContent}>
@@ -94,7 +98,10 @@ const DetailContent: React.FC<DetailContentProps> = ({
                     poster={diaryData.thumbnail ? getResourceUrl(diaryData.thumbnail) : undefined}
                   >
                     <source src={getResourceUrl(diaryData.video)} type="video/mp4" />
-                    您的浏览器不支持视频播放
+                    {t('videoNotSupported', {
+                      ns: 'diary',
+                      defaultValue: '您的浏览器不支持视频播放',
+                    })}
                   </video>
                   <div className={styles.videoControls}></div>
                 </div>
@@ -128,7 +135,9 @@ const DetailContent: React.FC<DetailContentProps> = ({
                       {formatDate(diaryData.publishedAt).split(' ')[0]}
                     </div>
                   )}
-                  <div className={styles.place}>中国大陆</div>
+                  <div className={styles.place}>
+                    {t('mainlandChina', { ns: 'diary', defaultValue: '中国大陆' })}
+                  </div>
                 </div>
                 <div className={styles.hashTags}>
                   {diaryData?.tags &&
@@ -145,7 +154,7 @@ const DetailContent: React.FC<DetailContentProps> = ({
                       </Tag>
                     ))}
                   <Tag shape="mark" theme="danger" variant="light">
-                    #创作者新星计划
+                    #{t('creatorStarPlan', { ns: 'diary', defaultValue: '创作者新星计划' })}
                   </Tag>
                 </div>
               </div>

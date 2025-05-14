@@ -6,12 +6,14 @@ import { useTranslation } from 'react-i18next';
 import { authApi } from '@/service/api/auth';
 import { useAuthStore } from '@/store/auth';
 import styles from './index.module.scss';
+import { getStatusBarHeight } from '@/utils/getStatusBarHeight';
 
 // 定义表单类型
 type FormType = 'login' | 'register';
 
 const Login: React.FC = () => {
   const { t } = useTranslation();
+  const statusBarHeight = getStatusBarHeight();
   const setToken = useAuthStore((state) => state.setToken);
   const setUser = useAuthStore((state) => state.setUser);
 
@@ -261,7 +263,7 @@ const Login: React.FC = () => {
   };
 
   return (
-    <div className={styles.container}>
+    <div className={styles.container} style={{ paddingTop: `${statusBarHeight}px` }}>
       {/* 返回按钮 */}
       <button className={styles.backBtn} onClick={handleBack}>
         <Icon icon="mdi:arrow-left" width="24" height="24" />

@@ -1,6 +1,7 @@
 import React from 'react';
 import type { UploadFile } from 'tdesign-mobile-react/es/upload/type';
 import CoverSelector from './CoverSelector';
+import { useTranslation } from 'react-i18next';
 
 interface VideoSectionProps {
   videoPreviewUrl: string | null;
@@ -13,9 +14,10 @@ const VideoSection: React.FC<VideoSectionProps> = ({
   coverImage,
   setCoverImage,
 }) => {
+  const { t } = useTranslation('diary');
   return (
     <div className="bg-white rounded-xl shadow-md p-6 mb-8">
-      <h3 className="text-lg font-semibold mb-3 text-gray-700">视频预览</h3>
+      <h3 className="text-lg font-semibold mb-3 text-gray-700">{t('video.preview')}</h3>
       {videoPreviewUrl && (
         <video
           controls
@@ -24,7 +26,7 @@ const VideoSection: React.FC<VideoSectionProps> = ({
           style={{ maxHeight: '300px' }}
         />
       )}
-      <h3 className="text-lg font-semibold mb-3 text-gray-700">设置封面</h3>
+      <h3 className="text-lg font-semibold mb-3 text-gray-700">{t('video.setCover')}</h3>
       <CoverSelector currentCover={coverImage} onCoverChange={setCoverImage} />
     </div>
   );

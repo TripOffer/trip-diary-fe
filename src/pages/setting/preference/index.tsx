@@ -2,26 +2,30 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Icon } from '@iconify/react';
 import { Slider, Button, Message } from 'tdesign-mobile-react';
+import { useTranslation } from 'react-i18next';
 import styles from './index.module.scss';
+import { getStatusBarHeight } from '@/utils/getStatusBarHeight';
 
 // 主题色选项
 const themeOptions = [
-  { value: '#0052d9', label: '默认蓝' },
-  { value: '#0a7b31', label: '自然绿' },
-  { value: '#d54941', label: '活力红' },
-  { value: '#9c27b0', label: '典雅紫' },
-  { value: '#ff9800', label: '阳光橙' },
+  { value: '#0052d9', label: 'themeDefaultBlue' },
+  { value: '#0a7b31', label: 'themeNatureGreen' },
+  { value: '#d54941', label: 'themeVividRed' },
+  { value: '#9c27b0', label: 'themeElegantPurple' },
+  { value: '#ff9800', label: 'themeSunshineOrange' },
 ];
 
 // 字体大小选项
 const fontSizeOptions = [
-  { value: 'small', label: '小', size: 0.9 },
-  { value: 'normal', label: '标准', size: 1 },
-  { value: 'large', label: '大', size: 1.1 },
-  { value: 'x-large', label: '超大', size: 1.2 },
+  { value: 'small', label: 'fontSmall', size: 0.9 },
+  { value: 'normal', label: 'fontNormal', size: 1 },
+  { value: 'large', label: 'fontLarge', size: 1.1 },
+  { value: 'x-large', label: 'fontXLarge', size: 1.2 },
 ];
 
 const PreferencePage: React.FC = () => {
+  const { t } = useTranslation('settings');
+  const statusBarHeight = getStatusBarHeight();
   const navigate = useNavigate();
 
   // 状态
@@ -166,7 +170,7 @@ const PreferencePage: React.FC = () => {
                 <Icon icon="mdi:check" className={styles.checkIcon} />
               )}
             </div>
-            <div className={styles.themeLabel}>{option.label}</div>
+            <div className={styles.themeLabel}>{t(option.label)}</div>
           </div>
         ))}
       </div>
@@ -176,11 +180,14 @@ const PreferencePage: React.FC = () => {
   return (
     <div className={styles.preferencePage}>
       {/* 页面头部 */}
-      <div className={styles.header}>
+      <div
+        className={styles.header}
+        style={{ paddingTop: statusBarHeight, height: statusBarHeight + 60 }}
+      >
         <div className={styles.backButton} onClick={handleBack}>
           <Icon icon="mdi:arrow-left" />
         </div>
-        <h1 className={styles.title}>内容偏好设置</h1>
+        <h1 className={styles.title}>{t('preferenceTitle')}</h1>
         <div className={styles.dummySpace}></div>
       </div>
 
@@ -189,7 +196,7 @@ const PreferencePage: React.FC = () => {
         <div className={styles.section}>
           <div className={styles.sectionTitle}>
             <Icon icon="mdi:palette-outline" className={styles.sectionIcon} />
-            <span>主题色</span>
+            <span>{t('themeColor')}</span>
           </div>
           <div className={styles.sectionContent}>{renderThemeSelector()}</div>
         </div>
@@ -198,17 +205,17 @@ const PreferencePage: React.FC = () => {
         <div className={styles.section}>
           <div className={styles.sectionTitle}>
             <Icon icon="mdi:format-size" className={styles.sectionIcon} />
-            <span>字体大小</span>
+            <span>{t('fontSize')}</span>
           </div>
           <div className={styles.sectionContent}>
             <div
               className={styles.fontSizeDemo}
               style={{ fontSize: `${1 + (fontSliderValue - 1) * 0.1}rem` }}
             >
-              字体大小预览
+              {t('fontPreview')}
             </div>
             <div className={styles.fontSizeSlider}>
-              <div className={styles.sliderLabel}>小</div>
+              <div className={styles.sliderLabel}>{t('fontSmall')}</div>
               <Slider
                 className={styles.slider}
                 value={fontSliderValue}
@@ -217,7 +224,7 @@ const PreferencePage: React.FC = () => {
                 step={1}
                 onChange={handleSliderChange}
               />
-              <div className={styles.sliderLabel}>大</div>
+              <div className={styles.sliderLabel}>{t('fontLarge')}</div>
             </div>
             <div className={styles.fontSizeLabels}>
               {fontSizeOptions.map((option, index) => (
@@ -226,7 +233,7 @@ const PreferencePage: React.FC = () => {
                   className={`${styles.fontSizeLabel} ${index === fontSliderValue ? styles.activeLabel : ''}`}
                   style={{ left: `${(index / (fontSizeOptions.length - 1)) * 100}%` }}
                 >
-                  {option.label}
+                  {t(option.label)}
                 </div>
               ))}
             </div>
@@ -247,10 +254,10 @@ const PreferencePage: React.FC = () => {
               setFontSliderValue(1);
 
               // 显示重置成功提示
-              Message.success('已恢复默认设置');
+              Message.success(t('resetSuccess'));
             }}
           >
-            恢复默认设置
+            {t('reset')}
           </Button>
         </div>
       </div>

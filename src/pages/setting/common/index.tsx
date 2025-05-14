@@ -4,9 +4,11 @@ import { Icon } from '@iconify/react';
 import { Cell, Radio, Message } from 'tdesign-mobile-react';
 import { useTranslation } from 'react-i18next';
 import styles from './index.module.scss';
+import { getStatusBarHeight } from '@/utils/getStatusBarHeight';
 
 const CommonSettingPage: React.FC = () => {
   const navigate = useNavigate();
+  const statusBarHeight = getStatusBarHeight();
   const { t, i18n } = useTranslation('settings');
 
   // 当前语言
@@ -30,7 +32,10 @@ const CommonSettingPage: React.FC = () => {
   return (
     <div className={styles.settingPage}>
       {/* 页面头部 */}
-      <div className={styles.header}>
+      <div
+        className={styles.header}
+        style={{ paddingTop: statusBarHeight, height: statusBarHeight + 60 }}
+      >
         <div className={styles.backButton} onClick={handleBack}>
           <Icon icon="mdi:arrow-left" />
         </div>

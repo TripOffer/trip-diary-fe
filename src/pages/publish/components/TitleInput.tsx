@@ -1,6 +1,7 @@
 import React from 'react';
 import { Input } from 'tdesign-mobile-react';
 import { Icon } from '@iconify/react/dist/iconify.js';
+import { useTranslation } from 'react-i18next';
 
 interface TitleInputProps {
   value: string;
@@ -10,6 +11,7 @@ interface TitleInputProps {
 const MAX_LENGTH = 50;
 
 const TitleInput: React.FC<TitleInputProps> = ({ value, onChange }) => {
+  const { t } = useTranslation('diary');
   // 适配 tdesign Input 的 onChange 类型
   const handleChange = (val: string | number) => {
     onChange(String(val));
@@ -20,10 +22,10 @@ const TitleInput: React.FC<TitleInputProps> = ({ value, onChange }) => {
     <div className="mb-5">
       <label className="flex items-center text-sm font-medium text-gray-600 mb-2">
         <Icon icon="mdi:format-title" className="mr-1 text-blue-500" />
-        标题
+        {t('title.label')}
       </label>{' '}
       <Input
-        placeholder="请输入吸引人的日记标题"
+        placeholder={t('title.placeholder')}
         value={value}
         onChange={handleChange}
         status={status}

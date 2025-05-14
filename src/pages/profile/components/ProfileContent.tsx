@@ -2,6 +2,7 @@ import React, { useState, useCallback, useEffect } from 'react';
 import { Icon } from '@iconify/react';
 import { Button } from 'tdesign-mobile-react';
 import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import DiaryMasonry from '@/components/DiaryMasonry';
 import { DiaryBase } from '@/service/api/user/types';
 import { userApi } from '@/service/api/user';
@@ -11,6 +12,7 @@ import styles from '../index.module.scss';
 type TabType = '笔记' | '收藏' | '赞过';
 
 const ProfileContent: React.FC = () => {
+  const { t } = useTranslation('profile');
   const [activeTab, setActiveTab] = useState<TabType>('笔记');
   const [loading, setLoading] = useState(false);
   const [page, setPage] = useState(1);
@@ -18,7 +20,12 @@ const ProfileContent: React.FC = () => {
   const [hasMore, setHasMore] = useState(true);
   const navigate = useNavigate();
 
-  const tabs: TabType[] = ['笔记', '收藏', '赞过'];
+  const tabKeys: TabType[] = ['笔记', '收藏', '赞过'];
+  const tabI18n: Record<TabType, string> = {
+    笔记: t('tabNotes', { defaultValue: '笔记' }),
+    收藏: t('tabFavorites', { defaultValue: '收藏' }),
+    赞过: t('tabLikes', { defaultValue: '赞过' }),
+  };
   const hasContent = diaries.length > 0;
 
   // 初始加载数据
@@ -115,13 +122,13 @@ const ProfileContent: React.FC = () => {
       {/* 标签栏 */}
       <div className={styles.tabBar}>
         <div className={styles.tabContent}>
-          {tabs.map((tab) => (
+          {tabKeys.map((tab) => (
             <div
               key={tab}
               className={`${styles.tabItem} ${activeTab === tab ? styles.active : ''}`}
               onClick={() => handleTabChange(tab)}
             >
-              {tab}
+              {tabI18n[tab]}
             </div>
           ))}
         </div>
@@ -131,7 +138,7 @@ const ProfileContent: React.FC = () => {
       {loading && !hasContent ? (
         <div className={styles.loadingState}>
           <Icon icon="mdi:loading" className={`${styles.loadingIcon} ${styles.spinning}`} />
-          <div className={styles.loadingText}>加载中...</div>
+          <div className={styles.loadingText}>{t('loading')}</div>
         </div>
       ) : hasContent ? (
         <div className={styles.masonryContainer}>
@@ -147,10 +154,10 @@ const ProfileContent: React.FC = () => {
           <Icon icon="mdi:image-outline" className={styles.emptyIcon} />
           <div className={styles.emptyText}>
             {activeTab === '笔记'
-              ? '还没有发布日记，去记录你的旅行吧'
+              ? t('emptyNotes', { defaultValue: '还没有发布日记，去记录你的旅行吧' })
               : activeTab === '收藏'
-                ? '还没有收藏内容'
-                : '还没有点赞内容'}
+                ? t('emptyFavorites', { defaultValue: '还没有收藏内容' })
+                : t('emptyLikes', { defaultValue: '还没有点赞内容' })}
           </div>
           {activeTab === '笔记' && (
             <Button
@@ -158,7 +165,7 @@ const ProfileContent: React.FC = () => {
               icon={<Icon icon="mdi:plus" />}
               onClick={handlePublish}
             >
-              去发布
+              {t('goPublish', { defaultValue: '去发布' })}
             </Button>
           )}
         </div>

@@ -1,5 +1,6 @@
 import React from 'react';
 import { Dialog } from 'tdesign-mobile-react';
+import { useTranslation } from 'react-i18next';
 
 interface PublishDialogProps {
   visible: boolean;
@@ -13,16 +14,19 @@ const PublishDialog: React.FC<PublishDialogProps> = ({
   dialogType,
   onConfirm,
   onClose,
-}) => (
-  <Dialog
-    visible={visible}
-    title={dialogType === 'publish' ? '确认发布？' : '存入草稿箱'}
-    content={dialogType === 'publish' ? '发布后将公开展示，是否继续？' : '是否将内容存入草稿箱？'}
-    confirmBtn={{ content: '确认', theme: 'primary' }}
-    cancelBtn={{ content: '取消' }}
-    onConfirm={onConfirm}
-    onClose={onClose}
-  />
-);
+}) => {
+  const { t } = useTranslation('diary');
+  return (
+    <Dialog
+      visible={visible}
+      title={dialogType === 'publish' ? t('dialog.publishTitle') : t('dialog.draftTitle')}
+      content={dialogType === 'publish' ? t('dialog.publishTip') : t('dialog.draftTip')}
+      confirmBtn={{ content: t('dialog.confirm'), theme: 'primary' }}
+      cancelBtn={{ content: t('dialog.cancel') }}
+      onConfirm={onConfirm}
+      onClose={onClose}
+    />
+  );
+};
 
 export default PublishDialog;

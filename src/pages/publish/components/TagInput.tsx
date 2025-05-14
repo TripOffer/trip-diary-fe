@@ -1,6 +1,7 @@
 import { Icon } from '@iconify/react/dist/iconify.js';
 import React, { useRef, useState } from 'react';
 import { Tag } from 'tdesign-mobile-react';
+import { useTranslation } from 'react-i18next';
 
 interface TagInputProps {
   tags: string[];
@@ -8,13 +9,14 @@ interface TagInputProps {
 }
 
 const TagInput: React.FC<TagInputProps> = ({ tags, onChange }) => {
+  const { t } = useTranslation('diary');
   const [input, setInput] = useState('');
-  const [error, setError] = useState(''); // 新增错误提示状态
+  const [error, setError] = useState('');
   const inputRef = useRef<HTMLInputElement>(null);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setInput(e.target.value);
-    setError(''); // 输入变化时清空错误
+    setError('');
   };
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
@@ -26,7 +28,7 @@ const TagInput: React.FC<TagInputProps> = ({ tags, onChange }) => {
       }
       if (value) {
         if (tags.includes(value)) {
-          setError('标签已存在'); // 重复时提示
+          setError(t('tag.exists'));
         } else if (tags.length < 10) {
           onChange([...tags, value]);
           setInput('');
@@ -67,7 +69,7 @@ const TagInput: React.FC<TagInputProps> = ({ tags, onChange }) => {
           value={input}
           onChange={handleInputChange}
           onKeyDown={handleKeyDown}
-          placeholder={tags.length >= 10 ? '最多10个标签' : '输入标签并回车'}
+          placeholder={tags.length >= 10 ? t('tag.max') : t('tag.placeholder')}
           maxLength={12}
           disabled={tags.length >= 10}
         />

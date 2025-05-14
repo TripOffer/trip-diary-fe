@@ -4,6 +4,7 @@ import Api from '@/service/api';
 import type { UploadFile } from 'tdesign-mobile-react/es/upload/type';
 import type { PresignExt, PresignType } from '@/service/api/oss/types';
 import axios from 'axios';
+import { useTranslation } from 'react-i18next';
 
 const getFileExt = (file: File): PresignExt => {
   const ext = file.name.split('.').pop()?.toLowerCase();
@@ -37,6 +38,7 @@ const compressImage = async (
 };
 
 const useDiaryUpload = () => {
+  const { t } = useTranslation('diary');
   const [uploading, setUploading] = useState(false);
   const [progress, setProgress] = useState(0);
   const [resultType, setResultType] = useState<'success' | 'error'>('success');
@@ -116,14 +118,14 @@ const useDiaryUpload = () => {
     const MAX_CONTENT_LENGTH = 2000;
     if (title.length > MAX_TITLE_LENGTH) {
       setResultType('error');
-      setResultMsg(`标题不能超过${MAX_TITLE_LENGTH}字`);
+      setResultMsg(t('form.titleTooLong', { max: MAX_TITLE_LENGTH }));
       setUploading(false);
       if (options.onError) options.onError();
       return;
     }
     if (content.length > MAX_CONTENT_LENGTH) {
       setResultType('error');
-      setResultMsg(`正文内容不能超过${MAX_CONTENT_LENGTH}字`);
+      setResultMsg(t('form.contentTooLong', { max: MAX_CONTENT_LENGTH }));
       setUploading(false);
       if (options.onError) options.onError();
       return;
@@ -132,7 +134,7 @@ const useDiaryUpload = () => {
     const MAX_TAGS = 10;
     if (tags.length > MAX_TAGS) {
       setResultType('error');
-      setResultMsg(`标签不能超过${MAX_TAGS}个`);
+      setResultMsg(t('form.tagsTooMany', { max: MAX_TAGS }));
       setUploading(false);
       if (options.onError) options.onError();
       return;
@@ -237,11 +239,11 @@ const useDiaryUpload = () => {
         await Api.diaryApi.createDiary(req);
       }
       setResultType('success');
-      setResultMsg(published ? '发布成功！' : '已存入草稿箱');
+      setResultMsg(published ? t('form.publishSuccess') : t('form.saveDraftSuccess'));
       if (onSuccess) onSuccess();
     } catch (e: any) {
       setResultType('error');
-      setResultMsg('发布失败，请重试');
+      setResultMsg(t('form.publishFailed'));
       if (onError) onError();
     } finally {
       setUploading(false);

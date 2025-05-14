@@ -1,6 +1,7 @@
 import React from 'react';
 import { Upload, Toast } from 'tdesign-mobile-react';
 import type { UploadFile } from 'tdesign-mobile-react/es/upload/type';
+import { useTranslation } from 'react-i18next';
 
 interface ImageUploadProps {
   fileList: UploadFile[];
@@ -8,10 +9,12 @@ interface ImageUploadProps {
 }
 
 const ImageUpload: React.FC<ImageUploadProps> = ({ fileList, setFileList }) => {
+  const { t } = useTranslation('diary');
+
   // 选择图片回调
   const handleChange = (newFiles: UploadFile[]) => {
     if (newFiles.length > 100) {
-      Toast({ message: '最多只能选择100张图片', duration: 2000 });
+      Toast({ message: t('image.max'), duration: 2000 });
       setFileList(newFiles.slice(0, 100));
       return;
     }
@@ -38,7 +41,7 @@ const ImageUpload: React.FC<ImageUploadProps> = ({ fileList, setFileList }) => {
         }}
       />
       <div className="mt-4 text-sm text-gray-500 text-center">
-        已选择 {fileList.length} 张图片，最多100张
+        {t('image.selected', { count: fileList.length })}
       </div>
     </div>
   );

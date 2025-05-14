@@ -3,6 +3,7 @@ import styles from './TopBar.module.scss';
 import { Icon } from '@iconify/react';
 import { Button } from 'tdesign-mobile-react';
 import { getStatusBarHeight } from '@/utils/getStatusBarHeight';
+import { useTranslation } from 'react-i18next';
 
 interface TopBarProps {
   scrollContainerRef: RefObject<HTMLDivElement>;
@@ -17,6 +18,7 @@ const TopBar: React.FC<TopBarProps> = ({
   onSearchChange,
   onSearchSubmit,
 }) => {
+  const { t } = useTranslation();
   const statusBarHeight = getStatusBarHeight();
   const [hidden, setHidden] = useState(false);
   const lastScroll = useRef(0);
@@ -59,7 +61,7 @@ const TopBar: React.FC<TopBarProps> = ({
           className={styles.placeholder}
           type="search"
           enterKeyHint="search"
-          placeholder="搜索日记、@用户、#标签"
+          placeholder={t('home.searchPlaceholder')}
           value={searchValue}
           onChange={(e) => onSearchChange(e.target.value)}
           onKeyDown={(e) => {
@@ -81,7 +83,7 @@ const TopBar: React.FC<TopBarProps> = ({
           onClick={onSearchSubmit}
           style={{ marginLeft: 8 }}
         >
-          搜索
+          {t('home.searchBtn')}
         </Button>
       </div>
     </div>

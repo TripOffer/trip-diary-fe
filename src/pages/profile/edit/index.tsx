@@ -15,6 +15,7 @@ import { userApi } from '@/service/api/user';
 import { MyUserDetailData, Gender, UpdateUserReq } from '@/service/api/user/types';
 import { uploadResource } from '@/utils/upload';
 import { useAuthStore } from '@/store/auth';
+import { useTranslation } from 'react-i18next';
 import styles from './index.module.scss';
 
 interface ApiResponse {
@@ -25,13 +26,8 @@ interface ApiResponse {
 
 const OSS_PREFIX = import.meta.env.VITE_OSS_URL || '';
 
-const genderOptions = [
-  { label: '未知', value: 'secret' },
-  { label: '男', value: 'male' },
-  { label: '女', value: 'female' },
-];
-
 const ProfileEdit: React.FC = () => {
+  const { t } = useTranslation('profile');
   const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
@@ -46,6 +42,12 @@ const ProfileEdit: React.FC = () => {
     gender: 'secret',
     birthday: '',
   });
+
+  const genderOptions = [
+    { label: t('genderSecret'), value: 'secret' },
+    { label: t('genderMale'), value: 'male' },
+    { label: t('genderFemale'), value: 'female' },
+  ];
 
   // 头像上传相关
   const fileInputRef = React.useRef<HTMLInputElement>(null);
@@ -93,7 +95,7 @@ const ProfileEdit: React.FC = () => {
         }
       } catch (error) {
         Message.error({
-          content: '获取用户信息失败',
+          content: t('fetchUserFailed'),
           duration: 2000,
         });
         console.error('Failed to fetch user data:', error);
@@ -103,7 +105,7 @@ const ProfileEdit: React.FC = () => {
     };
 
     fetchUserData();
-  }, []);
+  }, [t]);
 
   // 处理表单输入变化
   const handleInputChange = (field: keyof UpdateUserReq, value: string) => {
@@ -153,10 +155,10 @@ const ProfileEdit: React.FC = () => {
           });
         }
 
-        Message.success('头像更新成功');
+        Message.success(t('avatarUpdateSuccess'));
       }
     } catch (error) {
-      Message.error('头像更新失败，请重试');
+      Message.error(t('avatarUpdateFailed'));
       console.error('Avatar update error:', error);
     } finally {
       if (fileInputRef.current) {
@@ -174,7 +176,7 @@ const ProfileEdit: React.FC = () => {
 
       // 验证必填字段
       if (!form.name?.trim()) {
-        Message.error('名字不能为空');
+        Message.error(t('nameRequired'));
         return;
       }
 
@@ -190,7 +192,7 @@ const ProfileEdit: React.FC = () => {
           });
         }
 
-        Message.success('个人资料更新成功');
+        Message.success(t('saveSuccess'));
         // 更新成功后返回个人主页
         setTimeout(() => {
           navigate('/profile', { replace: true });
@@ -199,7 +201,7 @@ const ProfileEdit: React.FC = () => {
         throw new Error('Update failed');
       }
     } catch (error) {
-      Message.error('更新失败，请重试');
+      Message.error(t('saveFailed'));
       console.error('Update error:', error);
     } finally {
       setSubmitting(false);
@@ -224,10 +226,10 @@ const ProfileEdit: React.FC = () => {
 
     if (hasChanges) {
       Dialog?.confirm?.({
-        title: '提示',
-        content: '您的修改尚未保存，确定要离开吗？',
-        confirmBtn: '确定',
-        cancelBtn: '取消',
+        title: t('unsavedConfirmTitle'),
+        content: t('unsavedConfirmContent'),
+        confirmBtn: t('unsavedConfirmOk'),
+        cancelBtn: t('unsavedConfirmCancel'),
         onConfirm: () => navigate('/profile'),
         onCancel: () => console.log('取消离开'),
       });
@@ -239,7 +241,7 @@ const ProfileEdit: React.FC = () => {
   if (loading) {
     return (
       <div className={styles.container}>
-        <Loading />
+        <Loading>{t('loading')}</Loading>
       </div>
     );
   }
@@ -250,7 +252,7 @@ const ProfileEdit: React.FC = () => {
         <div className={styles.backButton} onClick={handleBack}>
           <Icon icon="mdi:arrow-left" />
         </div>
-        <h1 className={styles.title}>编辑资料</h1>
+        <h1 className={styles.title}>{t('editProfileTitle')}</h1>
         <div className={styles.dummySpace}></div>
       </div>
 
@@ -268,7 +270,7 @@ const ProfileEdit: React.FC = () => {
               />
               <div className={styles.changeAvatarHint}>
                 <Icon icon="mdi:camera" width="16" height="16" />
-                <span>更换头像</span>
+                <span>{t('avatarChange')}</span>
               </div>
             </div>
           ) : (
@@ -276,7 +278,7 @@ const ProfileEdit: React.FC = () => {
               <Icon icon="mdi:account" width="48" height="48" color="#CCCCCC" />
               <div className={styles.uploadHint}>
                 <Icon icon="mdi:camera" width="16" height="16" />
-                <span>上传头像</span>
+                <span>{t('avatarUpload')}</span>
               </div>
             </div>
           )}
@@ -292,11 +294,11 @@ const ProfileEdit: React.FC = () => {
         {/* 基本信息表单 */}
         <div className={styles.form}>
           <Cell
-            title="名字"
+            title={t('name')}
             align="middle"
             description={
               <Input
-                placeholder="请输入名字"
+                placeholder={t('namePlaceholder')}
                 value={form.name}
                 onChange={(value) => handleInputChange('name', String(value))}
                 maxlength={20}
@@ -306,17 +308,17 @@ const ProfileEdit: React.FC = () => {
           />
 
           <Cell
-            title="旅游日记ID号"
+            title={t('id')}
             align="middle"
             description={<div className={styles.readonlyValue}>{userData?.id}</div>}
           />
 
           <Cell
-            title="个性签名"
+            title={t('bio')}
             align="middle"
             description={
               <Input
-                placeholder="请输入个性签名"
+                placeholder={t('bioPlaceholder')}
                 value={form.bio}
                 onChange={(value) => handleInputChange('bio', String(value))}
                 maxlength={100}
@@ -326,7 +328,7 @@ const ProfileEdit: React.FC = () => {
           />
 
           <Cell
-            title="性别"
+            title={t('gender')}
             align="middle"
             description={
               <div className={styles.genderButtons}>
@@ -346,19 +348,19 @@ const ProfileEdit: React.FC = () => {
           />
 
           <Cell
-            title="生日"
+            title={t('birthday')}
             align="middle"
             arrow
             onClick={() => setCalendarVisible(true)}
             description={
               <div className={styles.dateValue}>
-                {form.birthday ? formatDate(form.birthday) : '未设置'}
+                {form.birthday ? formatDate(form.birthday) : t('birthdayUnset')}
               </div>
             }
           />
 
           <Cell
-            title="邮箱"
+            title={t('email')}
             align="middle"
             description={<div className={styles.readonlyValue}>{userData?.email}</div>}
           />
@@ -374,7 +376,7 @@ const ProfileEdit: React.FC = () => {
             onClick={handleSubmit}
             className={styles.saveButton}
           >
-            保存
+            {t('save')}
           </Button>
         </div>
       </div>

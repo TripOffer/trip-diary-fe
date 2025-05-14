@@ -2,7 +2,9 @@ import React from 'react';
 import { Button } from 'tdesign-mobile-react';
 import { Icon } from '@iconify/react';
 import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import styles from './DetailNavBar.module.scss';
+import { getStatusBarHeight } from '@/utils/getStatusBarHeight';
 
 interface DetailNavBarProps {
   title: string;
@@ -25,7 +27,9 @@ const DetailNavBar: React.FC<DetailNavBarProps> = ({
   onShareClick,
   onBackClick,
 }) => {
+  const { t } = useTranslation('diary');
   const navigate = useNavigate();
+  const statusBarHeight = getStatusBarHeight();
 
   const handleBack = () => {
     if (onBackClick) {
@@ -54,7 +58,10 @@ const DetailNavBar: React.FC<DetailNavBarProps> = ({
   };
 
   return (
-    <div className={styles.navBar}>
+    <div
+      className={styles.navBar}
+      style={{ paddingTop: statusBarHeight, height: statusBarHeight + 60 }}
+    >
       <div className={styles.leftSection}>
         <div className={styles.backIcon} onClick={handleBack}>
           <Icon icon="mdi:arrow-left" width={24} height={24} />
@@ -79,7 +86,9 @@ const DetailNavBar: React.FC<DetailNavBarProps> = ({
               variant={isFollowing ? 'outline' : 'base'}
               className={isFollowing ? styles.following : ''}
             >
-              {isFollowing ? '已关注' : '关注'}
+              {isFollowing
+                ? t('followed', { ns: 'diary', defaultValue: '已关注' })
+                : t('follow', { ns: 'diary', defaultValue: '关注' })}
             </Button>
           </div>
         )}

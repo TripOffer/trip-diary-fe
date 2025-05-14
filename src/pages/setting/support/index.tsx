@@ -2,7 +2,9 @@ import React, { useState, useEffect, useRef, KeyboardEvent } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Icon } from '@iconify/react';
 import { Button, Input, Tag } from 'tdesign-mobile-react';
+import { useTranslation } from 'react-i18next';
 import styles from './index.module.scss';
+import { getStatusBarHeight } from '@/utils/getStatusBarHeight';
 
 // 消息类型
 interface ChatMessage {
@@ -44,7 +46,9 @@ const getCurrentTime = () => {
 };
 
 const SupportChatPage: React.FC = () => {
+  const { t } = useTranslation('settings');
   const navigate = useNavigate();
+  const statusBarHeight = getStatusBarHeight();
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [inputText, setInputText] = useState('');
   const chatEndRef = useRef<HTMLDivElement>(null);
@@ -234,11 +238,14 @@ const SupportChatPage: React.FC = () => {
   return (
     <div className={styles.supportChatPage}>
       {/* 页面头部 */}
-      <div className={styles.header}>
+      <div
+        className={styles.header}
+        style={{ paddingTop: statusBarHeight, height: statusBarHeight + 60 }}
+      >
         <div className={styles.backButton} onClick={handleBack}>
           <Icon icon="mdi:arrow-left" />
         </div>
-        <h1 className={styles.title}>帮助与客服</h1>
+        <h1 className={styles.title}>{t('helpTitle')}</h1>
         <div className={styles.dummySpace}></div>
       </div>
 
@@ -276,7 +283,7 @@ const SupportChatPage: React.FC = () => {
 
       {/* 常见问题区域 */}
       <div className={styles.faqSection}>
-        <div className={styles.faqTitle}>常见问题</div>
+        <div className={styles.faqTitle}>{t('faq')}</div>
         <div className={styles.faqTags}>
           {faqQuestions.map((question, index) => (
             <Tag key={index} className={styles.faqTag} onClick={() => handleFaqClick(question)}>
@@ -292,7 +299,7 @@ const SupportChatPage: React.FC = () => {
           <Input
             value={inputText}
             onChange={(value) => setInputText(value as string)}
-            placeholder="请输入您的问题..."
+            placeholder={t('inputPlaceholder')}
             className={styles.chatInput}
           />
         </div>

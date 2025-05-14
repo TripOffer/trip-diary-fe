@@ -4,25 +4,30 @@ import { Icon } from '@iconify/react';
 import EntryDetail from './EntryDetail';
 import EntryActions from './EntryActions';
 import { Image } from 'tdesign-mobile-react';
+import { useTranslation } from 'react-i18next';
 
 const statusMap = {
-  pending: { theme: 'warning', text: '待审核' },
-  approved: { theme: 'success', text: '已通过' },
-  rejected: { theme: 'danger', text: '已拒绝' },
+  pending: { theme: 'warning', text: 'diary:pending' },
+  approved: { theme: 'success', text: 'diary:approved' },
+  rejected: { theme: 'danger', text: 'diary:rejected' },
 };
 type TagTheme = 'warning' | 'success' | 'danger' | 'default' | 'primary';
 type StatusKey = keyof typeof statusMap;
 
-const getStatusInfo = (status: any): { theme: TagTheme; text: string } => {
+const getStatusInfo = (status: any, t: any): { theme: TagTheme; text: string } => {
   if (!status) return { theme: 'default', text: '-' };
   const key = String(status).toLowerCase() as StatusKey;
-  if (key in statusMap) return statusMap[key] as { theme: TagTheme; text: string };
+  if (key in statusMap) {
+    const info = statusMap[key];
+    return { theme: info.theme as TagTheme, text: t(info.text) };
+  }
   return { theme: 'default', text: status };
 };
 
 const OSS_PREFIX = import.meta.env.VITE_OSS_URL || '';
 
 const EntryCard = ({ item, onEdit, onDelete, onPublish, onUnpublish, canUnpublish }: any) => {
+  const { t } = useTranslation('diary');
   const [collapse, setCollapse] = useState(false);
   const [actionVisible, setActionVisible] = useState(false);
 
@@ -35,18 +40,18 @@ const EntryCard = ({ item, onEdit, onDelete, onPublish, onUnpublish, canUnpublis
           fit="cover"
           loading={
             <div className="flex items-center justify-center h-40 bg-gray-100">
-              <span className="text-gray-400">加载中...</span>
+              <span className="text-gray-400">{t('loading')}</span>
             </div>
           }
           error={
             <div className="flex items-center justify-center h-40 bg-gray-100">
-              <span className="text-gray-400">加载失败</span>
+              <span className="text-gray-400">{t('loadFailed')}</span>
             </div>
           }
         />
         <div className="absolute top-3 left-3 flex gap-2">
-          <Tag theme={getStatusInfo(item.status).theme} size="small" className="opacity-90">
-            {getStatusInfo(item.status).text}
+          <Tag theme={getStatusInfo(item.status, t).theme} size="small" className="opacity-90">
+            {getStatusInfo(item.status, t).text}
           </Tag>
         </div>
       </div>
@@ -57,7 +62,7 @@ const EntryCard = ({ item, onEdit, onDelete, onPublish, onUnpublish, canUnpublis
             <h3 className="font-medium text-base truncate mr-2">{item.title}</h3>
             {item.parentId && (
               <Tag theme="primary" variant="light" size="small" className="opacity-90">
-                副本
+                {t('copy', { defaultValue: '副本' })}
               </Tag>
             )}
           </div>
@@ -73,7 +78,9 @@ const EntryCard = ({ item, onEdit, onDelete, onPublish, onUnpublish, canUnpublis
         </div>
 
         <div className="text-xs text-gray-500 mb-3">
-          {item.publishedAt ? new Date(item.publishedAt).toLocaleString() : '未发布'}
+          {item.publishedAt
+            ? new Date(item.publishedAt).toLocaleString()
+            : t('unpublished', { defaultValue: '未发布' })}
         </div>
 
         <Collapse
@@ -81,7 +88,12 @@ const EntryCard = ({ item, onEdit, onDelete, onPublish, onUnpublish, canUnpublis
           onChange={(v) => setCollapse(!!v.length)}
           className="border-t border-gray-100 pt-2"
         >
-          <CollapsePanel value={1} header={<span className="text-sm font-medium">详情</span>}>
+          <CollapsePanel
+            value={1}
+            header={
+              <span className="text-sm font-medium">{t('detail', { defaultValue: '详情' })}</span>
+            }
+          >
             <EntryDetail
               viewCount={item.viewCount}
               likeCount={item.likeCount}
@@ -91,7 +103,9 @@ const EntryCard = ({ item, onEdit, onDelete, onPublish, onUnpublish, canUnpublis
             />
             {String(item.status).toLowerCase() === 'rejected' && item.rejectedReason && (
               <div className="mt-3 p-3 bg-red-50 rounded-md text-xs text-red-500 border border-red-100">
-                <div className="font-medium mb-1">拒绝原因：</div>
+                <div className="font-medium mb-1">
+                  {t('rejectedReason', { defaultValue: '拒绝原因：' })}
+                </div>
                 <div>{item.rejectedReason}</div>
               </div>
             )}

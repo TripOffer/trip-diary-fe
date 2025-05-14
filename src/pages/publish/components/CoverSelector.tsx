@@ -1,6 +1,7 @@
 import React, { useRef, ChangeEvent } from 'react';
 import type { UploadFile } from 'tdesign-mobile-react/es/upload/type';
 import { Icon } from '@iconify/react';
+import { useTranslation } from 'react-i18next';
 
 interface CoverSelectorProps {
   currentCover: UploadFile | null;
@@ -13,6 +14,7 @@ const CoverSelector: React.FC<CoverSelectorProps> = ({
   onCoverChange,
   // 已移除 buttonText
 }) => {
+  const { t } = useTranslation('diary');
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleFileChange = (event: ChangeEvent<HTMLInputElement>) => {
@@ -47,7 +49,7 @@ const CoverSelector: React.FC<CoverSelectorProps> = ({
         <div className="relative group mb-4 cursor-pointer" onClick={triggerFileInput}>
           <img
             src={currentCover.url}
-            alt="当前封面"
+            alt={t('cover.current')}
             className="rounded-lg max-w-xs w-full max-h-60 object-cover shadow-md transition-opacity group-hover:opacity-75"
           />
           <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-30 opacity-0 group-hover:opacity-100 transition-opacity rounded-lg">
@@ -60,7 +62,7 @@ const CoverSelector: React.FC<CoverSelectorProps> = ({
           onClick={triggerFileInput}
         >
           <Icon icon="mdi:image-plus" className="text-4xl text-gray-400 mb-2" />
-          <span className="text-gray-500">选择封面</span>
+          <span className="text-gray-500">{t('cover.select')}</span>
         </div>
       )}
       <input

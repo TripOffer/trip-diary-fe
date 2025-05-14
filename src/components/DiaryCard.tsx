@@ -5,6 +5,7 @@ import { Image } from 'tdesign-mobile-react';
 import Avatar from 'tdesign-mobile-react/es/avatar/Avatar';
 import LikeButton from './LikeButton';
 import SimpleSkeleton from './SimpleSkeleton';
+import { useTranslation } from 'react-i18next';
 
 export interface Tag {
   id: string;
@@ -67,6 +68,7 @@ function getAuthorInfo(author?: Author) {
 }
 
 const DiaryCard = React.forwardRef<HTMLDivElement, DiaryCardProps>(({ diary }, ref) => {
+  const { t } = useTranslation('diary');
   const navigate = useNavigate();
   const { thumbnail, title, author, likeCount, isLiked, liked, id, thumbnailMeta } = diary;
   // 优先使用 thumbnailMeta 的宽高
@@ -112,7 +114,7 @@ const DiaryCard = React.forwardRef<HTMLDivElement, DiaryCardProps>(({ diary }, r
   // 处理封面图为 null 或空的情况
   const hasThumbnail = !!thumbnail;
   const imageSrc = hasThumbnail ? OSS_PREFIX + thumbnail : '/default-thumbnail.png'; // 请替换为实际默认图片路径
-  const imageAlt = hasThumbnail ? title : '默认封面';
+  const imageAlt = hasThumbnail ? title : t('noCover');
 
   return (
     <div
@@ -136,7 +138,9 @@ const DiaryCard = React.forwardRef<HTMLDivElement, DiaryCardProps>(({ diary }, r
         />
         {!hasThumbnail && (
           <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-            <span className="text-xs text-gray-400 bg-white/70 rounded px-2 py-1">无封面</span>
+            <span className="text-xs text-gray-400 bg-white/70 rounded px-2 py-1">
+              {t('noCover')}
+            </span>
           </div>
         )}
       </div>

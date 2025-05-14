@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { Message, Loading } from 'tdesign-mobile-react';
 import { useLocation } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import styles from './index.module.scss';
 import ProfileHeader from './components/ProfileHeader';
 import ProfileContent from './components/ProfileContent';
 import { userApi } from '@/service/api/user';
 import { MyUserDetailData } from '@/service/api/user/types';
+import { getStatusBarHeight } from '@/utils/getStatusBarHeight';
 
 interface ApiResponse {
   code: number;
@@ -14,6 +16,7 @@ interface ApiResponse {
 }
 
 const Profile: React.FC = () => {
+  const { t } = useTranslation('profile');
   const [userData, setUserData] = useState<MyUserDetailData | null>(null);
   const [loading, setLoading] = useState(true);
   const location = useLocation();
@@ -32,7 +35,7 @@ const Profile: React.FC = () => {
         }
       } catch (error) {
         Message.error({
-          content: '获取用户信息失败',
+          content: t('fetchUserFailed'),
           duration: 2000,
         });
         console.error('Failed to fetch user data:', error);
@@ -42,7 +45,7 @@ const Profile: React.FC = () => {
     };
 
     fetchUserData();
-  }, [location.key]);
+  }, [location.key, t]);
   const handleAvatarChange = (newAvatar: string) => {
     if (userData) {
       setUserData({
@@ -57,7 +60,7 @@ const Profile: React.FC = () => {
         name: userData.name,
         userId: String(userData.id),
         avatar: userData.avatar || '',
-        bio: userData.bio || '这个人很懒，什么都没留下',
+        bio: userData.bio || t('emptyBio'),
       }
     : null;
 

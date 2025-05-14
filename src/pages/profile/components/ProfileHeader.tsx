@@ -2,11 +2,13 @@ import React, { useRef } from 'react';
 import { Avatar, Button } from 'tdesign-mobile-react';
 import { Icon } from '@iconify/react';
 import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import styles from './ProfileHeader.module.scss';
 import { userApi } from '@/service/api/user';
 import { uploadResource } from '@/utils/upload';
 import Toast from '@/utils/toast';
 import { useAuthStore } from '@/store/auth';
+import { getStatusBarHeight } from '@/utils/getStatusBarHeight';
 
 interface UserData {
   name: string;
@@ -29,7 +31,9 @@ interface ProfileHeaderProps {
 const OSS_PREFIX = import.meta.env.VITE_OSS_URL || '';
 
 const ProfileHeader: React.FC<ProfileHeaderProps> = ({ userData, statsData, onAvatarChange }) => {
+  const { t } = useTranslation('profile');
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const statusBarHeight = getStatusBarHeight();
   const navigate = useNavigate();
   const authUser = useAuthStore((state) => state.user);
   const setAuthUser = useAuthStore((state) => state.setUser);
@@ -58,7 +62,7 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = ({ userData, statsData, onAv
       const response = await userApi.updateAvatar({ avatar: ossObject.key });
       if (response && response.data) {
         const newAvatarUrl = OSS_PREFIX + ossObject.key;
-        Toast.success('头像更新成功');
+        Toast.success(t('avatarUpdateSuccess'));
         onAvatarChange?.(newAvatarUrl);
 
         // 更新auth store中的用户头像
@@ -70,7 +74,7 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = ({ userData, statsData, onAv
         }
       }
     } catch {
-      Toast.error('头像更新失败，请重试');
+      Toast.error(t('avatarUpdateFailed'));
     }
   };
 
@@ -93,7 +97,7 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = ({ userData, statsData, onAv
   };
 
   return (
-    <div className={styles.profileHeader}>
+    <div className={styles.profileHeader} style={{ paddingTop: `${statusBarHeight}px` }}>
       <div className={styles.userInfo}>
         <div className={styles.avatar} onClick={handleAvatarClick}>
           {avatarUrl ? (
@@ -107,7 +111,7 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = ({ userData, statsData, onAv
               />
               <div className={styles.changeAvatarHint}>
                 <Icon icon="mdi:camera" width="16" height="16" />
-                <span>更换头像</span>
+                <span>{t('avatarChange')}</span>
               </div>
             </div>
           ) : (
@@ -115,7 +119,7 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = ({ userData, statsData, onAv
               <Icon icon="mdi:account" width="32" height="32" color="#CCCCCC" />
               <div className={styles.uploadHint}>
                 <Icon icon="mdi:camera" width="14" height="14" />
-                <span>上传头像</span>
+                <span>{t('avatarUpload')}</span>
               </div>
             </div>
           )}
@@ -135,11 +139,11 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = ({ userData, statsData, onAv
           <div className={styles.stats}>
             <div className={styles.statItem} onClick={handleGoToFollowingList}>
               <span className={styles.count}>{statsData.followCount}</span>
-              <span className={styles.label}>正在关注</span>
+              <span className={styles.label}>{t('following')}</span>
             </div>
             <div className={styles.statItem} onClick={handleGoToFollowersList}>
               <span className={styles.count}>{statsData.fansCount}</span>
-              <span className={styles.label}>关注者</span>
+              <span className={styles.label}>{t('followers')}</span>
             </div>
           </div>
           <p className={styles.bio}>{userData.bio}</p>
@@ -152,7 +156,7 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = ({ userData, statsData, onAv
           icon={<Icon icon="mdi:pencil" />}
           onClick={handleEditProfile}
         >
-          编辑个人资料
+          {t('edit')}
         </Button>
         <Button
           className={styles.settingBtn}
@@ -160,7 +164,7 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = ({ userData, statsData, onAv
           onClick={handleGoToSettings}
           variant="outline"
         >
-          设置
+          {t('setting')}
         </Button>
       </div>
     </div>

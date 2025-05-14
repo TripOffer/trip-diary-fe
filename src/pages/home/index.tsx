@@ -6,8 +6,10 @@ import Loading from 'tdesign-mobile-react/es/loading';
 import { PullDownRefresh } from 'tdesign-mobile-react';
 import styles from './index.module.scss';
 import { getStatusBarHeight } from '@/utils/getStatusBarHeight';
+import { useTranslation } from 'react-i18next';
 
 const Home: React.FC = () => {
+  const { t } = useTranslation();
   const statusBarHeight = getStatusBarHeight();
   const scrollRef = useRef<HTMLDivElement>(null);
   const [items, setItems] = useState<any[]>([]);
@@ -86,7 +88,12 @@ const Home: React.FC = () => {
         style={{ WebkitOverflowScrolling: 'touch', paddingTop: `${statusBarHeight}px` }}
         loadingBarHeight={60}
         loadingProps={{}}
-        loadingTexts={['', '松开刷新', '正在刷新', '']}
+        loadingTexts={[
+          t('home.refreshIdle'),
+          t('home.refreshReady'),
+          t('home.refreshing'),
+          t('home.refreshSuccess'),
+        ]}
         onRefresh={handleRefresh}
       >
         <div ref={scrollRef} className="h-full flex justify-center">

@@ -1,5 +1,6 @@
 import React from 'react';
 import { Icon } from '@iconify/react/dist/iconify.js';
+import { useTranslation } from 'react-i18next';
 
 interface BottomBarProps {
   onArchive?: () => void;
@@ -7,6 +8,7 @@ interface BottomBarProps {
 }
 
 const BottomBar: React.FC<BottomBarProps> = ({ onArchive, onPublish }) => {
+  const { t } = useTranslation('diary');
   return (
     <div
       className="fixed bottom-0 left-0 w-full bg-white border-t border-gray-200 shadow z-50 flex items-center py-3 px-4"
@@ -24,7 +26,7 @@ const BottomBar: React.FC<BottomBarProps> = ({ onArchive, onPublish }) => {
         style={{ minWidth: 0 }}
         onClick={onPublish}
       >
-        发布
+        {t('publish')}
       </button>
     </div>
   );

@@ -10,6 +10,8 @@ import PublishDialog from './components/PublishDialog';
 import PublishResult from './components/PublishResult';
 import useDiaryUpload from './hooks/useDiaryUpload';
 import { Icon } from '@iconify/react';
+import { getStatusBarHeight } from '@/utils/getStatusBarHeight';
+import { useTranslation } from 'react-i18next';
 
 // Helper function to generate video thumbnail (implementation will be refined)
 const generateVideoThumbnail = async (videoFile: File): Promise<UploadFile | null> => {
@@ -62,8 +64,10 @@ const getOssUrl = (key?: string) => {
 };
 
 const PublishEditPage = () => {
+  const { t } = useTranslation('diary');
   const location = useLocation();
   const navigate = useNavigate();
+  const statusBarHeight = getStatusBarHeight();
   // 新增：支持 URL 查询参数 id
   const [searchParams] = useSearchParams();
   const urlId = searchParams.get('id');
@@ -201,34 +205,38 @@ const PublishEditPage = () => {
   }, [contentType, initFiles, initVideoFile, isEditMode]);
 
   // 编辑模式标题
-  const pageTitle = isEditMode ? '编辑日记' : isVideo ? '发布视频日记' : '发布图文日记';
+  const pageTitle = isEditMode
+    ? t('editDiaryTitle', { defaultValue: '编辑日记' })
+    : isVideo
+      ? t('publishVideoDiary', { defaultValue: '发布视频日记' })
+      : t('publishImageDiary', { defaultValue: '发布图文日记' });
 
   // 触发Dialog（提前校验）
   const handleBarClick = (type: 'publish' | 'archive') => {
     // 必填项校验
     if (!title.trim()) {
       setResultType('error');
-      setResultMsg('标题为必填项');
+      setResultMsg(t('form.titleRequired', { defaultValue: '标题为必填项' }));
       setShowResult(true);
       return;
     }
     if (!content.trim()) {
       setResultType('error');
-      setResultMsg('正文为必填项');
+      setResultMsg(t('form.contentRequired', { defaultValue: '正文为必填项' }));
       setShowResult(true);
       return;
     }
     if (isVideo) {
       if (!initVideoFile && !videoPreviewUrl) {
         setResultType('error');
-        setResultMsg('请上传视频');
+        setResultMsg(t('form.videoRequired', { defaultValue: '请上传视频' }));
         setShowResult(true);
         return;
       }
     } else {
       if (!imageFileList || imageFileList.length === 0) {
         setResultType('error');
-        setResultMsg('请上传图片');
+        setResultMsg(t('form.imageRequired', { defaultValue: '请上传图片' }));
         setShowResult(true);
         return;
       }
@@ -275,7 +283,7 @@ const PublishEditPage = () => {
       <PublishResult
         show={showResult || uploading}
         type={uploading ? 'success' : resultType}
-        msg={uploading ? '正在上传，请稍候…' : resultMsg}
+        msg={uploading ? t('form.uploading', { defaultValue: '正在上传，请稍候…' }) : resultMsg}
         onClose={!uploading ? () => setShowResult(false) : undefined}
         uploading={uploading}
         progress={progress}
@@ -287,17 +295,17 @@ const PublishEditPage = () => {
         onConfirm={handleDialogConfirm}
         onClose={() => setShowDialog(false)}
       />
-      <div className="max-w-3xl mx-auto pb-12">
+      <div className="max-w-3xl mx-auto pb-12" style={{ paddingTop: `${statusBarHeight}px` }}>
         <h2 className="text-2xl font-bold mb-8 text-center text-gray-800 relative flex items-center justify-center">
           {/* 返回按钮 */}
           <button
             className="absolute left-0 top-1/2 -translate-y-1/2 flex items-center px-2 py-1 text-blue-500 hover:text-blue-700 focus:outline-none"
             onClick={() => navigate(-1)}
-            aria-label="返回"
+            aria-label={t('back', { defaultValue: '返回' })}
             type="button"
           >
             <Icon icon="mingcute:arrow-left-line" className="text-xl" />
-            <span className="ml-1 hidden sm:inline">返回</span>
+            <span className="ml-1 hidden sm:inline">{t('back', { defaultValue: '返回' })}</span>
           </button>
           <span className="relative inline-block">
             {pageTitle}

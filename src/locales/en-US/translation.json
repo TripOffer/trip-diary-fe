@@ -178,5 +178,13 @@
       "phone": "Phone: 400-123-4567",
       "response": "We will respond to you within 15 working days of receiving your inquiry."
     }
+  },
+  "home": {
+    "refreshIdle": "",
+    "refreshReady": "Release to refresh",
+    "refreshing": "Refreshing",
+    "refreshSuccess": "",
+    "searchPlaceholder": "Search diaries, @user, #tag",
+    "searchBtn": "Search"
   }
 }

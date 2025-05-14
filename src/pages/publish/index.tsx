@@ -3,17 +3,19 @@ import PublishEntry from './components/PublishEntry';
 import ManageEntries from './components/ManageEntries';
 import { getStatusBarHeight } from '@/utils/getStatusBarHeight';
 import { useLocation, useNavigate } from 'react-router-dom';
-
-const tabList = [
-  { value: 'publish', label: '发布' },
-  { value: 'manage', label: '管理' },
-];
+import { useTranslation } from 'react-i18next';
 
 const PublishPage = () => {
+  const { t } = useTranslation('diary');
   const statusBarHeight = getStatusBarHeight();
   const location = useLocation();
   const navigate = useNavigate();
   const [currentValue, setCurrentValue] = useState('publish');
+
+  const tabList = [
+    { value: 'publish', label: t('publishTab', { defaultValue: '发布' }) },
+    { value: 'manage', label: t('manageTab', { defaultValue: '管理' }) },
+  ];
 
   // 检查 location.state.tab，自动切换Tab
   useEffect(() => {

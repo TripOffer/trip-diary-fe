@@ -1,6 +1,7 @@
 import React from 'react';
 import { ActionSheet } from 'tdesign-mobile-react';
 import { Icon } from '@iconify/react';
+import { useTranslation } from 'react-i18next';
 
 interface EntryActionsProps {
   visible: boolean;
@@ -23,34 +24,35 @@ const EntryActions: React.FC<EntryActionsProps> = ({
   onUnpublish,
   canUnpublish,
 }) => {
+  const { t } = useTranslation('diary');
   const items = [
     {
-      label: '编辑',
+      label: t('edit', { defaultValue: '编辑' }),
       icon: <Icon icon="mdi:pencil-outline" width={22} />,
-      description: '修改日记内容',
+      description: t('editDesc', { defaultValue: '修改日记内容' }),
       action: onEdit,
     },
     {
-      label: '删除',
+      label: t('delete', { defaultValue: '删除' }),
       icon: <Icon icon="mdi:delete-outline" width={22} />,
-      description: '彻底删除该日记',
+      description: t('deleteDesc', { defaultValue: '彻底删除该日记' }),
       action: onDelete,
       theme: 'danger',
     },
   ];
   if (canPublish) {
     items.push({
-      label: '发布',
+      label: t('publish', { defaultValue: '发布' }),
       icon: <Icon icon="mdi:send-outline" width={22} />,
-      description: '公开发布到广场',
+      description: t('publishDesc', { defaultValue: '公开发布到广场' }),
       action: onPublish,
     });
   }
   if (canUnpublish && onUnpublish) {
     items.push({
-      label: '取消发布',
+      label: t('unpublish', { defaultValue: '取消发布' }),
       icon: <Icon icon="mdi:undo-variant" width={22} />,
-      description: '将日记从广场撤回',
+      description: t('unpublishDesc', { defaultValue: '将日记从广场撤回' }),
       action: onUnpublish,
     });
   }

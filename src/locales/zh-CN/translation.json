@@ -2,7 +2,7 @@
   "welcome": "欢迎使用 Trip Diary！",
   "language": "语言",
   "login": {
-    "title": "旅途日记",
+    "title": "旅行日记",
     "subtitle": "记录旅行，分享生活",
     "loginTitle": "登录",
     "registerTitle": "注册",
@@ -32,7 +32,7 @@
     "loginSuccess": "登录成功",
     "registerSuccess": "注册成功",
 
-    "appName": "旅途日记",
+    "appName": "旅行日记",
     "loginTab": "登录",
     "registerTab": "注册",
     "emailPlaceholder": "请输入邮箱",
@@ -178,5 +178,13 @@
       "phone": "电话：400-123-4567",
       "response": "我们会在收到您的问题后的15个工作日内回复您。"
     }
+  },
+  "home": {
+    "refreshIdle": "",
+    "refreshReady": "松开刷新",
+    "refreshing": "正在刷新",
+    "refreshSuccess": "",
+    "searchPlaceholder": "搜索日记、@用户、#标签",
+    "searchBtn": "搜索"
   }
 }

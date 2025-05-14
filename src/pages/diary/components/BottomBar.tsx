@@ -4,6 +4,7 @@ import LikeButton from '@/components/LikeButton';
 import Api from '@/service/api';
 import Toast from '@/utils/toast';
 import styles from './BottomBar.module.scss';
+import { useTranslation } from 'react-i18next';
 
 interface BottomBarProps {
   diaryId: string;
@@ -22,6 +23,7 @@ const BottomBar: React.FC<BottomBarProps> = ({
   onCommentClick,
   onCommentSubmit,
 }) => {
+  const { t } = useTranslation('diary');
   const [commentText, setCommentText] = useState('');
   const [localStarCount, setLocalStarCount] = useState(starCount);
   const [localLikeCount, setLocalLikeCount] = useState(likeCount);
@@ -40,20 +42,24 @@ const BottomBar: React.FC<BottomBarProps> = ({
         setLocalStarCount((prev) => Math.max(0, prev - 1));
         setIsStarred(false);
         await Api.diaryApi.unfavoriteDiary(diaryId);
-        Toast.success('已取消收藏', { duration: 1000 });
+        Toast.success(t('unstarSuccess', { ns: 'diary', defaultValue: '已取消收藏' }), {
+          duration: 1000,
+        });
       } else {
         setLocalStarCount((prev) => prev + 1);
         setIsStarred(true);
         await Api.diaryApi.favoriteDiary(diaryId);
-        Toast.success('已收藏', { duration: 1000 });
+        Toast.success(t('starSuccess', { ns: 'diary', defaultValue: '已收藏' }), {
+          duration: 1000,
+        });
       }
     } catch (error) {
       console.error('收藏操作失败:', error);
-      Toast.error('操作失败，请重试');
+      Toast.error(t('actionFailed', { ns: 'diary', defaultValue: '操作失败，请重试' }));
       setLocalStarCount(isStarred ? Math.max(0, localStarCount - 1) : localStarCount + 1);
       setIsStarred(!isStarred);
     }
-  }, [diaryId, isStarred, localStarCount]);
+  }, [diaryId, isStarred, localStarCount, t]);
 
   const handleCommentClick = () => {
     onCommentClick?.();
@@ -102,7 +108,7 @@ const BottomBar: React.FC<BottomBarProps> = ({
       <div className={styles.inputContainer}>
         <input
           type="text"
-          placeholder="说点什么..."
+          placeholder={t('saySomething', { ns: 'diary', defaultValue: '说点什么...' })}
           className={styles.commentInput}
           value={commentText}
           onChange={(e) => setCommentText(e.target.value)}

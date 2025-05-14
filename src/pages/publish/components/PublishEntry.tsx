@@ -2,12 +2,14 @@ import React, { useRef } from 'react';
 import { Icon } from '@iconify/react';
 import { useNavigate } from 'react-router-dom';
 import { Cell } from 'tdesign-mobile-react';
+import { useTranslation } from 'react-i18next';
 
 interface PublishEntryProps {
   className?: string;
 }
 
 const PublishEntry: React.FC<PublishEntryProps> = ({ className }) => {
+  const { t } = useTranslation('diary');
   const navigate = useNavigate();
   const videoInputRef = useRef<HTMLInputElement>(null);
   const imageInputRef = useRef<HTMLInputElement>(null);
@@ -22,9 +24,9 @@ const PublishEntry: React.FC<PublishEntryProps> = ({ className }) => {
       return;
     }
     if (window?.Android && typeof window.Android.showToast === 'function') {
-      window.Android.showToast('进入图文发布');
+      window.Android.showToast(t('goImagePublish', { defaultValue: '进入图文发布' }));
     } else {
-      alert('进入图文发布');
+      alert(t('goImagePublish', { defaultValue: '进入图文发布' }));
     }
   };
 
@@ -33,9 +35,9 @@ const PublishEntry: React.FC<PublishEntryProps> = ({ className }) => {
     if (files && files.length > 0) {
       if (files.length > 100) {
         if (window?.Android && typeof window.Android.showToast === 'function') {
-          window.Android.showToast('最多只能选择100张图片');
+          window.Android.showToast(t('maxImageLimit', { defaultValue: '最多只能选择100张图片' }));
         } else {
-          alert('最多只能选择100张图片');
+          alert(t('maxImageLimit', { defaultValue: '最多只能选择100张图片' }));
         }
         e.target.value = '';
         return;
@@ -74,8 +76,8 @@ const PublishEntry: React.FC<PublishEntryProps> = ({ className }) => {
       <div className="flex gap-4">
         <div className="flex-1">
           <Cell
-            title="图文"
-            description="发布图文日记"
+            title={t('imageDiary', { defaultValue: '图文' })}
+            description={t('publishImageDiary', { defaultValue: '发布图文日记' })}
             leftIcon={<Icon icon="mdi:image" width="32" height="32" />}
             onClick={() => handleClick('image')}
             className="rounded-2xl shadow-md mb-4 bg-gray-50 active:shadow-lg transition-shadow"
@@ -83,8 +85,8 @@ const PublishEntry: React.FC<PublishEntryProps> = ({ className }) => {
         </div>
         <div className="flex-1">
           <Cell
-            title="视频"
-            description="发布视频日记"
+            title={t('videoDiary', { defaultValue: '视频' })}
+            description={t('publishVideoDiary', { defaultValue: '发布视频日记' })}
             leftIcon={<Icon icon="mdi:video" width="32" height="32" />}
             onClick={() => handleClick('video')}
             className="rounded-2xl shadow-md mb-4 bg-gray-50 active:shadow-lg transition-shadow"

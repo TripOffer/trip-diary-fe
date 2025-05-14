@@ -8,9 +8,13 @@ import Api from '@/service/api';
 import { DiaryDetail } from '@/types/diary';
 import Toast from '@/utils/toast';
 import styles from './index.module.scss';
+import { useTranslation } from 'react-i18next';
+import { getStatusBarHeight } from '@/utils/getStatusBarHeight';
 
 const DiaryDetailPage: React.FC = () => {
+  const { t } = useTranslation('diary');
   const { id } = useParams<{ id: string }>();
+  const statusBarHeight = getStatusBarHeight();
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(true);
   const [diaryData, setDiaryData] = useState<DiaryDetail | null>(null);
@@ -61,7 +65,7 @@ const DiaryDetailPage: React.FC = () => {
         }
       } catch (error) {
         console.error('Failed to fetch diary detail:', error);
-        Toast.error('获取日记详情失败');
+        Toast.error(t('fetchDetailFailed', { ns: 'diary', defaultValue: '获取日记详情失败' }));
       } finally {
         setIsLoading(false);
       }
@@ -81,14 +85,19 @@ const DiaryDetailPage: React.FC = () => {
       }
 
       setIsFollowing(!isFollowing);
-      Toast.success(isFollowing ? '已取消关注' : '已关注', { duration: 1000 });
+      Toast.success(
+        isFollowing
+          ? t('unfollowed', { ns: 'diary', defaultValue: '已取消关注' })
+          : t('followed', { ns: 'diary', defaultValue: '已关注' }),
+        { duration: 1000 },
+      );
     } catch {
-      Toast.error('操作失败，请重试');
+      Toast.error(t('actionFailed', { ns: 'diary', defaultValue: '操作失败，请重试' }));
     }
   };
 
   const handleShareClick = () => {
-    Toast.info('分享功能开发中', { duration: 1000 });
+    Toast.info(t('shareDev', { ns: 'diary', defaultValue: '分享功能开发中' }), { duration: 1000 });
   };
 
   const handleCommentClick = () => {
@@ -103,17 +112,19 @@ const DiaryDetailPage: React.FC = () => {
 
     try {
       setCommentCount((prev) => prev + 1);
-      Toast.success('评论成功', { duration: 1000 });
+      Toast.success(t('commentSuccess', { ns: 'diary', defaultValue: '评论成功' }), {
+        duration: 1000,
+      });
     } catch (error) {
       console.error('Failed to submit comment:', error);
-      Toast.error('评论失败，请重试');
+      Toast.error(t('commentFailed', { ns: 'diary', defaultValue: '评论失败，请重试' }));
     }
   };
 
-  const title = authorName || '加载中...';
+  const title = authorName || t('loading', { ns: 'diary', defaultValue: '加载中...' });
 
   return (
-    <div className={styles.container}>
+    <div className={styles.container} style={{ paddingTop: statusBarHeight }}>
       <DetailNavBar
         title={title}
         isFollowing={isFollowing}

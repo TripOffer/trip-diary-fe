@@ -1,6 +1,7 @@
 import DiaryCard from '@/components/DiaryCard';
 import React, { useRef, useEffect, useState, useCallback } from 'react';
 import { motion } from 'framer-motion';
+import { useTranslation } from 'react-i18next';
 
 export interface DiaryMasonryProps {
   items: any[]; // Diary[]
@@ -17,6 +18,7 @@ const DiaryMasonry: React.FC<DiaryMasonryProps> = ({
   hasMore = false,
   loading = false,
 }) => {
+  const { t } = useTranslation('diary');
   // items去重，基于id
   const dedupedItems = React.useMemo(() => {
     const seen = new Set();
@@ -200,7 +202,7 @@ const DiaryMasonry: React.FC<DiaryMasonryProps> = ({
       {renderColumn(1)}
       <div className="clear-both" />
       <div className="w-full flex justify-center items-center py-4 text-gray-400 text-sm select-none">
-        {loading ? '加载中...' : hasMore ? '' : '没有更多了'}
+        {loading ? t('loading') : hasMore ? '' : t('noMore')}
       </div>
     </div>
   );

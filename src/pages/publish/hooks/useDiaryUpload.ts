@@ -111,6 +111,32 @@ const useDiaryUpload = () => {
       onSuccess,
       onError,
     } = options;
+    // 新增：前端校验输入长度
+    const MAX_TITLE_LENGTH = 50;
+    const MAX_CONTENT_LENGTH = 2000;
+    if (title.length > MAX_TITLE_LENGTH) {
+      setResultType('error');
+      setResultMsg(`标题不能超过${MAX_TITLE_LENGTH}字`);
+      setUploading(false);
+      if (options.onError) options.onError();
+      return;
+    }
+    if (content.length > MAX_CONTENT_LENGTH) {
+      setResultType('error');
+      setResultMsg(`正文内容不能超过${MAX_CONTENT_LENGTH}字`);
+      setUploading(false);
+      if (options.onError) options.onError();
+      return;
+    }
+    // 新增：标签数量校验
+    const MAX_TAGS = 10;
+    if (tags.length > MAX_TAGS) {
+      setResultType('error');
+      setResultMsg(`标签不能超过${MAX_TAGS}个`);
+      setUploading(false);
+      if (options.onError) options.onError();
+      return;
+    }
     if (uploading) return;
     setUploading(true);
     setProgress(0);

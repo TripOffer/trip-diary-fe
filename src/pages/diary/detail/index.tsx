@@ -145,7 +145,7 @@ const DiaryDetailPage: React.FC = () => {
   const title = authorName || t('loading', { ns: 'diary', defaultValue: '加载中...' });
 
   return (
-    <div className={styles.container} style={{ paddingTop: statusBarHeight }}>
+    <div className={styles.container}>
       <DetailNavBar
         title={title}
         diaryId={id}

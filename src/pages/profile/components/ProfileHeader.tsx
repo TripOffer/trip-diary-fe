@@ -71,20 +71,43 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = ({ userData, statsData, onAv
     navigate('/setting');
   };
 
+  // 跳转到关注列表
+  const handleGoToFollowingList = () => {
+    navigate(`/profile/following`);
+  };
+
+  // 跳转到粉丝列表
+  const handleGoToFollowersList = () => {
+    navigate(`/profile/followers`);
+  };
+
   return (
     <div className={styles.profileHeader}>
       <div className={styles.userInfo}>
         <div className={styles.avatar} onClick={handleAvatarClick}>
-          <Avatar
-            className={styles.avatarImage}
-            shape="circle"
-            size="large"
-            image={avatarUrl}
-            alt={userData.name}
-          />
-          <div className={styles.avatarOverlay}>
-            <Icon icon="mdi:camera" />
-          </div>
+          {avatarUrl ? (
+            <div className={styles.avatarWrapper}>
+              <Avatar
+                className={styles.avatarImage}
+                shape="circle"
+                size="large"
+                image={avatarUrl}
+                alt={userData.name}
+              />
+              <div className={styles.changeAvatarHint}>
+                <Icon icon="mdi:camera" width="16" height="16" />
+                <span>更换头像</span>
+              </div>
+            </div>
+          ) : (
+            <div className={styles.emptyAvatar}>
+              <Icon icon="mdi:account" width="32" height="32" color="#CCCCCC" />
+              <div className={styles.uploadHint}>
+                <Icon icon="mdi:camera" width="14" height="14" />
+                <span>上传头像</span>
+              </div>
+            </div>
+          )}
           <input
             type="file"
             ref={fileInputRef}
@@ -99,11 +122,11 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = ({ userData, statsData, onAv
             <span className={styles.userId}>@{userData.userId}</span>
           </div>
           <div className={styles.stats}>
-            <div className={styles.statItem}>
+            <div className={styles.statItem} onClick={handleGoToFollowingList}>
               <span className={styles.count}>{statsData.followCount}</span>
               <span className={styles.label}>正在关注</span>
             </div>
-            <div className={styles.statItem}>
+            <div className={styles.statItem} onClick={handleGoToFollowersList}>
               <span className={styles.count}>{statsData.fansCount}</span>
               <span className={styles.label}>关注者</span>
             </div>

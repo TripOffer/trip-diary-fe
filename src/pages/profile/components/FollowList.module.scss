@@ -1,0 +1,209 @@
+.followListContainer {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  background-color: #fff;
+}
+
+.header {
+  height: 56px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 16px;
+  background-color: #fff;
+  border-bottom: 1px solid #eee;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+  position: sticky;
+  top: 0;
+  z-index: 10;
+
+  .backButton {
+    font-size: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    cursor: pointer;
+
+    &:hover {
+      background-color: #f5f5f5;
+    }
+
+    svg {
+      width: 24px;
+      height: 24px;
+    }
+  }
+
+  .title {
+    font-size: 18px;
+    font-weight: 600;
+    margin: 0;
+    flex: 1;
+    text-align: center;
+  }
+
+  .dummySpace {
+    width: 36px;
+  }
+}
+
+.countInfo {
+  padding: 12px 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: #333;
+
+  .count {
+    font-size: 15px;
+    font-weight: 500;
+  }
+
+  .sortButton {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 14px;
+    color: #666;
+
+    .sortIcon {
+      font-size: 18px;
+    }
+  }
+}
+
+.listContainer {
+  flex: 1;
+  padding: 0 16px;
+
+  .userItem {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 0;
+    border-bottom: 1px solid #eee;
+
+    .userInfo {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex: 1;
+
+      .userDetail {
+        flex: 1;
+        overflow: hidden;
+
+        .nameRow {
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          margin-bottom: 4px;
+
+          .userName {
+            font-size: 16px;
+            font-weight: 500;
+            color: #333;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+          }
+        }
+
+        .bioText {
+          font-size: 13px;
+          color: #999;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          max-width: 200px;
+        }
+      }
+    }
+
+    .actions {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+
+      .followButton {
+        font-size: 14px;
+        padding: 0 12px;
+        height: 30px;
+        min-width: 60px;
+        border-radius: 15px;
+        margin-right: 10px;
+        background-color: #f5f5f5;
+        color: #333;
+        border: 1px solid #e0e0e0;
+
+        &:active {
+          background-color: #e8e8e8;
+        }
+      }
+
+      .primaryButton {
+        background-color: var(--td-primary-color, #0052d9);
+        color: #fff;
+        border: none;
+
+        &:active {
+          background-color: var(--td-primary-color-active, #0043b0);
+        }
+      }
+
+      .moreIcon {
+        font-size: 20px;
+        color: #999;
+        cursor: pointer;
+      }
+    }
+  }
+
+  .loadingContainer {
+    display: flex;
+    justify-content: center;
+    padding: 20px 0;
+  }
+
+  .loadingMore {
+    display: flex;
+    justify-content: center;
+    padding: 16px 0;
+  }
+
+  .loadMoreButton {
+    text-align: center;
+    padding: 16px;
+    color: #666;
+    font-size: 14px;
+    cursor: pointer;
+
+    &:hover {
+      color: #333;
+    }
+  }
+
+  .noMore {
+    text-align: center;
+    padding: 16px;
+    color: #999;
+    font-size: 14px;
+  }
+
+  .emptyState {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 60px 0;
+    color: #999;
+
+    .emptyIcon {
+      font-size: 48px;
+      margin-bottom: 12px;
+    }
+  }
+}

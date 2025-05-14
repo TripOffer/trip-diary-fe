@@ -236,13 +236,29 @@ const ProfileEdit: React.FC = () => {
       <div className={styles.content}>
         {/* 头像部分 */}
         <div className={styles.avatarSection} onClick={handleAvatarClick}>
-          <Avatar
-            className={styles.avatarLarge}
-            shape="circle"
-            size="large"
-            image={avatarUrl}
-            alt={form.name || ''}
-          />
+          {avatarUrl ? (
+            <div className={styles.avatarWrapper}>
+              <Avatar
+                className={styles.avatarLarge}
+                shape="circle"
+                size="large"
+                image={avatarUrl}
+                alt={form.name || ''}
+              />
+              <div className={styles.changeAvatarHint}>
+                <Icon icon="mdi:camera" width="16" height="16" />
+                <span>更换头像</span>
+              </div>
+            </div>
+          ) : (
+            <div className={styles.emptyAvatar}>
+              <Icon icon="mdi:account" width="48" height="48" color="#CCCCCC" />
+              <div className={styles.uploadHint}>
+                <Icon icon="mdi:camera" width="16" height="16" />
+                <span>上传头像</span>
+              </div>
+            </div>
+          )}
           <input
             type="file"
             ref={fileInputRef}

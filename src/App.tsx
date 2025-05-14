@@ -16,6 +16,9 @@ function App() {
   // 只在首页、发布页、我的页面显示TabBar
   const showTabBar = ['/', '/profile', '/publish'].includes(location.pathname);
 
+  // 判断是否是详情页
+  const isDiaryDetail = location.pathname.includes('/diary/');
+
   const handleTabChange = (value: string | number) => {
     if (typeof value === 'string') {
       navigate(value);
@@ -23,7 +26,13 @@ function App() {
   };
   return (
     <div className="app-container">
-      <div className="app-content" style={{ position: 'relative', overflow: 'hidden' }}>
+      <div
+        className="app-content"
+        style={{
+          position: 'relative',
+          overflow: isDiaryDetail ? 'auto' : 'hidden',
+        }}
+      >
         <KeepAliveOutlet />
       </div>
       {showTabBar && (

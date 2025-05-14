@@ -21,6 +21,15 @@
   --td-brand-color-light: var(--td-primary-color-light);
   --td-brand-color-light-hover: var(--td-primary-color-light-hover);
 
+  /* 文本颜色 */
+  --td-text-color-primary: #333333;
+  --td-text-color-secondary: #666666;
+
+  /* 背景颜色 */
+  --td-bg-color-page: #f5f5f5;
+  --td-bg-color-container: #ffffff;
+  --td-component-stroke: #e7e7e7;
+
   /* 按钮颜色 */
   --td-button-primary-bg-color: var(--td-primary-color);
   --td-button-primary-active-bg-color: var(--td-primary-color-active);

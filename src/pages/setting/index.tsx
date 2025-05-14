@@ -76,7 +76,7 @@ const SettingPage: React.FC = () => {
             title="通用设置"
             leftIcon={<Icon icon="mdi:cog" />}
             arrow
-            onClick={() => Toast.info('功能开发中')}
+            onClick={() => navigate('/setting/common')}
             className={styles.cell}
           />
           <Cell

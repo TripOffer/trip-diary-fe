@@ -15,6 +15,7 @@ import UserAgreementPage from '../pages/agreement';
 import PrivacyPolicyPage from '../pages/privacy';
 import FollowList from '../pages/profile/components/FollowList';
 import PreferencePage from '../pages/setting/preference';
+import CommonSettingPage from '../pages/setting/common';
 import { useAuthStore } from '@/store/auth';
 
 const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
@@ -95,6 +96,14 @@ const AppRoutes: React.FC = () => (
         element={
           <ProtectedRoute>
             <PreferencePage />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="setting/common"
+        element={
+          <ProtectedRoute>
+            <CommonSettingPage />
           </ProtectedRoute>
         }
       />

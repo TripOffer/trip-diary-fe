@@ -83,7 +83,7 @@ const SettingPage: React.FC = () => {
             title="内容偏好调节"
             leftIcon={<Icon icon="mdi:tune" />}
             arrow
-            onClick={() => Toast.info('功能开发中')}
+            onClick={() => navigate('/setting/preference')}
             className={styles.cell}
           />
         </div>

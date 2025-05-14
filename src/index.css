@@ -1,5 +1,32 @@
 @import 'tailwindcss';
 
+:root {
+  /* 主题色变量 - TDesign主色系 */
+  --td-primary-color: #0052d9;
+  --td-primary-color-active: #0043b0;
+  --td-primary-color-hover: #0062ff;
+  --td-primary-color-disabled: rgba(0, 82, 217, 0.4);
+  --td-primary-color-light: rgba(0, 82, 217, 0.1);
+  --td-primary-color-light-hover: rgba(0, 82, 217, 0.2);
+
+  /* 字体大小比例 */
+  --font-size-ratio: 1;
+
+  /* TDesign品牌色 */
+  --td-brand-color: var(--td-primary-color);
+  --td-brand-color-hover: var(--td-primary-color-hover);
+  --td-brand-color-focus: var(--td-primary-color-active);
+  --td-brand-color-active: var(--td-primary-color-active);
+  --td-brand-color-disabled: var(--td-primary-color-disabled);
+  --td-brand-color-light: var(--td-primary-color-light);
+  --td-brand-color-light-hover: var(--td-primary-color-light-hover);
+
+  /* 按钮颜色 */
+  --td-button-primary-bg-color: var(--td-primary-color);
+  --td-button-primary-active-bg-color: var(--td-primary-color-active);
+  --td-button-primary-disabled-bg-color: var(--td-primary-color-disabled);
+}
+
 body {
   margin: 0;
   padding: 0;
@@ -9,6 +36,9 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   overscroll-behavior-y: contain;
+  font-size: calc(14px * var(--font-size-ratio));
+  color: #333;
+  line-height: 1.5;
 }
 
 #root {
@@ -36,4 +66,89 @@ body {
   height: 100%;
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
+}
+
+/* 全局字体大小调整 */
+/* 基础文本 */
+.t-button,
+.t-input,
+.t-textarea,
+.t-tag,
+.t-radio,
+.t-checkbox,
+.t-toast,
+.t-message,
+.t-dropdown-menu__item,
+.t-cell__note,
+.t-picker-item,
+p,
+div,
+span {
+  font-size: calc(14px * var(--font-size-ratio));
+}
+
+/* 标题文本 */
+.t-cell__title,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-size: calc(16px * var(--font-size-ratio));
+}
+
+/* 小号文本 */
+.t-cell__description,
+small,
+.t-tag--small {
+  font-size: calc(12px * var(--font-size-ratio));
+}
+
+/* Tab栏文字 */
+.t-tab-bar-item__text,
+.t-tab-panel__content,
+.t-tabs__nav-item {
+  font-size: calc(14px * var(--font-size-ratio));
+}
+
+.t-tab-bar,
+.t-tabs__nav-item.t-is-active,
+.t-checkbox--checked .t-checkbox__icon,
+.t-radio--checked .t-radio__icon,
+.t-slider__bar,
+.t-switch--checked {
+  color: var(--td-primary-color);
+}
+
+.t-tag--primary,
+.t-checkbox--checked .t-checkbox__icon,
+.t-radio--checked .t-radio__icon,
+.t-slider__bar,
+.t-switch--checked {
+  background-color: var(--td-primary-color);
+}
+
+.t-tab-bar--tag .t-tab-bar-item--active,
+.t-tabs__nav-item.t-is-active,
+.t-radio-button--checked {
+  color: var(--td-primary-color);
+}
+
+.t-tab-bar--tag .t-tab-bar-item--active {
+  background-color: var(--td-primary-color-light);
+}
+
+/* 按钮相关颜色 */
+.t-button--theme-primary {
+  background-color: var(--td-primary-color);
+}
+
+/* 添加全局过渡效果 */
+* {
+  transition:
+    color 0.3s ease,
+    background-color 0.3s ease,
+    border-color 0.3s ease,
+    font-size 0.3s ease;
 }

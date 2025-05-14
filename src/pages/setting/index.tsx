@@ -76,14 +76,14 @@ const SettingPage: React.FC = () => {
             title="通用设置"
             leftIcon={<Icon icon="mdi:cog" />}
             arrow
-            onClick={() => Toast.info('功能开发中')}
+            onClick={() => navigate('/setting/common')}
             className={styles.cell}
           />
           <Cell
             title="内容偏好调节"
             leftIcon={<Icon icon="mdi:tune" />}
             arrow
-            onClick={() => Toast.info('功能开发中')}
+            onClick={() => navigate('/setting/preference')}
             className={styles.cell}
           />
         </div>
@@ -94,7 +94,7 @@ const SettingPage: React.FC = () => {
             title="帮助与客服"
             leftIcon={<Icon icon="mdi:help-circle" />}
             arrow
-            onClick={() => Toast.info('功能开发中')}
+            onClick={() => navigate('/setting/support')}
             className={styles.cell}
           />
 
@@ -102,7 +102,7 @@ const SettingPage: React.FC = () => {
             title="关于旅行日记"
             leftIcon={<Icon icon="mdi:information" />}
             arrow
-            onClick={() => Toast.info('功能开发中')}
+            onClick={() => navigate('/setting/about')}
             className={styles.cell}
           />
 

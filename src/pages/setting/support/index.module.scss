@@ -1,0 +1,255 @@
+.supportChatPage {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  background-color: var(--td-bg-color-page, #f5f5f5);
+  position: relative;
+  overflow: hidden;
+}
+
+.header {
+  height: 56px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 16px;
+  background-color: var(--td-bg-color-container, #fff);
+  border-bottom: 1px solid var(--td-component-stroke, #eee);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+  position: sticky;
+  top: 0;
+  z-index: 10;
+
+  .backButton {
+    font-size: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    cursor: pointer;
+
+    &:hover {
+      background-color: rgba(0, 0, 0, 0.05);
+    }
+
+    svg {
+      width: 24px;
+      height: 24px;
+    }
+  }
+
+  .title {
+    font-size: 18px;
+    font-weight: 600;
+    margin: 0;
+    flex: 1;
+    text-align: center;
+  }
+
+  .dummySpace {
+    width: 36px;
+  }
+}
+
+.chatContainer {
+  flex: 1;
+  padding: 16px 10px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-bottom: 160px;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(0, 0, 0, 0.2) transparent;
+
+  &::-webkit-scrollbar {
+    width: 4px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background-color: rgba(0, 0, 0, 0.2);
+    border-radius: 4px;
+  }
+}
+
+.messageItem {
+  display: flex;
+  align-items: flex-start;
+  margin-bottom: 16px;
+  max-width: 100%;
+
+  &.userMessage {
+    flex-direction: row-reverse;
+    padding-left: 40px;
+
+    .messageContent {
+      align-items: flex-end;
+
+      .messageBubble {
+        background-color: var(--td-primary-color, #0052d9);
+        color: white;
+        border-radius: 18px 4px 18px 18px;
+      }
+
+      .messageTime {
+        text-align: right;
+      }
+    }
+  }
+
+  &.supportMessage {
+    .messageBubble {
+      background-color: #fff;
+      border-radius: 4px 18px 18px 18px;
+      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+    }
+  }
+
+  .avatar {
+    width: 40px;
+    height: 40px;
+    margin: 0 8px;
+  }
+
+  .messageContent {
+    display: flex;
+    flex-direction: column;
+    max-width: 70%;
+
+    .messageBubble {
+      padding: 12px 16px;
+      font-size: 15px;
+      line-height: 1.5;
+      word-wrap: break-word;
+    }
+
+    .messageTime {
+      margin-top: 4px;
+      font-size: 12px;
+      color: #999;
+    }
+  }
+}
+
+.faqSection {
+  position: fixed;
+  bottom: 80px;
+  left: 0;
+  right: 0;
+  padding: 12px 16px;
+  background-color: var(--td-bg-color-container, #fff);
+  border-top: 1px solid var(--td-component-stroke, #eee);
+  z-index: 5;
+
+  .faqTitle {
+    font-size: 14px;
+    color: #666;
+    margin-bottom: 8px;
+    font-weight: 500;
+  }
+
+  .faqTags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+
+    .faqTag {
+      background-color: #f0f0f0;
+      color: #333;
+      padding: 6px 12px;
+      font-size: 13px;
+      border-radius: 16px;
+      cursor: pointer;
+      transition: all 0.2s;
+      max-width: calc(50% - 8px);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+
+      &:hover {
+        background-color: #e0e0e0;
+      }
+    }
+  }
+}
+
+.inputArea {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 12px 16px;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  background-color: var(--td-bg-color-container, #fff);
+  border-top: 1px solid var(--td-component-stroke, #eee);
+  z-index: 10;
+
+  .chatInput {
+    flex: 1;
+    background-color: #f5f5f5;
+    border-radius: 20px;
+    font-size: 15px;
+
+    :global {
+      .t-input {
+        padding: 8px 12px;
+      }
+    }
+  }
+
+  .sendButton {
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    background-color: var(--td-primary-color, #0052d9);
+
+    svg {
+      font-size: 18px;
+    }
+
+    &:disabled {
+      background-color: #ccc;
+    }
+  }
+}
+
+.supportAvatarWrapper {
+  width: 40px;
+  height: 40px;
+  background-color: #2878ff;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 8px;
+}
+
+@keyframes blink {
+  0% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+.cursor {
+  display: inline-block;
+  animation: blink 1s infinite;
+  font-weight: bold;
+}

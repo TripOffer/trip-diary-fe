@@ -14,6 +14,7 @@ import { Icon } from '@iconify/react';
 import { userApi } from '@/service/api/user';
 import { MyUserDetailData, Gender, UpdateUserReq } from '@/service/api/user/types';
 import { uploadResource } from '@/utils/upload';
+import { useAuthStore } from '@/store/auth';
 import styles from './index.module.scss';
 
 interface ApiResponse {
@@ -35,6 +36,8 @@ const ProfileEdit: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
   const [calendarVisible, setCalendarVisible] = useState(false);
+  const authUser = useAuthStore((state) => state.user);
+  const setAuthUser = useAuthStore((state) => state.setUser);
 
   const [userData, setUserData] = useState<MyUserDetailData | null>(null);
   const [form, setForm] = useState<UpdateUserReq>({
@@ -141,6 +144,15 @@ const ProfileEdit: React.FC = () => {
       if (response && response.data) {
         const newAvatarUrl = OSS_PREFIX + ossObject.key;
         setAvatarUrl(newAvatarUrl);
+
+        // 更新auth store中的用户头像
+        if (authUser) {
+          setAuthUser({
+            ...authUser,
+            avatar: ossObject.key,
+          });
+        }
+
         Message.success('头像更新成功');
       }
     } catch (error) {
@@ -169,6 +181,15 @@ const ProfileEdit: React.FC = () => {
       const response = await userApi.updateMyInfo(form);
 
       if (response && response.data) {
+        // 同步更新auth store中的用户信息
+        if (authUser) {
+          setAuthUser({
+            ...authUser,
+            name: form.name,
+            bio: form.bio || null,
+          });
+        }
+
         Message.success('个人资料更新成功');
         // 更新成功后返回个人主页
         setTimeout(() => {

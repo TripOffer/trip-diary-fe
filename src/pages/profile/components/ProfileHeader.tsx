@@ -6,6 +6,7 @@ import styles from './ProfileHeader.module.scss';
 import { userApi } from '@/service/api/user';
 import { uploadResource } from '@/utils/upload';
 import Toast from '@/utils/toast';
+import { useAuthStore } from '@/store/auth';
 
 interface UserData {
   name: string;
@@ -30,6 +31,8 @@ const OSS_PREFIX = import.meta.env.VITE_OSS_URL || '';
 const ProfileHeader: React.FC<ProfileHeaderProps> = ({ userData, statsData, onAvatarChange }) => {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const navigate = useNavigate();
+  const authUser = useAuthStore((state) => state.user);
+  const setAuthUser = useAuthStore((state) => state.setUser);
 
   let avatarUrl = '';
   if (userData.avatar) {
@@ -57,6 +60,14 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = ({ userData, statsData, onAv
         const newAvatarUrl = OSS_PREFIX + ossObject.key;
         Toast.success('头像更新成功');
         onAvatarChange?.(newAvatarUrl);
+
+        // 更新auth store中的用户头像
+        if (authUser) {
+          setAuthUser({
+            ...authUser,
+            avatar: ossObject.key,
+          });
+        }
       }
     } catch {
       Toast.error('头像更新失败，请重试');

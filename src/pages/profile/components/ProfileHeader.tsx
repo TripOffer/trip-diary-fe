@@ -75,16 +75,29 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = ({ userData, statsData, onAv
     <div className={styles.profileHeader}>
       <div className={styles.userInfo}>
         <div className={styles.avatar} onClick={handleAvatarClick}>
-          <Avatar
-            className={styles.avatarImage}
-            shape="circle"
-            size="large"
-            image={avatarUrl}
-            alt={userData.name}
-          />
-          <div className={styles.avatarOverlay}>
-            <Icon icon="mdi:camera" />
-          </div>
+          {avatarUrl ? (
+            <div className={styles.avatarWrapper}>
+              <Avatar
+                className={styles.avatarImage}
+                shape="circle"
+                size="large"
+                image={avatarUrl}
+                alt={userData.name}
+              />
+              <div className={styles.changeAvatarHint}>
+                <Icon icon="mdi:camera" width="16" height="16" />
+                <span>更换头像</span>
+              </div>
+            </div>
+          ) : (
+            <div className={styles.emptyAvatar}>
+              <Icon icon="mdi:account" width="32" height="32" color="#CCCCCC" />
+              <div className={styles.uploadHint}>
+                <Icon icon="mdi:camera" width="14" height="14" />
+                <span>上传头像</span>
+              </div>
+            </div>
+          )}
           <input
             type="file"
             ref={fileInputRef}

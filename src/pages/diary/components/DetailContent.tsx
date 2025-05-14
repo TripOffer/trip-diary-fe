@@ -1,5 +1,8 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Tag, Swiper } from 'tdesign-mobile-react';
+import { Icon } from '@iconify/react';
+import ImageGallery from 'react-image-gallery';
+import 'react-image-gallery/styles/css/image-gallery.css';
 import { DiaryDetail } from '@/types/diary';
 import styles from './DetailContent.module.scss';
 
@@ -19,6 +22,10 @@ const DetailContent: React.FC<DetailContentProps> = ({
   const diaryTitle = diaryData?.title || '';
   const content = diaryData?.content || '';
 
+  // 图片预览相关状态
+  const [showImageViewer, setShowImageViewer] = useState(false);
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
+
   const formatContent = (text: string) => {
     if (!text) return [];
     // 按照段落分割文本
@@ -30,6 +37,27 @@ const DetailContent: React.FC<DetailContentProps> = ({
   // 处理资源URL，添加OSS前缀
   const getResourceUrl = (path: string) => {
     return path.startsWith('http') ? path : `${OSS_PREFIX}${path}`;
+  };
+
+  // 获取图库格式的图片数据
+  const getGalleryImages = () => {
+    if (!diaryData?.images || diaryData.images.length === 0) return [];
+    return diaryData.images.map((image) => ({
+      original: getResourceUrl(image),
+      thumbnail: getResourceUrl(image),
+      originalAlt: `${diaryTitle} - 图片`,
+    }));
+  };
+
+  // 处理图片点击事件
+  const handleImageClick = (index: number) => {
+    setCurrentImageIndex(index);
+    setShowImageViewer(true);
+  };
+
+  // 关闭图片预览
+  const closeImageViewer = () => {
+    setShowImageViewer(false);
   };
 
   // 渲染图片轮播
@@ -50,7 +78,7 @@ const DetailContent: React.FC<DetailContentProps> = ({
           >
             {diaryData.images.map((image, index) => (
               <Swiper.SwiperItem key={index}>
-                <div className={styles.swiperImageWrapper}>
+                <div className={styles.swiperImageWrapper} onClick={() => handleImageClick(index)}>
                   <img
                     src={getResourceUrl(image)}
                     alt={`${diaryTitle} - 图片${index + 1}`}
@@ -67,7 +95,7 @@ const DetailContent: React.FC<DetailContentProps> = ({
     // 单张图片
     return (
       <div className={styles.imageContainer}>
-        <div className={styles.imageWrapper}>
+        <div className={styles.imageWrapper} onClick={() => handleImageClick(0)}>
           <img
             src={getResourceUrl(diaryData.images[0])}
             alt={`${diaryTitle} - 图片1`}
@@ -103,6 +131,23 @@ const DetailContent: React.FC<DetailContentProps> = ({
 
             {/* 图片展示区域 - 使用轮播或单张显示 */}
             {diaryData?.images && diaryData.images.length > 0 && renderImageSwiper()}
+
+            {/* 图片预览器 */}
+            {showImageViewer && diaryData?.images && diaryData.images.length > 0 && (
+              <div className={styles.galleryOverlay}>
+                <div className={styles.galleryCloseButton} onClick={closeImageViewer}>
+                  <Icon icon="mdi:close" width="24" height="24" />
+                </div>
+                <ImageGallery
+                  items={getGalleryImages()}
+                  startIndex={currentImageIndex}
+                  showPlayButton={false}
+                  showFullscreenButton={true}
+                  showThumbnails={true}
+                  lazyLoad={true}
+                />
+              </div>
+            )}
 
             {/* 标题区域 */}
             <h2 className={styles.diaryTitle}>{diaryTitle}</h2>

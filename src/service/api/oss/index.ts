@@ -5,6 +5,8 @@ import {
   ConfirmUploadReq,
   ConfirmUploadRes,
   ImageProcessQuery,
+  ImageMetaQuery,
+  ImageMetaRes,
 } from './types';
 
 class OssApi extends BaseApi {
@@ -12,6 +14,7 @@ class OssApi extends BaseApi {
     presign: '/oss/presign',
     confirm: '/oss/confirm-upload',
     image: '/image',
+    meta: '/oss/meta',
   };
 
   tag = 'OSS';
@@ -27,6 +30,10 @@ class OssApi extends BaseApi {
   async imageProcess(params: ImageProcessQuery) {
     // 通常图片处理直接拼接 url，返回图片流或新 url
     return this.http.get(this.urls.image, { params, responseType: 'blob' });
+  }
+
+  async getImageMeta(params: ImageMetaQuery) {
+    return this.http.get<ImageMetaRes>(this.urls.meta, { params });
   }
 }
 
